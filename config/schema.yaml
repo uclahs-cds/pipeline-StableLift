@@ -1,0 +1,71 @@
+---
+dataset_id:
+  type: 'String'
+  required: true
+  help: 'Dataset identifier'
+blcds_registered_dataset:
+  type: 'Bool'
+  required: true
+  help: 'Enable to have output be registered'
+  default: false
+sample_id:
+  type: 'String'
+  required: true
+  help: 'sample id supplied from input yaml'
+algorithm:
+  type: 'List'
+  required: true
+  help: 'List of Annotation Algorithms to apply'
+  default:
+    - SnpEff
+    - Funcotator
+    - VEP
+  choices:
+    - SnpEff
+    - Funcotator
+    - VEP
+save_intermediate_files:
+  type: 'Bool'
+  required: true
+  default: false
+  help: 'Enable to store intermediate files'
+output_dir:
+  type: 'Path'
+  mode: 'w'
+  required: true
+  help: 'absolute path to directory to store output'
+fasta_ref_37:
+  type: 'Path'
+  mode: 'r'
+  required: true
+  help: 'GRCh37 reference FASTA file'
+fasta_ref_38:
+  type: 'Path'
+  mode: 'r'
+  required: true
+  help: 'GRCh38 reference FASTA file'
+chain_file:
+  type: 'Path'
+  mode: 'r'
+  required: true
+  help: 'FIXME ???'
+repeat_bed:
+  type: 'Path'
+  mode: 'r'
+  required: true
+  help: 'FIXME ???'
+funcotator_sources:
+  type: 'Path'
+  mode: 'r'
+  required: true
+  help: 'FIXME ???'
+input:
+  type: 'Namespace'
+  required: true
+  help: 'Input sample'
+  elements:
+    vcf:
+      type: 'Path'
+      mode: 'r'
+      required: true
+      help: 'Input dataset supplied by input yaml'
