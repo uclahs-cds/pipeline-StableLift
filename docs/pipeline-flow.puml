@@ -1,0 +1,14 @@
+/'
+This is a PlantUML (https://plantuml.com/) diagram documenting the pipeline.
+
+Everything between the opening slash-single-quote and the closing
+single-quote-slash is a comment.
+'/
+
+@startuml
+title Pipeline Steps
+
+:Step 1;
+:Step 2;
+
+@enduml
