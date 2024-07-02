@@ -1,29 +1,8 @@
 ---
-dataset_id:
-  type: 'String'
-  required: true
-  help: 'Dataset identifier'
-blcds_registered_dataset:
-  type: 'Bool'
-  required: true
-  help: 'Enable to have output be registered'
-  default: false
 sample_id:
   type: 'String'
   required: true
   help: 'sample id supplied from input yaml'
-algorithm:
-  type: 'List'
-  required: true
-  help: 'List of Annotation Algorithms to apply'
-  default:
-    - SnpEff
-    - Funcotator
-    - VEP
-  choices:
-    - SnpEff
-    - Funcotator
-    - VEP
 save_intermediate_files:
   type: 'Bool'
   required: true
@@ -34,16 +13,16 @@ output_dir:
   mode: 'w'
   required: true
   help: 'absolute path to directory to store output'
-fasta_ref_37:
+src_fasta_ref:
   type: 'Path'
   mode: 'r'
   required: true
-  help: 'GRCh37 reference FASTA file'
-fasta_ref_38:
+  help: 'Source reference sequence (FASTA)'
+dest_fasta_ref:
   type: 'Path'
   mode: 'r'
   required: true
-  help: 'GRCh38 reference FASTA file'
+  help: 'Destination reference sequence (FASTA)'
 chain_file:
   type: 'Path'
   mode: 'r'
@@ -54,7 +33,27 @@ repeat_bed:
   mode: 'r'
   required: true
   help: 'FIXME ???'
-funcotator_sources:
+funcotator_data:
+  type: 'FuncotatorDataSource'
+  required: true
+  help: 'Funcotator data source and reference sample IDs'
+  elements:
+    data_source:
+      type: 'Path'
+      mode: 'r'
+      required: true
+      help: 'Root data source folder for Funcotator'
+    src_reference_id:
+      type: 'String'
+      mode: 'r'
+      required: true
+      help: 'Reference build ID for the source sequence'
+    dest_reference_id:
+      type: 'String'
+      mode: 'r'
+      required: true
+      help: 'Reference build ID for the destination sequence'
+rf_model:
   type: 'Path'
   mode: 'r'
   required: true
