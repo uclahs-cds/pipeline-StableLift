@@ -3,17 +3,12 @@
 nextflow.enable.dsl=2
 
 // Include processes and workflows here
-include { run_validate_PipeVal } from './external/pipeline-Nextflow-module/modules/PipeVal/validate/main.nf' addParams(
+include { run_validate_PipeVal_with_metadata } from './external/pipeline-Nextflow-module/modules/PipeVal/validate/main.nf' addParams(
     options: [
         docker_image_version: params.pipeval_version,
         main_process: "./" //Save logs in <log_dir>/process-log/run_validate_PipeVal
     ]
 )
-include { generate_standard_filename } from './external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
-include { tool_name_command_name } from './module/module-name' addParams(
-    workflow_output_dir: "${params.output_dir_base}/ToolName-${params.toolname_version}",
-    workflow_log_output_dir: "${params.log_output_dir}/process-log/ToolName-${params.toolname_version}"
-    )
 
 // Log info here
 log.info """\
@@ -60,54 +55,37 @@ def indexFile(bam_or_vcf) {
         }
     }
 
-// Channels here
-Channel
-    .fromList(params.samples_to_process)
-    .map { sample ->
-        return tuple(sample.orig_id, sample.id, sample.path, sample.sample_type)
-    }
-    .set { samplesToProcessChannel }
-
-Channel
-    .fromList(params.samples_to_process)
-    .map{ it -> [it['path'], indexFile(it['path'])] }
-    .flatten()
-    .set { files_to_validate_ch }
-
-// Possible reference channel
-Channel
-    .from(
-        params.reference,
-        params.reference_index,
-        params.reference_dict
-        )
-    .set { reference_ch }
-
-// Decription of input channel
-Channel
-    .fromPath(params.variable_name)
-    .ifEmpty { error "Cannot find: ${params.variable_name}" }
-    .set { input_ch_variable_name }
-
-files_to_validate_ch = files_to_validate_ch
-    .mix(reference_ch)
-    .mix(input_ch_variable_name)
-
 // Main workflow here
 workflow {
-    // Validation process
-    run_validate_PipeVal(
-        files_to_validate_ch
+
+    // Currently this is written for a single sample_id and VCF file, but
+    // abstract that away
+    Channel.of ([
+            vcf: params.input.vcf,
+            index: indexFile(params.input.vcf),
+            sample_id: params.sample_id
+        ]).set { vcf_with_index }
+
+    // Run the input VCF and TBI files through PipeVal
+    vcf_with_index
+        .flatMap { sample ->
+            [
+                [sample.vcf, [[sample_id: sample.sample_id], "vcf"]],
+                [sample.index, [[sample_id: sample.sample_id], "index"]]
+            ]
+        } | run_validate_PipeVal_with_metadata
+
+    // Save the validation result
+    run_validate_PipeVal_with_metadata.out.validation_result
+        .collectFile(
+            name: 'input_validation.txt',
+            newLine: true,
+            storeDir: "${params.output_dir_base}/validation"
         )
 
-    run_validate_PipeVal.out.val_file.collectFile(
-        name: 'input_validation.txt', newLine: true,
-        storeDir: "${params.output_dir_base}/validation"
-        )
-
-    // Workflow or process
-    tool_name_command_name(
-        samplesToProcessChannel,
-        input_ch_variable_name
-        )
+    run_validate_PipeVal_with_metadata.out.validated_file
+        .map { filename, metadata -> [metadata[0].sample_id, metadata[0] + [(metadata[1]): filename]] }
+        .groupTuple()
+        .map { it[1].inject([:]) { result, i -> result + i } }
+        .set { validated_vcf_with_index }
 }
