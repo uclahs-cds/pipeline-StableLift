@@ -10,6 +10,8 @@ include { run_validate_PipeVal_with_metadata } from './external/pipeline-Nextflo
     ]
 )
 
+include { raw_liftover } from './module/liftover.nf'
+
 // Log info here
 log.info """\
         ======================================
@@ -55,6 +57,14 @@ def indexFile(bam_or_vcf) {
         }
     }
 
+Channel
+    .value( [params.funcotator_data.src_reference_id, params.src_fasta_ref] )
+    .set { input_ch_src_sequence }
+
+Channel
+    .value( [params.funcotator_data.dest_reference_id, params.dest_fasta_ref] )
+    .set { input_ch_dest_sequence }
+
 // Main workflow here
 workflow {
 
@@ -65,6 +75,8 @@ workflow {
             index: indexFile(params.input.vcf),
             sample_id: params.sample_id
         ]).set { vcf_with_index }
+
+    // The values of vcf_with_index are maps with keys vcf, index, and sample_id.
 
     // Run the input VCF and TBI files through PipeVal
     vcf_with_index
@@ -88,4 +100,16 @@ workflow {
         .groupTuple()
         .map { it[1].inject([:]) { result, i -> result + i } }
         .set { validated_vcf_with_index }
+
+    // The values of validated_vcf_with_index are maps with keys vcf, index, and sample_id.
+    raw_liftover(
+        validated_vcf_with_index.map { [it.sample_id, it.vcf, it.index] },
+        input_ch_src_sequence,
+        input_ch_dest_sequence,
+        Channel.value(params.chain_file),
+        // FIXME This is not the correct approach
+        Channel.value("${projectDir}/input/liftover.so")
+    )
+
+
 }
