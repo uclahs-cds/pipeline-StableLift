@@ -90,10 +90,6 @@ workflow {
     // The values of vcf_with_index are maps with keys vcf, index, and sample_id.
 
     // Run the input VCF and TBI files through PipeVal
-    if (params.skip_validation) {
-        vcf_with_index.set { validated_vcf_with_index }
-    } else {
-
     vcf_with_index
         .flatMap { sample ->
             [

@@ -15,7 +15,7 @@ process run_funcotator {
         pattern: "output.vcf.gz",
         mode: "copy",
         enabled: params.save_intermediate_files,
-        saveAs: "${slug}.vcf.gz"
+        saveAs: { "${slug}.vcf.gz" }
 
     input:
         tuple val(sample_id), path(vcf), path(index)
