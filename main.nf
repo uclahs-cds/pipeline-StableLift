@@ -11,6 +11,7 @@ include { run_validate_PipeVal_with_metadata } from './external/pipeline-Nextflo
 )
 
 include { raw_liftover } from './module/liftover.nf'
+include { run_funcotator } from './module/funcotator.nf'
 
 // Log info here
 log.info """\
@@ -58,11 +59,21 @@ def indexFile(bam_or_vcf) {
     }
 
 Channel
-    .value( [params.funcotator_data.src_reference_id, params.src_fasta_ref] )
+    .value( [
+        params.funcotator_data.src_reference_id,
+        params.src_fasta_ref,
+        params.src_fasta_fai,
+        params.src_fasta_dict,
+    ] )
     .set { input_ch_src_sequence }
 
 Channel
-    .value( [params.funcotator_data.dest_reference_id, params.dest_fasta_ref] )
+    .value( [
+        params.funcotator_data.dest_reference_id,
+        params.dest_fasta_ref,
+        params.dest_fasta_fai,
+        params.dest_fasta_dict
+    ] )
     .set { input_ch_dest_sequence }
 
 // Main workflow here
@@ -79,6 +90,10 @@ workflow {
     // The values of vcf_with_index are maps with keys vcf, index, and sample_id.
 
     // Run the input VCF and TBI files through PipeVal
+    if (params.skip_validation) {
+        vcf_with_index.set { validated_vcf_with_index }
+    } else {
+
     vcf_with_index
         .flatMap { sample ->
             [
@@ -111,5 +126,12 @@ workflow {
         Channel.value("${projectDir}/input/liftover.so")
     )
 
+    funcotator_input = raw_liftover.out.liftover_vcf_with_index
 
+    run_funcotator(
+        // raw_liftover.out.liftover_vcf_with_index,
+        funcotator_input,
+        input_ch_dest_sequence,
+        Channel.value(params.funcotator_data.data_source)
+    )
 }

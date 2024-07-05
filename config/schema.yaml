@@ -18,11 +18,31 @@ src_fasta_ref:
   mode: 'r'
   required: true
   help: 'Source reference sequence (FASTA)'
+src_fasta_fai:
+  type: 'Path'
+  mode: 'r'
+  required: true
+  help: 'Source reference sequence index file'
+src_fasta_dict:
+  type: 'Path'
+  mode: 'r'
+  required: true
+  help: 'Source reference sequence dictionary'
 dest_fasta_ref:
   type: 'Path'
   mode: 'r'
   required: true
   help: 'Destination reference sequence (FASTA)'
+dest_fasta_fai:
+  type: 'Path'
+  mode: 'r'
+  required: true
+  help: 'Destination reference sequence index file'
+dest_fasta_dict:
+  type: 'Path'
+  mode: 'r'
+  required: true
+  help: 'Destination reference sequence dictionary'
 chain_file:
   type: 'Path'
   mode: 'r'
