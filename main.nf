@@ -13,6 +13,7 @@ include { run_validate_PipeVal_with_metadata } from './external/pipeline-Nextflo
 include { raw_liftover } from './module/liftover.nf'
 include { run_funcotator } from './module/funcotator.nf'
 include { apply_annotations } from './module/annotations.nf'
+include { extract_features} from './module/extract_features.nf'
 
 // Log info here
 log.info """\
@@ -135,5 +136,9 @@ workflow {
     apply_annotations(
         run_funcotator.out.funcotator_vcf,
         input_ch_dest_sequence
+    )
+
+    extract_features(
+        apply_annotations.out.annotated_vcf
     )
 }
