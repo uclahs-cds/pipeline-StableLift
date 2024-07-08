@@ -12,6 +12,7 @@ include { run_validate_PipeVal_with_metadata } from './external/pipeline-Nextflo
 
 include { raw_liftover } from './module/liftover.nf'
 include { run_funcotator } from './module/funcotator.nf'
+include { apply_annotations } from './module/annotations.nf'
 
 // Log info here
 log.info """\
@@ -129,5 +130,10 @@ workflow {
         funcotator_input,
         input_ch_dest_sequence,
         Channel.value(params.funcotator_data.data_source)
+    )
+
+    apply_annotations(
+        run_funcotator.out.funcotator_vcf,
+        input_ch_dest_sequence
     )
 }
