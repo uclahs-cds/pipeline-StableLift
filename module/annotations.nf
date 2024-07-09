@@ -8,7 +8,7 @@ process run_repeatmasker {
         saveAs: { "${slug}.vcf.gz" }
 
     input:
-    tuple val(sample_id), path(vcf)
+    tuple val(sample_id), path(vcf, stageAs: 'inputs/*')
     path(repeat_bed)
 
     output:
@@ -43,12 +43,6 @@ process run_trinucleotide_context {
         mode: "copy",
         enabled: params.save_intermediate_files,
         saveAs: { "${slug}-full.tsv" }
-
-    publishDir path: "${intermediate_filepath}",
-        pattern: "partial.tsv",
-        mode: "copy",
-        enabled: params.save_intermediate_files,
-        saveAs: { "${slug}-partial.tsv" }
 
     input:
     tuple val(sample_id), path(vcf)
@@ -129,7 +123,11 @@ process run_trinucleotide_annotate {
         saveAs: { "${slug}.vcf.gz" }
 
     input:
-    tuple val(sample_id), path(vcf), path(tsv), path(tsv_tbi)
+    tuple
+        val(sample_id),
+        path(vcf, stageAs: 'inputs/*'),
+        path(tsv, stageAs: 'inputs/*'),
+        path(tsv_tbi, stageAs: 'inputs/*')
 
     // FIXME Should this process also emit the index file? It seems like
     // bcftools won't produce it without the --write-index flag
