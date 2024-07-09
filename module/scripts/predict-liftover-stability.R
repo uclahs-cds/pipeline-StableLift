@@ -24,6 +24,7 @@ parser$add_argument('--rf-model', type = 'character');
 parser$add_argument('--variant-caller', type = 'character');
 parser$add_argument('--specificity', type = 'numeric', help = 'Target specificity, overrides `--threshold`');
 parser$add_argument('--threshold', type = 'numeric', help = 'Stability score threshold', default = 0.5);
+parser$add_argument('--output-tsv', type = 'character', help = 'TSV output file');
 args <- parser$parse_args();
 
 # Save command line arguments
@@ -90,11 +91,10 @@ cat('Proportion predicted unstable =', round(mean(as.numeric(as.character(stabil
 ###################################################################################################
 # Output stability scores
 ###################################################################################################
-this.filename <- sub('_LiftOver-GRCh38_annotated.Rds', '_stableLift-GRCh38_stability-scores.tsv', features.dt.path);
 annotation.dt <- data.table(
     CHROM = features.dt$CHROM,
     POS = features.dt$POS,
     STABILITY_SCORE = format(round(stability$predictions[, 1], 4), nsmall = 4),
     STABILITY = ifelse(stability.classification == '1', 'UNSTABLE', 'STABLE')
     );
-fwrite(annotation.dt, file = this.filename, sep = '\t', col.names = TRUE);
+fwrite(annotation.dt, file = output.tsv, sep = '\t', col.names = TRUE);
