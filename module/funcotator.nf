@@ -18,8 +18,7 @@ process run_funcotator {
         saveAs: { "${slug}.vcf.gz" }
 
     input:
-        tuple
-            val(sample_id),
+        tuple val(sample_id),
             path(vcf, stageAs: 'inputs/*'),
             path(index, stageAs: 'inputs/*')
         tuple val(dest_fasta_id), path(dest_fasta_ref), path(dest_fasta_fai), path(dest_fasta_dict)

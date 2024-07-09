@@ -123,8 +123,7 @@ process run_trinucleotide_annotate {
         saveAs: { "${slug}.vcf.gz" }
 
     input:
-    tuple
-        val(sample_id),
+    tuple val(sample_id),
         path(vcf, stageAs: 'inputs/*'),
         path(tsv, stageAs: 'inputs/*'),
         path(tsv_tbi, stageAs: 'inputs/*')
