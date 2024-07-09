@@ -1,6 +1,5 @@
 ARG R_VERSION=4.3.1
 
-# FROM rocker/tidyverse:${R_VERSION} AS build
 FROM rocker/r-ver:${R_VERSION} AS build
 
 RUN R --quiet --no-save <<EOF
@@ -32,7 +31,18 @@ for (name in names(dependencies)) {
 EOF
 
 FROM rocker/r-ver:${R_VERSION}
+
+# Overwrite the site library with just the desired packages. By default rocker
+# only bundles docopt and littler in that directory.
 COPY --from=build /tmp/userlib /usr/local/lib/R/site-library
+
+# Install python (required for argparse). The version is not important, but
+# let's pin it for stability.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        python3=3.10 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 LABEL maintainer="Nicholas Wiltsie <nwiltsie@mednet.ucla.edu" \
       org.opencontainers.image.source=https://github.com/uclahs-cds/pipeline-StableLift
