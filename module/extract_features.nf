@@ -1,5 +1,3 @@
-include { generate_standard_filename } from '../external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
-
 process run_extract_vcf_features {
     container params.docker_image_stablelift
     containerOptions "-v ${moduleDir}:${moduleDir}"
@@ -45,8 +43,7 @@ process predict_variant_stability {
     tuple val(sample_id), path(output_file_name), emit: stability_tsv
 
     script:
-    slug = generate_standard_filename("stablelift", "", sample_id, [:])
-    output_file_name = "${slug}.tsv"
+    output_file_name = "stablelift-${sample_id}.tsv"
 
     """
     Rscript "${moduleDir}/scripts/predict-liftover-stability.R" \
