@@ -40,7 +40,7 @@ COPY --from=build /tmp/userlib /usr/local/lib/R/site-library
 # let's pin it for stability.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        python3=3.10 \
+        python3=3.10.6-1~22.04 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
