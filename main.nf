@@ -119,16 +119,11 @@ workflow {
         validated_vcf_with_index.map { [it.sample_id, it.vcf, it.index] },
         input_ch_src_sequence,
         input_ch_dest_sequence,
-        Channel.value(params.chain_file),
-        // FIXME This is not the correct approach
-        Channel.value("${projectDir}/input/liftover.so")
+        Channel.value(params.chain_file)
     )
 
-    funcotator_input = raw_liftover.out.liftover_vcf_with_index
-
     run_funcotator(
-        // raw_liftover.out.liftover_vcf_with_index,
-        funcotator_input,
+        raw_liftover.out.liftover_vcf_with_index,
         input_ch_dest_sequence,
         Channel.value(params.funcotator_data.data_source)
     )

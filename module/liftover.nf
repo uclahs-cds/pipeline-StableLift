@@ -34,20 +34,17 @@ process raw_liftover {
         tuple val(src_fasta_id), path(src_fasta_ref), path(src_fasta_fai), path(src_fasta_dict)
         tuple val(dest_fasta_id), path(dest_fasta_ref), path(dest_fasta_fai), path(dest_fasta_dict)
         path (chain_file)
-        // FIXME This is not the correct approach
-        path liftover_plugin, stageAs: 'bcf_plugins/liftover.so'
 
     output:
         tuple val(sample_id), path('liftover.vcf.gz'), path('liftover.vcf.gz.tbi'), emit: liftover_vcf_with_index
 
     script:
         // FIXME Use a more standard path
-        intermediate_path = "${params.output_dir_base}/${params.bcftools_version}/intermediate/${task.process}"
+        intermediate_path = "${params.output_dir_base}/bcftools-${params.bcftools_version}/intermediate/${task.process}"
 
         slug = "LiftOver-${sample_id}-${src_fasta_id}-to-${dest_fasta_id}"
         
         """
-        export BCFTOOLS_PLUGINS="\$(pwd)/bcf_plugins"
         bcftools +liftover \
             --output-type u \
             "${vcf}" \
