@@ -21,5 +21,12 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Add a new user/group called bldocker
+RUN groupadd -g 500001 bldocker && \
+    useradd -l -r -u 500001 -g bldocker bldocker
+
+# Change the default user to bldocker from root
+USER bldocker
+
 LABEL maintainer="Nicholas Wiltsie <nwiltsie@mednet.ucla.edu" \
       org.opencontainers.image.source=https://github.com/uclahs-cds/pipeline-StableLift
