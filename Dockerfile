@@ -11,6 +11,7 @@ localdir <- '/tmp/userlib'
 dir.create(localdir)
 
 dependencies <- c(
+    'ROCR' = '1.0-11',
     'argparse' = '2.2.2',
     'caret' = '6.0-94',
     'data.table' = '1.14.8',
