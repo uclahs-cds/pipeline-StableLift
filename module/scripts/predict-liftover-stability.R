@@ -11,6 +11,7 @@ suppressPackageStartupMessages({
     library(caret);
     library(ranger);
     library(argparse);
+    library(ROCR);
     library(data.table);
     });
 
