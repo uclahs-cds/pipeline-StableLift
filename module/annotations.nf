@@ -170,14 +170,14 @@ workflow apply_annotations {
         run_trinucleotide_context.out.trinucleotide_tsv
     )
 
-     run_trinucleotide_annotate(
-         run_repeatmasker.out.repeatmasker_vcf.join(
-             run_compress_and_index_tsv.out.compressed_tsv_with_index,
-             failOnDuplicate: true,
-             failOnMismatch: true
-         )
-     )
+    run_trinucleotide_annotate(
+        run_repeatmasker.out.repeatmasker_vcf.join(
+            run_compress_and_index_tsv.out.compressed_tsv_with_index,
+            failOnDuplicate: true,
+            failOnMismatch: true
+        )
+    )
 
-     emit:
-     annotated_vcf = run_trinucleotide_annotate.out.trinucleotide_vcf
+    emit:
+    annotated_vcf = run_trinucleotide_annotate.out.trinucleotide_vcf
 }
