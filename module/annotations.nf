@@ -77,7 +77,7 @@ process run_trinucleotide_context {
     """
 }
 
-process run_compress_and_index {
+process run_compress_and_index_tsv {
     container params.docker_image_samtools
 
     publishDir path: "${intermediate_filepath}",
@@ -166,11 +166,13 @@ workflow apply_annotations {
         dest_fasta_data
     )
 
-    run_compress_and_index(run_trinucleotide_context.out.trinucleotide_tsv)
+    run_compress_and_index_tsv(
+        run_trinucleotide_context.out.trinucleotide_tsv
+    )
 
      run_trinucleotide_annotate(
          run_repeatmasker.out.repeatmasker_vcf.join(
-             run_compress_and_index.out.compressed_tsv_with_index,
+             run_compress_and_index_tsv.out.compressed_tsv_with_index,
              failOnDuplicate: true,
              failOnMismatch: true
          )

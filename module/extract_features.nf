@@ -1,3 +1,5 @@
+include { run_compress_and_index_tsv } from './annotations.nf'
+
 process run_extract_vcf_features {
     container params.docker_image_stablelift
     containerOptions "-v ${moduleDir}:${moduleDir}"
@@ -69,6 +71,10 @@ workflow extract_features {
     predict_variant_stability(
         ch_annotations,
         Channel.value(params.rf_model)
+    )
+
+    run_compress_and_index_tsv(
+        predict_variant_stability.out.stability_tsv
     )
 
     emit:
