@@ -74,17 +74,17 @@ process run_apply_stability_annotations {
     tuple val(sample_id),
         path(stability_vcf),
         path(stability_vcf_tbi),
-        emit: stability_vcf
+        emit: stability_vcf_with_index
     tuple val(sample_id),
         path(filtered_vcf),
         path(filtered_vcf_tbi),
-        emit: filtered_vcf
+        emit: filtered_vcf_with_index
 
     script:
     slug = "${sample_id}_LiftOver"
 
     stability_vcf = "${slug}_stability.vcf.gz"
-    stability_vcf_tbi = "${annotated_vcf}.tbi"
+    stability_vcf_tbi = "${stability_vcf}.tbi"
 
     filtered_vcf = "${slug}_filtered.vcf.gz"
     filtered_vcf_tbi = "${filtered_vcf}.tbi"
@@ -139,6 +139,6 @@ workflow extract_features {
     )
 
     emit:
-    stability_vcf = run_apply_stability_annotations.out.stability_vcf
-    filtered_vcf =  run_apply_stability_annotations.out.filtered_vcf
+    stability_vcf = run_apply_stability_annotations.out.stability_vcf_with_index
+    filtered_vcf =  run_apply_stability_annotations.out.filtered_vcf_with_index
 }
