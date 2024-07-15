@@ -108,7 +108,7 @@ process compress_and_index_HTSlib {
 }
 
 
-process run_trinucleotide_annotate {
+process annotate_trinucleotide_BCFtools {
     container params.docker_image_bcftools
 
     publishDir path: "${intermediate_filepath}",
@@ -165,7 +165,7 @@ workflow workflow_apply_annotations {
         extract_TrinucleotideContext_BEDTools.out.trinucleotide_tsv
     )
 
-    run_trinucleotide_annotate(
+    annotate_trinucleotide_BCFtools(
         annotate_RepeatMasker_BCFtools.out.repeatmasker_vcf.join(
             compress_and_index_HTSlib.out.compressed_tsv_with_index,
             failOnDuplicate: true,
@@ -174,5 +174,5 @@ workflow workflow_apply_annotations {
     )
 
     emit:
-    annotated_vcf = run_trinucleotide_annotate.out.trinucleotide_vcf
+    annotated_vcf = annotate_trinucleotide_BCFtools.out.trinucleotide_vcf
 }
