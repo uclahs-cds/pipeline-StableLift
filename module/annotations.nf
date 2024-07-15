@@ -29,7 +29,7 @@ process annotate_RepeatMasker_BCFtools {
     """
 }
 
-process run_trinucleotide_context {
+process extract_TrinucleotideContext_BEDTools {
     container params.docker_image_bedtools
 
     publishDir path: "${intermediate_filepath}",
@@ -161,13 +161,13 @@ workflow workflow_apply_annotations {
         Channel.value(params.repeat_bed)
     )
 
-    run_trinucleotide_context(
+    extract_TrinucleotideContext_BEDTools(
         annotate_RepeatMasker_BCFtools.out.repeatmasker_vcf,
         dest_fasta_data
     )
 
     run_compress_and_index_tsv(
-        run_trinucleotide_context.out.trinucleotide_tsv
+        extract_TrinucleotideContext_BEDTools.out.trinucleotide_tsv
     )
 
     run_trinucleotide_annotate(
