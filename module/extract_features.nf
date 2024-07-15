@@ -1,6 +1,6 @@
 include { compress_and_index_HTSlib } from './annotations.nf'
 
-process run_extract_vcf_features {
+process extract_VCF_features_StableLift {
     container params.docker_image_stablelift
     containerOptions "-v ${moduleDir}:${moduleDir}"
 
@@ -117,8 +117,8 @@ workflow workflow_extract_features {
     if (params.variant_caller == "HaplotypeCaller") {
         error "HaplotypeCaller is not supported yet"
     } else {
-        run_extract_vcf_features(vcf_with_sample_id)
-        run_extract_vcf_features.out.r_annotations.set { ch_annotations }
+        extract_VCF_features_StableLift(vcf_with_sample_id)
+        extract_VCF_features_StableLift.out.r_annotations.set { ch_annotations }
     }
 
     predict_variant_stability(
