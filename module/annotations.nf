@@ -15,7 +15,7 @@ process annotate_RepeatMasker_BCFtools {
     tuple val(sample_id), path('output.vcf.gz'), emit: repeatmasker_vcf
 
     script:
-    intermediate_filepath = "${params.output_dir_base}/bcftools-${params.bcftools_version}/intermediate/${task.process}"
+    intermediate_filepath = "${params.output_dir_base}/BCFtools-${params.bcftools_version}/intermediate/${task.process}"
 
     slug = "RepeatMasker-${sample_id}"
 
@@ -127,7 +127,7 @@ process annotate_trinucleotide_BCFtools {
     tuple val(sample_id), path('output.vcf.gz'), emit: trinucleotide_vcf
 
     script:
-    intermediate_filepath = "${params.output_dir_base}/bcftools-${params.bcftools_version}/intermediate/${task.process}"
+    intermediate_filepath = "${params.output_dir_base}/BCFtools-${params.bcftools_version}/intermediate/${task.process}"
 
     slug = "Trinucleotide-${sample_id}"
 

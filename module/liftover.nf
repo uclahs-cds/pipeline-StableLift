@@ -40,7 +40,7 @@ process run_liftover_BCFtools {
 
     script:
         // FIXME Use a more standard path
-        intermediate_path = "${params.output_dir_base}/bcftools-${params.bcftools_version}/intermediate/${task.process}"
+        intermediate_path = "${params.output_dir_base}/BCFtools-${params.bcftools_version}/intermediate/${task.process}"
 
         slug = "LiftOver-${sample_id}-${src_fasta_id}-to-${dest_fasta_id}"
         
