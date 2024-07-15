@@ -13,9 +13,11 @@ COPY --from=build /tmp/userlib /usr/local/lib/R/site-library
 
 # Install python (required for argparse). The version is not important, but
 # let's pin it for stability.
+ARG PYTHON_VERSION=3.10.6-1~22.04
+
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        python3=3.10.6-1~22.04 \
+        python3=${PYTHON_VERSION} \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
