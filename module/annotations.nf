@@ -92,7 +92,7 @@ process compress_and_index_HTSlib {
     tuple val(sample_id), path('output.tsv.gz'), path('output.tsv.gz.tbi'), emit: compressed_tsv_with_index
 
     script:
-    intermediate_filepath = "${params.output_dir_base}/samtools-${params.bcftools_version}/intermediate/${task.process}"
+    intermediate_filepath = "${params.output_dir_base}/SAMtools-${params.samtools_version}/intermediate/${task.process}"
 
     slug = "Trinucleotide-${sample_id}"
 
