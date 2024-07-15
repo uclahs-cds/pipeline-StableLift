@@ -60,7 +60,7 @@ process run_apply_stability_annotations {
     container params.docker_image_bcftools
 
     publishDir path: "${params.output_dir_base}/output",
-        pattern: "*.vcf.*",
+        pattern: "*.vcf.gz{,.tbi}",
         mode: "copy"
 
     input:

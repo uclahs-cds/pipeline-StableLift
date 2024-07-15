@@ -81,12 +81,7 @@ process compress_and_index_HTSlib {
     container params.docker_image_samtools
 
     publishDir path: "${intermediate_filepath}",
-        pattern: "output.tsv.gz",
-        mode: "copy",
-        enabled: params.save_intermediate_files
-
-    publishDir path: "${intermediate_filepath}",
-        pattern: "output.tsv.gz.tbi",
+        pattern: "output.tsv.gz{,.tbi}",
         mode: "copy",
         enabled: params.save_intermediate_files
 
