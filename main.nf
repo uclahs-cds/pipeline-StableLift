@@ -13,7 +13,7 @@ include { run_validate_PipeVal_with_metadata } from './external/pipeline-Nextflo
 include { run_liftover_BCFtools } from './module/liftover.nf'
 include { run_Funcotator_GATK } from './module/funcotator.nf'
 include { workflow_apply_annotations } from './module/annotations.nf'
-include { extract_features} from './module/extract_features.nf'
+include { workflow_extract_features} from './module/extract_features.nf'
 
 // Log info here
 log.info """\
@@ -133,7 +133,7 @@ workflow {
         input_ch_dest_sequence
     )
 
-    extract_features(
+    workflow_extract_features(
         workflow_apply_annotations.out.annotated_vcf
     )
 }

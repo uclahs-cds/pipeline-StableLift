@@ -109,7 +109,7 @@ process run_apply_stability_annotations {
     """
 }
 
-workflow extract_features {
+workflow workflow_extract_features {
     take:
     vcf_with_sample_id
 
