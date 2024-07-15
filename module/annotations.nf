@@ -77,7 +77,7 @@ process extract_TrinucleotideContext_BEDTools {
     """
 }
 
-process run_compress_and_index_tsv {
+process compress_and_index_HTSlib {
     container params.docker_image_samtools
 
     publishDir path: "${intermediate_filepath}",
@@ -166,13 +166,13 @@ workflow workflow_apply_annotations {
         dest_fasta_data
     )
 
-    run_compress_and_index_tsv(
+    compress_and_index_HTSlib(
         extract_TrinucleotideContext_BEDTools.out.trinucleotide_tsv
     )
 
     run_trinucleotide_annotate(
         annotate_RepeatMasker_BCFtools.out.repeatmasker_vcf.join(
-            run_compress_and_index_tsv.out.compressed_tsv_with_index,
+            compress_and_index_HTSlib.out.compressed_tsv_with_index,
             failOnDuplicate: true,
             failOnMismatch: true
         )

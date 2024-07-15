@@ -1,4 +1,4 @@
-include { run_compress_and_index_tsv } from './annotations.nf'
+include { compress_and_index_HTSlib } from './annotations.nf'
 
 process run_extract_vcf_features {
     container params.docker_image_stablelift
@@ -126,13 +126,13 @@ workflow workflow_extract_features {
         Channel.value(params.rf_model)
     )
 
-    run_compress_and_index_tsv(
+    compress_and_index_HTSlib(
         predict_variant_stability.out.stability_tsv
     )
 
     run_apply_stability_annotations(
         vcf_with_sample_id.join(
-            run_compress_and_index_tsv.out.compressed_tsv_with_index,
+            compress_and_index_HTSlib.out.compressed_tsv_with_index,
             failOnDuplicate: true,
             failOnMismatch: true
         )
