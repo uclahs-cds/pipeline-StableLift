@@ -53,7 +53,7 @@ process extract_TrinucleotideContext_BEDTools {
     tuple val(sample_id), path('output.bed'), emit: trinucleotide_bed
 
     script:
-    intermediate_filepath = "${params.output_dir_base}/bedtools-${params.bedtools_version}/intermediate/${task.process}"
+    intermediate_filepath = "${params.output_dir_base}/BEDtools-${params.bedtools_version}/intermediate/${task.process}"
 
     slug = "Trinucleotide-${sample_id}"
 
