@@ -150,7 +150,7 @@ process run_trinucleotide_annotate {
 
 
 
-workflow apply_annotations {
+workflow workflow_apply_annotations {
     take:
     vcf_with_sample_id
     dest_fasta_data

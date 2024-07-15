@@ -12,7 +12,7 @@ include { run_validate_PipeVal_with_metadata } from './external/pipeline-Nextflo
 
 include { run_liftover_BCFtools } from './module/liftover.nf'
 include { run_Funcotator_GATK } from './module/funcotator.nf'
-include { apply_annotations } from './module/annotations.nf'
+include { workflow_apply_annotations } from './module/annotations.nf'
 include { extract_features} from './module/extract_features.nf'
 
 // Log info here
@@ -128,12 +128,12 @@ workflow {
         Channel.value(params.funcotator_data.data_source)
     )
 
-    apply_annotations(
+    workflow_apply_annotations(
         run_Funcotator_GATK.out.funcotator_vcf,
         input_ch_dest_sequence
     )
 
     extract_features(
-        apply_annotations.out.annotated_vcf
+        workflow_apply_annotations.out.annotated_vcf
     )
 }
