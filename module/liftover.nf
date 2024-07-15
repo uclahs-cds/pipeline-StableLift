@@ -8,7 +8,7 @@
 
 // include { generate_standard_filename } from '../external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
 
-process raw_liftover {
+process run_liftover_BCFtools {
     container params.docker_image_bcftools
 
     publishDir path: "${intermediate_path}",

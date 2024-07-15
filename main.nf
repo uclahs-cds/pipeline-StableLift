@@ -10,7 +10,7 @@ include { run_validate_PipeVal_with_metadata } from './external/pipeline-Nextflo
     ]
 )
 
-include { raw_liftover } from './module/liftover.nf'
+include { run_liftover_BCFtools } from './module/liftover.nf'
 include { run_funcotator } from './module/funcotator.nf'
 include { apply_annotations } from './module/annotations.nf'
 include { extract_features} from './module/extract_features.nf'
@@ -115,7 +115,7 @@ workflow {
         .set { validated_vcf_with_index }
 
     // The values of validated_vcf_with_index are maps with keys vcf, index, and sample_id.
-    raw_liftover(
+    run_liftover_BCFtools(
         validated_vcf_with_index.map { [it.sample_id, it.vcf, it.index] },
         input_ch_src_sequence,
         input_ch_dest_sequence,
@@ -123,7 +123,7 @@ workflow {
     )
 
     run_funcotator(
-        raw_liftover.out.liftover_vcf_with_index,
+        run_liftover_BCFtools.out.liftover_vcf_with_index,
         input_ch_dest_sequence,
         Channel.value(params.funcotator_data.data_source)
     )
