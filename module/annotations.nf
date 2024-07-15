@@ -1,4 +1,4 @@
-process run_repeatmasker {
+process annotate_RepeatMasker_BCFtools {
     container params.docker_image_bcftools
 
     publishDir path: "${intermediate_filepath}",
@@ -156,13 +156,13 @@ workflow workflow_apply_annotations {
     dest_fasta_data
 
     main:
-    run_repeatmasker(
+    annotate_RepeatMasker_BCFtools(
         vcf_with_sample_id,
         Channel.value(params.repeat_bed)
     )
 
     run_trinucleotide_context(
-        run_repeatmasker.out.repeatmasker_vcf,
+        annotate_RepeatMasker_BCFtools.out.repeatmasker_vcf,
         dest_fasta_data
     )
 
@@ -171,7 +171,7 @@ workflow workflow_apply_annotations {
     )
 
     run_trinucleotide_annotate(
-        run_repeatmasker.out.repeatmasker_vcf.join(
+        annotate_RepeatMasker_BCFtools.out.repeatmasker_vcf.join(
             run_compress_and_index_tsv.out.compressed_tsv_with_index,
             failOnDuplicate: true,
             failOnMismatch: true
