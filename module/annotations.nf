@@ -123,8 +123,6 @@ process annotate_trinucleotide_BCFtools {
         path(tsv, stageAs: 'inputs/*'),
         path(tsv_tbi, stageAs: 'inputs/*')
 
-    // FIXME Should this process also emit the index file? It seems like
-    // bcftools won't produce it without the --write-index flag
     output:
     tuple val(sample_id), path('output.vcf.gz'), emit: trinucleotide_vcf
 
