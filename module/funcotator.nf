@@ -8,7 +8,7 @@
 
 include { generate_standard_filename } from '../external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
 
-process run_funcotator {
+process run_Funcotator_GATK {
     container params.docker_image_gatk
 
     publishDir path: "${intermediate_filepath}",
