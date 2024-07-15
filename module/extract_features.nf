@@ -29,7 +29,7 @@ process extract_VCF_features_StableLift {
     """
 }
 
-process predict_variant_stability {
+process predict_stability_StableLift {
     container params.docker_image_stablelift
     containerOptions "-v ${moduleDir}:${moduleDir}"
 
@@ -121,13 +121,13 @@ workflow workflow_extract_features {
         extract_VCF_features_StableLift.out.r_annotations.set { ch_annotations }
     }
 
-    predict_variant_stability(
+    predict_stability_StableLift(
         ch_annotations,
         Channel.value(params.rf_model)
     )
 
     compress_and_index_HTSlib(
-        predict_variant_stability.out.stability_tsv
+        predict_stability_StableLift.out.stability_tsv
     )
 
     run_apply_stability_annotations(
