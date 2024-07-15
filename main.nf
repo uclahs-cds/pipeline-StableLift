@@ -17,36 +17,63 @@ include { workflow_extract_features} from './module/extract_features.nf'
 
 // Log info here
 log.info """\
-        ======================================
-        T E M P L A T E - N F  P I P E L I N E
-        ======================================
-        Boutros Lab
+    =====================================
+    S T A B L E L I F T   P I P E L I N E
+    =====================================
+    Boutros Lab
 
-        Current Configuration:
-        - pipeline:
-            name: ${workflow.manifest.name}
-            version: ${workflow.manifest.version}
+    Current Configuration:
+    - pipeline:
+        name: ${workflow.manifest.name}
+        version: ${workflow.manifest.version}
 
-        - input:
-            input a: ${params.variable_name}
-            ...
+    - input:
+        dataset_id: ${params.dataset_id}
+        variant_caller: ${params.variant_caller}
+        rf_model: ${params.rf_model}
 
-        - output:
-            output a: ${params.output_path}
-            ...
+        src_fasta_ref:   ${params.src_fasta_ref}
+        src_fasta_fai:   ${params.src_fasta_fai}
+        src_fasta_dict:  ${params.src_fasta_dict}
 
-        - options:
-            option a: ${params.option_name}
-            ...
+        dest_fasta_ref:  ${params.dest_fasta_ref}
+        dest_fasta_fai:  ${params.dest_fasta_fai}
+        dest_fasta_dict: ${params.dest_fasta_dict}
 
-        Tools Used:
-            tool a: ${params.docker_image_name}
+        chain_file: ${params.chain_file}
+        repeat_bed: ${params.repeat_bed}
 
-        ------------------------------------
-        Starting workflow...
-        ------------------------------------
-        """
-        .stripIndent()
+        funcotator_data:
+            data_source:       ${params.funcotator_data.data_source}
+            src_reference_id:  ${params.funcotator_data.src_reference_id}
+            dest_reference_id: ${params.funcotator_data.dest_reference_id}
+
+    - output:
+        output_dir_base: ${params.output_dir_base}
+
+    - options:
+        blcds_registered_dataset: ${params.blcds_registered_dataset}
+        ucla_cds: ${params.ucla_cds}
+
+        min_cpus: ${params.min_cpus}
+        max_cpus: ${params.max_cpus}
+
+        min_memory: ${params.min_memory}
+        max_memory: ${params.max_memory}
+
+    Tools Used:
+        BCFtools:   ${params.docker_image_bcftools}
+        BEDtools:   ${params.docker_image_bedtools}
+        PipeVal:    ${params.docker_image_pipeval}
+        SAMTools:   ${params.docker_image_samtools}
+        StableLift: ${params.docker_image_stablelift}
+        GATK:       ${params.docker_image_gatk}
+
+    ------------------------------------
+    Starting workflow...
+    ------------------------------------
+    """
+    .stripIndent()
 
 def indexFile(bam_or_vcf) {
     if(bam_or_vcf.endsWith('.bam')) {
