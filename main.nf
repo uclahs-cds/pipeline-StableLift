@@ -11,8 +11,7 @@ include { run_validate_PipeVal_with_metadata } from './external/pipeline-Nextflo
 )
 
 include { run_liftover_BCFtools } from './module/liftover.nf'
-include { run_Funcotator_GATK } from './module/funcotator.nf'
-include { workflow_apply_annotations } from './module/annotations.nf'
+include { workflow_apply_snv_annotations } from './module/snv_annotations.nf'
 include { workflow_extract_features} from './module/extract_features.nf'
 
 // Log info here
@@ -142,6 +141,8 @@ workflow {
         .set { validated_vcf_with_index }
 
     // The values of validated_vcf_with_index are maps with keys vcf, index, and sample_id.
+
+    // Step 1: Liftover
     run_liftover_BCFtools(
         validated_vcf_with_index.map { [it.sample_id, it.vcf, it.index] },
         input_ch_src_sequence,
@@ -149,18 +150,14 @@ workflow {
         Channel.value(params.chain_file)
     )
 
-    run_Funcotator_GATK(
+    // Step 2: Annotate
+    workflow_apply_snv_annotations(
         run_liftover_BCFtools.out.liftover_vcf_with_index,
-        input_ch_dest_sequence,
-        Channel.value(params.funcotator_data.data_source)
-    )
-
-    workflow_apply_annotations(
-        run_Funcotator_GATK.out.funcotator_vcf,
         input_ch_dest_sequence
     )
 
+    // Step 3: Analyze
     workflow_extract_features(
-        workflow_apply_annotations.out.annotated_vcf
+        workflow_apply_snv_annotations.out.annotated_vcf
     )
 }

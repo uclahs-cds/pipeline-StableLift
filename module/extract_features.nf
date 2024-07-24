@@ -1,4 +1,4 @@
-include { compress_and_index_HTSlib } from './annotations.nf'
+include { compress_and_index_HTSlib } from './snv_annotations.nf'
 
 process extract_VCF_features_StableLift {
     container params.docker_image_stablelift
