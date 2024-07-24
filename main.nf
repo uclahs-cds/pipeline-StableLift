@@ -152,7 +152,7 @@ workflow {
             Channel.value(header_contigs),
             Channel.value(gnomad_rds),
             Channel.value(chain_file),
-            Channel.value(variant_caller)
+            Channel.value(params.variant_caller)
         )
 
         workflow_extract_sv_annotations.out.r_annotations.set { liftover_vcf }
@@ -165,7 +165,7 @@ workflow {
             input_ch_src_sequence,
             input_ch_dest_sequence,
             Channel.value(params.chain_file),
-            Channel.value(variant_caller)
+            Channel.value(params.variant_caller)
         )
 
         workflow_extract_snv_annotations.out.r_annotations.set { liftover_vcf }
