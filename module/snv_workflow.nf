@@ -1,4 +1,4 @@
-include { workflow_apply_snv_annotations } from './module/snv_annotations.nf'
+include { workflow_apply_snv_annotations } from './snv_annotations.nf'
 
 process run_liftover_BCFtools {
     container params.docker_image_bcftools
