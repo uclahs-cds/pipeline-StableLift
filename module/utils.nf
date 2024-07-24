@@ -2,22 +2,22 @@
 process compress_and_index_HTSlib {
     container params.docker_image_samtools
 
-    publishDir path: "${intermediate_filepath}",
+    publishDir path: "${params.output_dir_base}/SAMtools-${params.samtools_version}/intermediate/${task.process}",
         pattern: "output.tsv.gz{,.tbi}",
         mode: "copy",
-        enabled: params.save_intermediate_files
+        enabled: params.save_intermediate_files,
+        saveAs: { "${sample_id}${file(it).getName().replace(file(it).getSimpleName(), "")}" }
 
     input:
     tuple val(sample_id), path(tsv)
 
     output:
-    tuple val(sample_id), path('output.tsv.gz'), path('output.tsv.gz.tbi'), emit: compressed_tsv_with_index
+    tuple val(sample_id),
+        path('output.tsv.gz'),
+        path('output.tsv.gz.tbi'),
+        emit: compressed_tsv_with_index
 
     script:
-    intermediate_filepath = "${params.output_dir_base}/SAMtools-${params.samtools_version}/intermediate/${task.process}"
-
-    slug = "${sample_id}"
-
     """
     bgzip ${tsv} --output output.tsv.gz
 
