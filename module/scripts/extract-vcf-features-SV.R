@@ -21,6 +21,7 @@ suppressPackageStartupMessages({
 parser <- ArgumentParser();
 parser$add_argument('--variant-caller', type = 'character', help = '');
 parser$add_argument('--input-vcf', type = 'character', help = 'Delly2 vcf');
+parser$add_argument('--output-rds', type = 'character', help = 'Rds output for use in RF model');
 parser$add_argument('--gnomad-rds', type = 'character', help = 'gnomAD Rds file');
 args <- parser$parse_args();
 
@@ -35,8 +36,6 @@ if (interactive()) {
     input.vcf <- '/hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/sSV/stableLift/train_CPCG-40QC_Delly2/CPCG-40QC_Delly2_LiftOver-GRCh38.vcf.gz';
     gnomad.rds <- '/hot/code/nkwang/GitHub/uclahs-cds/project-method-AlgorithmEvaluation-BNCH-000142-GRCh37v38/report/manuscript/publish/data/gnomad.v4.0.sv.Rds';
     }
-
-output.path <- sub('\\..*$', '_annotated.Rds', input.vcf);
 
 ###################################################################################################
 # Functions
@@ -179,4 +178,4 @@ cat('Removed', features.dt.rows - nrow(features.dt), 'rows with missing data\n')
 ###################################################################################################
 # Save features.dt for input to RF
 ###################################################################################################
-saveRDS(features.dt, output.path);
+saveRDS(features.dt, output.rds);
