@@ -54,6 +54,12 @@ process run_liftover_BCFtools {
                 --write-index=tbi \
                 --output "liftover.vcf.gz"
         """
+
+    stub:
+    """
+    touch "liftover.vcf.gz"
+    touch "liftover.vcf.gz.tbi"
+    """
 }
 
 process extract_VCF_features_StableLift {
@@ -82,6 +88,11 @@ process extract_VCF_features_StableLift {
         --input-vcf "${vcf}" \
         --variant-caller ${params.variant_caller} \
         --output-rds "features.Rds"
+    """
+
+    stub:
+    """
+    touch "features.Rds"
     """
 }
 

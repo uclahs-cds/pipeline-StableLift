@@ -33,6 +33,11 @@ process run_Funcotator_GATK {
             --output-file-format VCF \
             --output "output.vcf.gz"
         """
+
+    stub:
+    """
+    touch "output.vcf.gz"
+    """
 }
 
 process annotate_RepeatMasker_BCFtools {
@@ -63,6 +68,11 @@ process annotate_RepeatMasker_BCFtools {
         -h <(echo '##INFO=<ID=REPEAT,Number=1,Type=String,Description="RepeatMasker Region">') \
         -o "output.vcf.gz" \
         "${vcf}"
+    """
+
+    stub:
+    """
+    touch "output.vcf.gz"
     """
 }
 
@@ -112,6 +122,12 @@ process extract_TrinucleotideContext_BEDTools {
         <(cut -f 2 "partial.tsv") \
         > "output.tsv"
     """
+
+    stub:
+    """
+    touch "output.tsv"
+    touch "output.bed"
+    """
 }
 
 process annotate_trinucleotide_BCFtools {
@@ -144,6 +160,11 @@ process annotate_trinucleotide_BCFtools {
         --header-lines <(echo '##INFO=<ID=TRINUCLEOTIDE,Number=1,Type=String,Description="Trinucleotide Context">') \
         --output output.vcf.gz \
         ${vcf}
+    """
+
+    stub:
+    """
+    touch "output.vcf.gz"
     """
 }
 

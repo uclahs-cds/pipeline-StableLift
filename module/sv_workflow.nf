@@ -31,6 +31,11 @@ process run_sv_liftover{
             --chain-file ${chain_file} \
             --output "liftover.vcf.gz"
         """
+
+    stub:
+    """
+    touch "liftover.vcf.gz"
+    """
 }
 
 process run_intersect_gnomad {
@@ -63,6 +68,11 @@ process run_intersect_gnomad {
             --output-rds "annotations.Rds" \
             --gnomad-rds ${gnomad_rds}
         """
+
+    stub:
+    """
+    touch "annotations.Rds"
+    """
 }
 
 workflow workflow_extract_sv_annotations {

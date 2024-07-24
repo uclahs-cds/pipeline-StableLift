@@ -27,6 +27,11 @@ process extract_VCF_features_StableLift {
         --variant-caller ${params.variant_caller} \
         --output-rds "features.Rds"
     """
+
+    stub:
+    """
+    touch features.Rds
+    """
 }
 
 process predict_stability_StableLift {
@@ -53,6 +58,11 @@ process predict_stability_StableLift {
         --rf-model "${rf_model}" \
         --variant-caller "${params.variant_caller}" \
         --output-tsv "${output_file_name}"
+    """
+
+    stub:
+    """
+    touch "${output_file_name}"
     """
 }
 
@@ -106,6 +116,14 @@ process run_apply_stability_annotations {
         "${stability_vcf}"
 
     bcftools index -t "${filtered_vcf}"
+    """
+
+    stub:
+    """
+    touch "${stability_vcf}"
+    touch "${stability_vcf_tbi}"
+    touch "${filtered_vcf}"
+    touch "${filtered_vcf_tbi}"
     """
 }
 

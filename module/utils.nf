@@ -27,4 +27,10 @@ process compress_and_index_HTSlib {
         --end 2 \
         output.tsv.gz
     """
+
+    stub:
+    """
+    touch "output.tsv.gz"
+    touch "output.tsv.gz.tbi"
+    """
 }
