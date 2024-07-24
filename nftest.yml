@@ -3,11 +3,11 @@ global:
   temp_dir: test/work
   remove_temp: true
   clean_logs: true
-  nf_config: test/nftest.config
 
 cases:
-  - name: Example test
+  - name: SNV
     nf_script: ./main.nf
+    nf_config: test/snv.config
     params_file: test/nftest.yaml
     skip: false
     verbose: true
