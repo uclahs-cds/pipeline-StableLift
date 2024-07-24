@@ -176,6 +176,7 @@ workflow {
     workflow_predict_stability(
         liftover_vcf,
         r_annotations,
-        Channel.value(params.rf_model)
+        Channel.value(params.rf_model),
+        Channel.value(params.variant_caller)
     )
 }

@@ -5,30 +5,30 @@ process predict_stability_StableLift {
     containerOptions "-v ${moduleDir}:${moduleDir}"
 
     publishDir path: "${params.output_dir_base}/output",
-        pattern: "${output_file_name}",
-        mode: "copy"
+        pattern: "stability.tsv",
+        mode: "copy",
+        saveAs: { "StableLift-${sample_id}-${variant_caller}.tsv" }
 
     input:
     tuple val(sample_id), path(features_rds)
     path(rf_model)
+    val(variant_caller)
 
     output:
-    tuple val(sample_id), path(output_file_name), emit: stability_tsv
+    tuple val(sample_id), path("stability.tsv"), emit: stability_tsv
 
     script:
-    output_file_name = "stablelift-${sample_id}.tsv"
-
     """
     Rscript "${moduleDir}/scripts/predict-liftover-stability.R" \
         --features-dt "${features_rds}" \
         --rf-model "${rf_model}" \
-        --variant-caller "${params.variant_caller}" \
-        --output-tsv "${output_file_name}"
+        --variant-caller "${variant_caller}" \
+        --output-tsv "stability.tsv"
     """
 
     stub:
     """
-    touch "${output_file_name}"
+    touch "stability.tsv"
     """
 }
 
@@ -98,12 +98,14 @@ workflow workflow_predict_stability {
     vcf_with_sample_id
     r_annotations
     rf_model
+    variant_caller
 
     main:
 
     predict_stability_StableLift(
         r_annotations,
-        rf_model
+        rf_model,
+        variant_caller
     )
 
     compress_and_index_HTSlib(
