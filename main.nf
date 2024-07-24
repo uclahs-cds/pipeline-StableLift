@@ -149,9 +149,9 @@ workflow {
         // Take the SV branch
         workflow_extract_sv_annotations(
             validated_vcf_tuple,
-            Channel.value(header_contigs),
-            Channel.value(gnomad_rds),
-            Channel.value(chain_file),
+            Channel.value(params.header_contigs),
+            Channel.value(params.gnomad_rds),
+            Channel.value(params.chain_file),
             Channel.value(params.variant_caller)
         )
 

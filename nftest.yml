@@ -11,3 +11,10 @@ cases:
     params_file: test/nftest.yaml
     skip: false
     verbose: true
+
+  - name: SV
+    nf_script: ./main.nf
+    nf_config: test/sv.config
+    params_file: test/nftest.yaml
+    skip: false
+    verbose: true
