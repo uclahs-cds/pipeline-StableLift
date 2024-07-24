@@ -2,7 +2,7 @@
 process run_sv_liftover{
     container params.docker_image_stablelift
 
-    publishDir path: "${params.output_dir_base}/StableLift-${params.stable_version}/intermediate/${task.process.replace(':', '/')}",
+    publishDir path: "${params.output_dir_base}/intermediate/${task.process.replace(':', '/')}",
         pattern: "liftover.vcf.gz",
         mode: "copy",
         enabled: params.save_intermediate_files,
@@ -36,7 +36,7 @@ process run_sv_liftover{
 process run_intersect_gnomad {
     container params.docker_image_stablelift
 
-    publishDir path: "${params.output_dir_base}/StableLift-${params.stable_version}/intermediate/${task.process.replace(':', '/')}",
+    publishDir path: "${params.output_dir_base}/intermediate/${task.process.replace(':', '/')}",
         pattern: "annotations.Rds",
         mode: "copy",
         enabled: params.save_intermediate_files,

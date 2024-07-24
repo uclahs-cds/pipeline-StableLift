@@ -3,7 +3,7 @@ include { workflow_apply_snv_annotations } from './snv_annotations.nf'
 process run_liftover_BCFtools {
     container params.docker_image_bcftools
 
-    publishDir path: "${params.output_dir_base}/BCFtools-${params.bcftools_version}/intermediate/${task.process.replace(':', '/')}",
+    publishDir path: "${params.output_dir_base}/intermediate/${task.process.replace(':', '/')}",
         pattern: "{reject,liftover}.vcf.gz{,.tbi}",
         mode: "copy",
         enabled: params.save_intermediate_files,
@@ -50,7 +50,7 @@ process extract_VCF_features_StableLift {
     container params.docker_image_stablelift
     containerOptions "-v ${moduleDir}:${moduleDir}"
 
-    publishDir path: "${params.output_dir_base}/StableLift-${params.stablelift_version}/intermediate/${task.process.replace(':', '/')}",
+    publishDir path: "${params.output_dir_base}/intermediate/${task.process.replace(':', '/')}",
         pattern: "features.Rds",
         mode: "copy",
         enabled: params.save_intermediate_files,

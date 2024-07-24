@@ -2,7 +2,7 @@
 process compress_and_index_HTSlib {
     container params.docker_image_samtools
 
-    publishDir path: "${params.output_dir_base}/SAMtools-${params.samtools_version}/intermediate/${task.process.replace(':', '/')}",
+    publishDir path: "${params.output_dir_base}/intermediate/${task.process.replace(':', '/')}",
         pattern: "output.tsv.gz{,.tbi}",
         mode: "copy",
         enabled: params.save_intermediate_files,
