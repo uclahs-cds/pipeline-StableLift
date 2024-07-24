@@ -75,12 +75,14 @@ workflow workflow_extract_sv_annotations {
 
     main:
 
+    // Step 1: Liftover
     run_sv_liftover(
         vcf_with_sample_id,
         header_contigs,
         chain_file
     )
 
+    // Step 2: Extract features
     run_intersect_gnomad(
         run_sv_liftover.out.liftover_vcf,
         gnomad_rds,
@@ -88,5 +90,6 @@ workflow workflow_extract_sv_annotations {
     )
 
     emit:
+    liftover_vcf = run_sv_liftover.out.liftover_vcf
     r_annotations = run_intersect_gnomad.out.r_annotations
 }

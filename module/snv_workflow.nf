@@ -1,12 +1,4 @@
-/*
-*   Module/process description here
-*
-*   @input  <name>  <type>  <description>
-*   @params <name>  <type>  <description>
-*   @output <name>  <type>  <description>
-*/
-
-// include { generate_standard_filename } from '../external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
+include { workflow_apply_snv_annotations } from './module/snv_annotations.nf'
 
 process run_liftover_BCFtools {
     container params.docker_image_bcftools
@@ -63,3 +55,68 @@ process run_liftover_BCFtools {
                 --output "liftover.vcf.gz"
         """
 }
+
+process extract_VCF_features_StableLift {
+    container params.docker_image_stablelift
+    containerOptions "-v ${moduleDir}:${moduleDir}"
+
+    publishDir path: "${intermediate_filepath}",
+        pattern: "features.Rds",
+        mode: "copy",
+        enabled: params.save_intermediate_files,
+        saveAs: { "${slug}.${file(it).getExtension()}" }
+
+    input:
+    tuple val(sample_id), path(vcf)
+
+    output:
+    tuple val(sample_id), path('features.Rds'), emit: r_annotations
+
+    script:
+    intermediate_filepath = "${params.output_dir_base}/stablelift-${params.stablelift_version}/intermediate/${task.process}"
+
+    slug = "stablelift-${sample_id}"
+
+    """
+    Rscript "${moduleDir}/scripts/extract-vcf-features.R" \
+        --input-vcf "${vcf}" \
+        --variant-caller ${params.variant_caller} \
+        --output-rds "features.Rds"
+    """
+}
+
+workflow workflow_extract_snv_annotations {
+    take:
+    vcf_with_sample_id
+    src_sequence
+    dest_sequence
+    chain_file
+    variant_caller
+
+    main:
+
+    // Step 1: Liftover
+    run_liftover_BCFtools(
+        vcf_with_sample_id,
+        src_sequence,
+        dest_sequence,
+        chain_file
+    )
+
+    // Step 2: Annotate
+    workflow_apply_snv_annotations(
+        run_liftover_BCFtools.out.liftover_vcf_with_index,
+        dest_sequence
+    )
+
+    // Step 3: Extract features
+    // FIXME Parallelize HaplotypeCaller
+    extract_VCF_features_StableLift(
+        workflow_apply_snv_annotations.out.annotated_vcf
+    )
+
+    emit:
+    liftover_vcf = workflow_apply_snv_annotations.out.annotated_vcf
+    r_annotations = extract_VCF_features_StableLift.out.r_annotations
+}
+

@@ -1,4 +1,4 @@
-include { compress_and_index_HTSlib } from './snv_annotations.nf'
+include { compress_and_index_HTSlib } from './utils.nf'
 
 process extract_VCF_features_StableLift {
     container params.docker_image_stablelift
@@ -109,21 +109,17 @@ process run_apply_stability_annotations {
     """
 }
 
-workflow workflow_extract_features {
+workflow workflow_predict_stability {
     take:
     vcf_with_sample_id
+    r_annotations
+    rf_model
 
     main:
-    if (params.variant_caller == "HaplotypeCaller") {
-        error "HaplotypeCaller is not supported yet"
-    } else {
-        extract_VCF_features_StableLift(vcf_with_sample_id)
-        extract_VCF_features_StableLift.out.r_annotations.set { ch_annotations }
-    }
 
     predict_stability_StableLift(
-        ch_annotations,
-        Channel.value(params.rf_model)
+        r_annotations,
+        rf_model
     )
 
     compress_and_index_HTSlib(
