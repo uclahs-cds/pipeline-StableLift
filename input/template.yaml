@@ -1,0 +1,4 @@
+---
+sample_id: ""
+input:
+  vcf: /path/to/file.vcf

@@ -1,0 +1,13 @@
+---
+global:
+  temp_dir: test/work
+  remove_temp: true
+  clean_logs: true
+  nf_config: test/nftest.config
+
+cases:
+  - name: Example test
+    nf_script: ./main.nf
+    params_file: test/nftest.yaml
+    skip: false
+    verbose: true

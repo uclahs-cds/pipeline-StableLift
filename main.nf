@@ -3,50 +3,77 @@
 nextflow.enable.dsl=2
 
 // Include processes and workflows here
-include { run_validate_PipeVal } from './external/pipeline-Nextflow-module/modules/PipeVal/validate/main.nf' addParams(
+include { run_validate_PipeVal_with_metadata } from './external/pipeline-Nextflow-module/modules/PipeVal/validate/main.nf' addParams(
     options: [
         docker_image_version: params.pipeval_version,
         main_process: "./" //Save logs in <log_dir>/process-log/run_validate_PipeVal
     ]
 )
-include { generate_standard_filename } from './external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
-include { tool_name_command_name } from './module/module-name' addParams(
-    workflow_output_dir: "${params.output_dir_base}/ToolName-${params.toolname_version}",
-    workflow_log_output_dir: "${params.log_output_dir}/process-log/ToolName-${params.toolname_version}"
-    )
+
+include { run_liftover_BCFtools } from './module/liftover.nf'
+include { run_Funcotator_GATK } from './module/funcotator.nf'
+include { workflow_apply_annotations } from './module/annotations.nf'
+include { workflow_extract_features} from './module/extract_features.nf'
 
 // Log info here
 log.info """\
-        ======================================
-        T E M P L A T E - N F  P I P E L I N E
-        ======================================
-        Boutros Lab
+    =====================================
+    S T A B L E L I F T   P I P E L I N E
+    =====================================
+    Boutros Lab
 
-        Current Configuration:
-        - pipeline:
-            name: ${workflow.manifest.name}
-            version: ${workflow.manifest.version}
+    Current Configuration:
+    - pipeline:
+        name: ${workflow.manifest.name}
+        version: ${workflow.manifest.version}
 
-        - input:
-            input a: ${params.variable_name}
-            ...
+    - input:
+        dataset_id: ${params.dataset_id}
+        variant_caller: ${params.variant_caller}
+        rf_model: ${params.rf_model}
 
-        - output:
-            output a: ${params.output_path}
-            ...
+        src_fasta_ref:   ${params.src_fasta_ref}
+        src_fasta_fai:   ${params.src_fasta_fai}
+        src_fasta_dict:  ${params.src_fasta_dict}
 
-        - options:
-            option a: ${params.option_name}
-            ...
+        dest_fasta_ref:  ${params.dest_fasta_ref}
+        dest_fasta_fai:  ${params.dest_fasta_fai}
+        dest_fasta_dict: ${params.dest_fasta_dict}
 
-        Tools Used:
-            tool a: ${params.docker_image_name}
+        chain_file: ${params.chain_file}
+        repeat_bed: ${params.repeat_bed}
 
-        ------------------------------------
-        Starting workflow...
-        ------------------------------------
-        """
-        .stripIndent()
+        funcotator_data:
+            data_source:       ${params.funcotator_data.data_source}
+            src_reference_id:  ${params.funcotator_data.src_reference_id}
+            dest_reference_id: ${params.funcotator_data.dest_reference_id}
+
+    - output:
+        output_dir_base: ${params.output_dir_base}
+
+    - options:
+        blcds_registered_dataset: ${params.blcds_registered_dataset}
+        ucla_cds: ${params.ucla_cds}
+
+        min_cpus: ${params.min_cpus}
+        max_cpus: ${params.max_cpus}
+
+        min_memory: ${params.min_memory}
+        max_memory: ${params.max_memory}
+
+    Tools Used:
+        BCFtools:   ${params.docker_image_bcftools}
+        BEDtools:   ${params.docker_image_bedtools}
+        PipeVal:    ${params.docker_image_pipeval}
+        SAMTools:   ${params.docker_image_samtools}
+        StableLift: ${params.docker_image_stablelift}
+        GATK:       ${params.docker_image_gatk}
+
+    ------------------------------------
+    Starting workflow...
+    ------------------------------------
+    """
+    .stripIndent()
 
 def indexFile(bam_or_vcf) {
     if(bam_or_vcf.endsWith('.bam')) {
@@ -60,54 +87,80 @@ def indexFile(bam_or_vcf) {
         }
     }
 
-// Channels here
 Channel
-    .fromList(params.samples_to_process)
-    .map { sample ->
-        return tuple(sample.orig_id, sample.id, sample.path, sample.sample_type)
-    }
-    .set { samplesToProcessChannel }
+    .value( [
+        params.funcotator_data.src_reference_id,
+        params.src_fasta_ref,
+        params.src_fasta_fai,
+        params.src_fasta_dict,
+    ] )
+    .set { input_ch_src_sequence }
 
 Channel
-    .fromList(params.samples_to_process)
-    .map{ it -> [it['path'], indexFile(it['path'])] }
-    .flatten()
-    .set { files_to_validate_ch }
-
-// Possible reference channel
-Channel
-    .from(
-        params.reference,
-        params.reference_index,
-        params.reference_dict
-        )
-    .set { reference_ch }
-
-// Decription of input channel
-Channel
-    .fromPath(params.variable_name)
-    .ifEmpty { error "Cannot find: ${params.variable_name}" }
-    .set { input_ch_variable_name }
-
-files_to_validate_ch = files_to_validate_ch
-    .mix(reference_ch)
-    .mix(input_ch_variable_name)
+    .value( [
+        params.funcotator_data.dest_reference_id,
+        params.dest_fasta_ref,
+        params.dest_fasta_fai,
+        params.dest_fasta_dict
+    ] )
+    .set { input_ch_dest_sequence }
 
 // Main workflow here
 workflow {
-    // Validation process
-    run_validate_PipeVal(
-        files_to_validate_ch
+
+    // Currently this is written for a single sample_id and VCF file, but
+    // abstract that away
+    Channel.of ([
+            vcf: params.input.vcf,
+            index: indexFile(params.input.vcf),
+            sample_id: params.sample_id
+        ]).set { vcf_with_index }
+
+    // The values of vcf_with_index are maps with keys vcf, index, and sample_id.
+
+    // Run the input VCF and TBI files through PipeVal
+    vcf_with_index
+        .flatMap { sample ->
+            [
+                [sample.vcf, [[sample_id: sample.sample_id], "vcf"]],
+                [sample.index, [[sample_id: sample.sample_id], "index"]]
+            ]
+        } | run_validate_PipeVal_with_metadata
+
+    // Save the validation result
+    run_validate_PipeVal_with_metadata.out.validation_result
+        .collectFile(
+            name: 'input_validation.txt',
+            newLine: true,
+            storeDir: "${params.output_dir_base}/validation"
         )
 
-    run_validate_PipeVal.out.val_file.collectFile(
-        name: 'input_validation.txt', newLine: true,
-        storeDir: "${params.output_dir_base}/validation"
-        )
+    run_validate_PipeVal_with_metadata.out.validated_file
+        .map { filename, metadata -> [metadata[0].sample_id, metadata[0] + [(metadata[1]): filename]] }
+        .groupTuple()
+        .map { it[1].inject([:]) { result, i -> result + i } }
+        .set { validated_vcf_with_index }
 
-    // Workflow or process
-    tool_name_command_name(
-        samplesToProcessChannel,
-        input_ch_variable_name
-        )
+    // The values of validated_vcf_with_index are maps with keys vcf, index, and sample_id.
+    run_liftover_BCFtools(
+        validated_vcf_with_index.map { [it.sample_id, it.vcf, it.index] },
+        input_ch_src_sequence,
+        input_ch_dest_sequence,
+        Channel.value(params.chain_file)
+    )
+
+    run_Funcotator_GATK(
+        run_liftover_BCFtools.out.liftover_vcf_with_index,
+        input_ch_dest_sequence,
+        Channel.value(params.funcotator_data.data_source)
+    )
+
+    workflow_apply_annotations(
+        run_Funcotator_GATK.out.funcotator_vcf,
+        input_ch_dest_sequence
+    )
+
+    workflow_extract_features(
+        workflow_apply_annotations.out.annotated_vcf
+    )
 }

@@ -6,3 +6,4 @@ languages: ["Nextflow", "Docker"]
 dependencies: ["Java", "Nextflow", "Docker"]
 references: "https://uclahs-cds.atlassian.net/wiki/spaces/BOUTROSLAB/pages/3189620/Guide+to+Nextflow"
 tools: ["tool_a:v1.1.0", "tool_b:v1.1.0"]
+image_name: "stablelift"
