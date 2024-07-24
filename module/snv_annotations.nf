@@ -3,11 +3,11 @@ include { compress_and_index_HTSlib } from './utils.nf'
 process run_Funcotator_GATK {
     container params.docker_image_gatk
 
-    publishDir path: "${intermediate_filepath}",
+    publishDir path: "${params.output_dir_base}/GATK-${params.gatk_version}/intermediate/${task.process}",
         pattern: "output.vcf.gz",
         mode: "copy",
         enabled: params.save_intermediate_files,
-        saveAs: { "${slug}.vcf.gz" }
+        saveAs: { "Funcotator-${sample_id}-${dest_fasta_id}.vcf.gz" }
 
     input:
         tuple val(sample_id),
@@ -20,10 +20,6 @@ process run_Funcotator_GATK {
         tuple val(sample_id), path('output.vcf.gz'), emit: funcotator_vcf
 
     script:
-        intermediate_filepath = "${params.output_dir_base}/GATK-${params.gatk_version}/intermediate/${task.process}"
-
-        slug = "Funcotator-${sample_id}-${dest_fasta_id}"
-
         """
         gatk Funcotator \
             --variant "${vcf}" \
@@ -43,11 +39,11 @@ process run_Funcotator_GATK {
 process annotate_RepeatMasker_BCFtools {
     container params.docker_image_bcftools
 
-    publishDir path: "${intermediate_filepath}",
+    publishDir path: "${params.output_dir_base}/BCFtools-${params.bcftools_version}/intermediate/${task.process}",
         pattern: "output.vcf.gz",
         mode: "copy",
         enabled: params.save_intermediate_files,
-        saveAs: { "${slug}.vcf.gz" }
+        saveAs: { "RepeatMasker-${sample_id}.vcf.gz" }
 
     input:
     tuple val(sample_id), path(vcf, stageAs: 'inputs/*')
@@ -57,9 +53,6 @@ process annotate_RepeatMasker_BCFtools {
     tuple val(sample_id), path('output.vcf.gz'), emit: repeatmasker_vcf
 
     script:
-    intermediate_filepath = "${params.output_dir_base}/BCFtools-${params.bcftools_version}/intermediate/${task.process}"
-
-    slug = "RepeatMasker-${sample_id}"
 
     """
     bcftools annotate \
@@ -79,17 +72,11 @@ process annotate_RepeatMasker_BCFtools {
 process extract_TrinucleotideContext_BEDTools {
     container params.docker_image_bedtools
 
-    publishDir path: "${intermediate_filepath}",
-        pattern: "output.bed",
+    publishDir path: "${params.output_dir_base}/BEDtools-${params.bedtools_version}/intermediate/${task.process}",
+        pattern: "output.{bed,tsv}",
         mode: "copy",
         enabled: params.save_intermediate_files,
-        saveAs: { "${slug}.bed" }
-
-    publishDir path: "${intermediate_filepath}",
-        pattern: "output.tsv",
-        mode: "copy",
-        enabled: params.save_intermediate_files,
-        saveAs: { "${slug}-full.tsv" }
+        saveAs: { "Trinucleotide-${sample_id}-${dest_fasta_id}.${file(it).getExtension()}" }
 
     input:
     tuple val(sample_id), path(vcf)
@@ -100,10 +87,6 @@ process extract_TrinucleotideContext_BEDTools {
     tuple val(sample_id), path('output.bed'), emit: trinucleotide_bed
 
     script:
-    intermediate_filepath = "${params.output_dir_base}/BEDtools-${params.bedtools_version}/intermediate/${task.process}"
-
-    slug = "Trinucleotide-${sample_id}"
-
     """
     zcat ${vcf} \
         | grep -v "^#" \
@@ -133,11 +116,11 @@ process extract_TrinucleotideContext_BEDTools {
 process annotate_trinucleotide_BCFtools {
     container params.docker_image_bcftools
 
-    publishDir path: "${intermediate_filepath}",
+    publishDir path: "${params.output_dir_base}/BCFtools-${params.bcftools_version}/intermediate/${task.process}",
         pattern: "output.vcf.gz",
         mode: "copy",
         enabled: params.save_intermediate_files,
-        saveAs: { "${slug}.vcf.gz" }
+        saveAs: { "Trinucleotide-annotated-${sample_id}.vcf.gz" }
 
     input:
     tuple val(sample_id),
@@ -149,10 +132,6 @@ process annotate_trinucleotide_BCFtools {
     tuple val(sample_id), path('output.vcf.gz'), emit: trinucleotide_vcf
 
     script:
-    intermediate_filepath = "${params.output_dir_base}/BCFtools-${params.bcftools_version}/intermediate/${task.process}"
-
-    slug = "Trinucleotide-${sample_id}"
-
     """
     bcftools annotate \
         --annotations ${tsv} \
