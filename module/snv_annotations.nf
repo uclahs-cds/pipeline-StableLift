@@ -3,7 +3,7 @@ include { compress_and_index_HTSlib } from './utils.nf'
 process run_Funcotator_GATK {
     container params.docker_image_gatk
 
-    publishDir path: "${params.output_dir_base}/GATK-${params.gatk_version}/intermediate/${task.process}",
+    publishDir path: "${params.output_dir_base}/GATK-${params.gatk_version}/intermediate/${task.process.replace(':', '/')}",
         pattern: "output.vcf.gz",
         mode: "copy",
         enabled: params.save_intermediate_files,
@@ -39,7 +39,7 @@ process run_Funcotator_GATK {
 process annotate_RepeatMasker_BCFtools {
     container params.docker_image_bcftools
 
-    publishDir path: "${params.output_dir_base}/BCFtools-${params.bcftools_version}/intermediate/${task.process}",
+    publishDir path: "${params.output_dir_base}/BCFtools-${params.bcftools_version}/intermediate/${task.process.replace(':', '/')}",
         pattern: "output.vcf.gz",
         mode: "copy",
         enabled: params.save_intermediate_files,
@@ -72,7 +72,7 @@ process annotate_RepeatMasker_BCFtools {
 process extract_TrinucleotideContext_BEDTools {
     container params.docker_image_bedtools
 
-    publishDir path: "${params.output_dir_base}/BEDtools-${params.bedtools_version}/intermediate/${task.process}",
+    publishDir path: "${params.output_dir_base}/BEDtools-${params.bedtools_version}/intermediate/${task.process.replace(':', '/')}",
         pattern: "output.{bed,tsv}",
         mode: "copy",
         enabled: params.save_intermediate_files,
@@ -116,7 +116,7 @@ process extract_TrinucleotideContext_BEDTools {
 process annotate_trinucleotide_BCFtools {
     container params.docker_image_bcftools
 
-    publishDir path: "${params.output_dir_base}/BCFtools-${params.bcftools_version}/intermediate/${task.process}",
+    publishDir path: "${params.output_dir_base}/BCFtools-${params.bcftools_version}/intermediate/${task.process.replace(':', '/')}",
         pattern: "output.vcf.gz",
         mode: "copy",
         enabled: params.save_intermediate_files,
