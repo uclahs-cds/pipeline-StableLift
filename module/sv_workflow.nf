@@ -2,11 +2,11 @@
 process run_sv_liftover{
     container params.docker_image_stablelift
 
-    publishDir path: "${intermediate_filepath}",
+    publishDir path: "${params.output_dir_base}/StableLift-${params.stable_version}/intermediate/${task.process}",
         pattern: "liftover.vcf.gz",
         mode: "copy",
         enabled: params.save_intermediate_files,
-        saveAs: { "${slug}.vcf.gz" }
+        saveAs: { "LiftOver-${sample_id}.vcf.gz" }
 
     input:
         tuple val(sample_id),
@@ -19,16 +19,11 @@ process run_sv_liftover{
         tuple val(sample_id), path('liftover.vcf.gz'), emit: liftover_vcf
 
     script:
-        // FIXME Use a more standard path
-        intermediate_path = "${params.output_dir_base}/StableLift-${params.stable_version}/intermediate/${task.process}"
-
-        slug = "LiftOver-${sample_id}"
-        
         """
         Rscript "${moduleDir}/scripts/liftover-Delly2-vcf.R \
-            --input-vcf ${vcf} \
-            --header-contigs ${header_contigs} \
-            --chain-file ${chain_file} \
+            --input-vcf "${vcf}" \
+            --header-contigs "${header_contigs}" \
+            --chain-file "${chain_file}" \
             --output "liftover.vcf.gz"
         """
 
@@ -41,11 +36,11 @@ process run_sv_liftover{
 process run_intersect_gnomad {
     container params.docker_image_stablelift
 
-    publishDir path: "${intermediate_filepath}",
+    publishDir path: "${params.output_dir_base}/StableLift-${params.stable_version}/intermediate/${task.process}",
         pattern: "annotations.Rds",
         mode: "copy",
         enabled: params.save_intermediate_files,
-        saveAs: { "${slug}.Rds" }
+        saveAs: { "LiftOver-${sample_id}-${variant_caller}.Rds" }
 
     input:
         tuple val(sample_id), path(vcf, stageAs: 'inputs/*')
@@ -56,11 +51,6 @@ process run_intersect_gnomad {
         tuple val(sample_id), path('annotations.Rds'), emit: r_annotations
 
     script:
-        // FIXME Use a more standard path
-        intermediate_path = "${params.output_dir_base}/StableLift-${params.stable_version}/intermediate/${task.process}"
-
-        slug = "LiftOver-${sample_id}-${variant_caller}"
-        
         """
         Rscript ${moduleDir}/scripts/publish/extract-vcf-features-SV.R \
             --variant-caller "${variant_caller}" \
