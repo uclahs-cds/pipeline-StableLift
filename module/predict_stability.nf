@@ -1,39 +1,5 @@
 include { compress_and_index_HTSlib } from './utils.nf'
 
-process extract_VCF_features_StableLift {
-    container params.docker_image_stablelift
-    containerOptions "-v ${moduleDir}:${moduleDir}"
-
-    publishDir path: "${intermediate_filepath}",
-        pattern: "features.Rds",
-        mode: "copy",
-        enabled: params.save_intermediate_files,
-        saveAs: { "${slug}.${file(it).getExtension()}" }
-
-    input:
-    tuple val(sample_id), path(vcf)
-
-    output:
-    tuple val(sample_id), path('features.Rds'), emit: r_annotations
-
-    script:
-    intermediate_filepath = "${params.output_dir_base}/stablelift-${params.stablelift_version}/intermediate/${task.process}"
-
-    slug = "stablelift-${sample_id}"
-
-    """
-    Rscript "${moduleDir}/scripts/extract-vcf-features.R" \
-        --input-vcf "${vcf}" \
-        --variant-caller ${params.variant_caller} \
-        --output-rds "features.Rds"
-    """
-
-    stub:
-    """
-    touch features.Rds
-    """
-}
-
 process predict_stability_StableLift {
     container params.docker_image_stablelift
     containerOptions "-v ${moduleDir}:${moduleDir}"
