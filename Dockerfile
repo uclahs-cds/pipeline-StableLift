@@ -30,14 +30,18 @@ ARG BIOC_VERSION="3.18"
 ENV BIOC_VERSION=${BIOC_VERSION}
 
 COPY docker/install-stablelift.R /tmp
+
 RUN Rscript /tmp/install-stablelift.R
+RUN cp -r \
+    "/tmp/stablelift/renv/library/R-4.3/*" \
+    "/tmp/library-to-copy"
 
 FROM rocker/r-ver:${R_VERSION}
 
 # Overwrite the site library with just the desired packages. By default rocker
 # only bundles docopt and littler in that directory.
 COPY --from=build \
-    /tmp/stablelift/renv/library/R-4.3/aarch64-unknown-linux-gnu \
+    /tmp/library-to-copy \
     /usr/local/lib/R/site-library
 
 # Install python (required for argparse). The version is not important, but
