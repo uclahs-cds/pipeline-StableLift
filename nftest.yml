@@ -3,6 +3,7 @@ global:
   temp_dir: test/work
   remove_temp: true
   clean_logs: true
+  nf_config: test/common.config
 
 cases:
   - name: SNV

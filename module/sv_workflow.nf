@@ -20,7 +20,7 @@ process run_sv_liftover{
 
     script:
         """
-        Rscript "${moduleDir}/scripts/liftover-Delly2-vcf.R \
+        Rscript "${moduleDir}/scripts/liftover-Delly2-vcf.R" \
             --input-vcf "${vcf}" \
             --header-contigs "${header_contigs}" \
             --chain-file "${chain_file}" \
@@ -52,7 +52,7 @@ process run_intersect_gnomad {
 
     script:
         """
-        Rscript ${moduleDir}/scripts/publish/extract-vcf-features-SV.R \
+        Rscript ${moduleDir}/scripts/publish/extract-vcf-features-SV.R" \
             --variant-caller "${variant_caller}" \
             --input-vcf "${vcf}" \
             --output-rds "annotations.Rds" \
