@@ -1,12 +1,19 @@
 ARG R_VERSION="4.3.1"
 
-FROM rocker/r-ver:${R_VERSION} AS build
-
 ARG LIBBZ2_VERSION="1.0.8-5build1"
 ARG LIBCURL_VERSION="7.81.0-1ubuntu1.16"
 ARG LIBLZMA_VERSION="5.2.5-2ubuntu1"
 ARG LIBXML2_VERSION="2.9.13+dfsg-1ubuntu0.4"
+ARG PYTHON_VERSION="3.10.6-1~22.04"
 ARG ZLIB_VERSION="1:1.2.11.dfsg-2ubuntu9.2"
+
+FROM rocker/r-ver:${R_VERSION} AS build
+
+ARG LIBBZ2_VERSION
+ARG LIBCURL_VERSION
+ARG LIBLZMA_VERSION
+ARG LIBXML2_VERSION
+ARG ZLIB_VERSION
 
 # Install build-time dependencies
 RUN apt-get update \
@@ -35,7 +42,7 @@ COPY --from=build \
 
 # Install python (required for argparse). The version is not important, but
 # let's pin it for stability.
-ARG PYTHON_VERSION=3.10.6-1~22.04
+ARG PYTHON_VERSION
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
