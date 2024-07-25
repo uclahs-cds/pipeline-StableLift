@@ -33,8 +33,8 @@ COPY docker/install-stablelift.R /tmp
 
 RUN Rscript /tmp/install-stablelift.R
 RUN cp -r \
-    "/tmp/stablelift/renv/library/R-4.3/*" \
-    "/tmp/library-to-copy"
+    /tmp/stablelift/renv/library/R-4.3/* \
+    /tmp/library-to-copy
 
 FROM rocker/r-ver:${R_VERSION}
 
