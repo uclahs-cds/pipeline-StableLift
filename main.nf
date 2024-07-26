@@ -155,7 +155,7 @@ workflow {
             Channel.value(params.variant_caller)
         )
 
-        workflow_extract_sv_annotations.out.r_annotations.set { liftover_vcf }
+        workflow_extract_sv_annotations.out.liftover_vcf.set { liftover_vcf }
         workflow_extract_sv_annotations.out.r_annotations.set { r_annotations }
 
     } else {
@@ -168,7 +168,7 @@ workflow {
             Channel.value(params.variant_caller)
         )
 
-        workflow_extract_snv_annotations.out.r_annotations.set { liftover_vcf }
+        workflow_extract_snv_annotations.out.liftover_vcf.set { liftover_vcf }
         workflow_extract_snv_annotations.out.r_annotations.set { r_annotations }
     }
 
