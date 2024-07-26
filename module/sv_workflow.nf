@@ -52,7 +52,7 @@ process run_intersect_gnomad {
 
     script:
         """
-        Rscript ${moduleDir}/scripts/publish/extract-vcf-features-SV.R" \
+        Rscript "${moduleDir}/scripts/extract-vcf-features-SV.R" \
             --variant-caller "${variant_caller}" \
             --input-vcf "${vcf}" \
             --output-rds "annotations.Rds" \

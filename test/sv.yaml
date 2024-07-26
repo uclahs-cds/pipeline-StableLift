@@ -1,0 +1,4 @@
+---
+sample_id: ExampleID
+input:
+  vcf: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/validation/TCGA-SARC_WGS/GRCh37/Delly2/TCGA-SARC_WGS_Delly2_regenotype-gSV_bcftools-merge_filter-germline.vcf.gz

@@ -9,13 +9,13 @@ cases:
   - name: SNV
     nf_script: ./main.nf
     nf_config: test/snv.config
-    params_file: test/nftest.yaml
+    params_file: test/snv.yaml
     skip: false
     verbose: true
 
   - name: SV
     nf_script: ./main.nf
     nf_config: test/sv.config
-    params_file: test/nftest.yaml
+    params_file: test/sv.yaml
     skip: false
     verbose: true
