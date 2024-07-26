@@ -33,6 +33,38 @@ for (arg in names(args)) {
     assign(gsub('_', '.', arg), args[[arg]]);
     }
 
+####################################################################################################
+# Functions
+####################################################################################################
+vcf.info.to.dt <- function(vcf.info) {
+    # Split each string by semicolon and convert to a list of key-value pairs
+    vcf.info <- strsplit(vcf.info, ';');
+    vcf.info <- lapply(vcf.info, function(x) {
+        x <- strsplit(x, '=');
+        as.list(stats::setNames(sapply(x, `[`, 2), sapply(x, `[`, 1)));
+        })
+
+    # Combine the list of key-value pairs into a data table
+    rbindlist(vcf.info, fill = TRUE);
+    }
+
+# Sort datatable by chr then position
+sort.genomic.dt <- function(x, chr = 'CHROM', pos = 'POS') {
+    setDT(x);
+    x[, eval(chr) := gsub('chr', '', get(chr))];
+    x[, eval(chr) := gsub('X', '23', get(chr))];
+    x[, eval(chr) := gsub('Y', '24', get(chr))];
+    x[, eval(chr) := as.numeric(get(chr))];
+
+    setorderv(x, c(chr, pos), c(1, 1));
+
+    x[, eval(chr) := gsub('23', 'X', get(chr))];
+    x[, eval(chr) := gsub('24', 'Y', get(chr))];
+    x[, eval(chr) := paste0('chr', get(chr))];
+
+    return(x);
+    }
+
 ###################################################################################################
 # Load data
 ###################################################################################################
@@ -99,14 +131,12 @@ stability <- predict(rf.model, data = features.dt);
 performance.f <- performance(rf.model$prediction, measure = 'f');
 index <- which.max(unlist(performance.f@y.values));
 threshold <- unlist(performance.f@x.values)[index];
-# f.score <- unlist(performance.f@y.values)[index];
 
 performance <- performance(rf.model$prediction, 'sens', 'spec');
 
 sensitivity <- unlist(performance@y.values)[index];
 specificity <- unlist(performance@x.values)[index];
 
-# cat(sprintf('Max F1-score = %.3f\n', f.score));
 # Convert to stability units
 threshold.stability <- 1 - threshold;
 cat(sprintf('Threshold = %.3f\n', threshold.stability));
@@ -126,4 +156,6 @@ annotation.dt <- data.table(
     STABILITY_SCORE = format(round(stability$predictions[, 1], 4), nsmall = 4),
     STABILITY = ifelse(stability.classification == '1', 'UNSTABLE', 'STABLE')
     );
-fwrite(annotation.dt, file = output.tsv, sep = '\t', col.names = TRUE);
+sort.genomic.dt(annotation.dt);
+fwrite(annotation.dt, file = output.tsv, sep = '\t', col.names = FALSE);
+
