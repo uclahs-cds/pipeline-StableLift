@@ -5,7 +5,6 @@ options(
 )
 
 renv::init(
-    project = "/tmp/stablelift",
     bare = TRUE,
     bioconductor = Sys.getenv("BIOC_VERSION")
 )

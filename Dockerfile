@@ -6,6 +6,7 @@ ARG LIBLZMA_VERSION="5.2.5-2ubuntu1"
 ARG LIBXML2_VERSION="2.9.13+dfsg-1ubuntu0.4"
 ARG PYTHON_VERSION="3.10.6-1~22.04"
 ARG ZLIB_VERSION="1:1.2.11.dfsg-2ubuntu9.2"
+ARG RLIBDIR="/usr/local/stablelift-R"
 
 FROM rocker/r-ver:${R_VERSION} AS build
 
@@ -29,20 +30,27 @@ RUN apt-get update \
 ARG BIOC_VERSION="3.18"
 ENV BIOC_VERSION=${BIOC_VERSION}
 
-COPY docker/install-stablelift.R /tmp
+ARG RLIBDIR
+ENV RENV_PATHS_CACHE ${RLIBDIR}/.cache
 
+RUN mkdir -p ${RENV_PATHS_CACHE}
+
+WORKDIR ${RLIBDIR}
+
+COPY docker/install-stablelift.R /tmp
 RUN Rscript /tmp/install-stablelift.R
-RUN cp -r \
-    /tmp/stablelift/renv/library/R-4.3/* \
-    /tmp/library-to-copy
+
+# renv prints to stdout, so we need to change directories
+WORKDIR /
+RUN echo ".libPaths( c( .libPaths(), \"/usr/local/stablelift-R/renv/library/R-4.3/$(Rscript -e "cat(unname(unlist(R.version['platform'])))")\" ) )" >> /usr/local/lib/R/etc/Rprofile.site
 
 FROM rocker/r-ver:${R_VERSION}
 
-# Overwrite the site library with just the desired packages. By default rocker
-# only bundles docopt and littler in that directory.
+ARG RLIBDIR
+COPY --from=build ${RLIBDIR} ${RLIBDIR}
 COPY --from=build \
-    /tmp/library-to-copy \
-    /usr/local/lib/R/site-library
+    /usr/local/lib/R/etc/Rprofile.site \
+    /usr/local/lib/R/etc/Rprofile.site
 
 # Install python (required for argparse). The version is not important, but
 # let's pin it for stability.
