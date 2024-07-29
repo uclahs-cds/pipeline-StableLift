@@ -158,4 +158,3 @@ annotation.dt <- data.table(
     );
 sort.genomic.dt(annotation.dt);
 fwrite(annotation.dt, file = output.tsv, sep = '\t', col.names = FALSE);
-

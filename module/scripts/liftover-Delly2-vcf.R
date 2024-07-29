@@ -151,7 +151,7 @@ for (i in seq_len(nrow(fix.lifted))) {
 output.vcf <- input.vcf;
 output.vcf@fix <- as.matrix(fix.lifted);
 output.vcf@gt <- as.matrix(gt.dt);
-output.vcf@meta <- output.vcf@meta[!grepl("^##(contig|reference)", output.vcf@meta)];
+output.vcf@meta <- output.vcf@meta[!grepl('^##(contig|reference)', output.vcf@meta)];
 output.vcf@meta <- c(output.vcf@meta, header.contigs);
 
 write.vcf(output.vcf, output);

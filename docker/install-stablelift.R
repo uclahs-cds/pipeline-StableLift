@@ -1,12 +1,12 @@
 install.packages('renv', lib = .Library)
 
 options(
-    renv.settings.bioconductor.version = Sys.getenv("BIOC_VERSION")
+    renv.settings.bioconductor.version = Sys.getenv('BIOC_VERSION')
 )
 
 renv::init(
     bare = TRUE,
-    bioconductor = Sys.getenv("BIOC_VERSION")
+    bioconductor = Sys.getenv('BIOC_VERSION')
 )
 
 renv::install(c(
