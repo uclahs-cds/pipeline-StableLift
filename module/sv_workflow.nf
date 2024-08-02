@@ -1,5 +1,5 @@
 
-process run_sv_liftover{
+process liftover_SV_StableLift{
     container params.docker_image_stablelift
 
     publishDir path: "${params.output_dir_base}/intermediate/${task.process.replace(':', '/')}",
@@ -105,13 +105,13 @@ workflow workflow_extract_sv_annotations {
     main:
 
     // Step 1: Liftover
-    run_sv_liftover(
+    liftover_SV_StableLift(
         vcf_with_sample_id,
         header_contigs,
         chain_file
     )
     run_sort_BCFtools(
-        run_sv_liftover.out.liftover_vcf
+        liftover_SV_StableLift.out.liftover_vcf
     )
 
     // Step 2: Extract features
