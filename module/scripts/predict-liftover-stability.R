@@ -36,17 +36,6 @@ for (arg in names(args)) {
 ####################################################################################################
 # Functions
 ####################################################################################################
-vcf.info.to.dt <- function(vcf.info) {
-    # Split each string by semicolon and convert to a list of key-value pairs
-    vcf.info <- strsplit(vcf.info, ';');
-    vcf.info <- lapply(vcf.info, function(x) {
-        x <- strsplit(x, '=');
-        as.list(stats::setNames(sapply(x, `[`, 2), sapply(x, `[`, 1)));
-        })
-
-    # Combine the list of key-value pairs into a data table
-    rbindlist(vcf.info, fill = TRUE);
-    }
 
 # Sort datatable by chr then position
 sort.genomic.dt <- function(x, chr = 'CHROM', pos = 'POS') {
