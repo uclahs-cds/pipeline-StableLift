@@ -28,14 +28,14 @@ flowchart TD
   legend
   ~~~ input_vcf[["Input VCF"]]:::input
   --> pipeval:::linux
-  --> sv_vs_snv{{Variant Caller?}}
+  --> sv_vs_snv{{Variant Type?}}
 
   sv_vs_snv ------> r_liftover
   header_contigs .-> r_liftover
   chain_file2 ..-> r_liftover
   gnomad_rds .-> r_extract_sv
 
-  subgraph SV ["`**Delly2**`"]
+  subgraph SV ["`**SV**`"]
     %% Other input files
     header_contigs([header_contigs]):::input
     chain_file2([chain_file]):::input
@@ -49,7 +49,7 @@ flowchart TD
   chain_file .-> bcftools_liftover
   sv_vs_snv --> bcftools_liftover
 
-  subgraph SNV ["`**Mutect2, HaplotypeCaller, Strelka2, Muse2, SomaticSniper**`"]
+  subgraph SNV ["`**SNV**`"]
     funcotator_sources([funcotator_sources]):::input
     chain_file([chain_file]):::input
     repeat_bed([repeat_bed]):::input
