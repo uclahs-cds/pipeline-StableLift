@@ -62,7 +62,7 @@ process run_sort_BCFtools {
         """
 }
 
-process run_intersect_gnomad {
+process annotate_gnomAD_StableLift {
     container params.docker_image_stablelift
 
     publishDir path: "${params.output_dir_base}/intermediate/${task.process.replace(':', '/')}",
@@ -115,7 +115,7 @@ workflow workflow_extract_sv_annotations {
     )
 
     // Step 2: Extract features
-    run_intersect_gnomad(
+    annotate_gnomAD_StableLift(
         run_sort_BCFtools.out.sorted_vcf,
         gnomad_rds,
         variant_caller
@@ -123,5 +123,5 @@ workflow workflow_extract_sv_annotations {
 
     emit:
     liftover_vcf = run_sort_BCFtools.out.sorted_vcf
-    r_annotations = run_intersect_gnomad.out.r_annotations
+    r_annotations = annotate_gnomAD_StableLift.out.r_annotations
 }
