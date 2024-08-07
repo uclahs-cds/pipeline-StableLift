@@ -1,0 +1,79 @@
+%%{init: {"flowchart": {"htmlLabels": false}} }%%
+
+flowchart TD
+
+  classDef input fill:#ffffb3
+  classDef output fill:#b3de69
+  classDef gatk fill:#bebada
+  classDef bcftools fill:#fdb462
+  classDef R fill:#8dd3c7
+  classDef linux fill:#fb8072
+
+  subgraph legend ["`**Legend**`"]
+      direction RL
+    subgraph nodes ["`**Nodes**`"]
+      input[["Input File"]]:::input
+      input_node(["Parameterized Input"]):::input
+      output[["Output file"]]:::output
+    end
+
+    subgraph processes ["`**Processes**`"]
+      gatk_docker[GATK]:::gatk
+      bcftools_docker[bcftools]:::bcftools
+      r_docker[Rscript]:::R
+      linux_docker[Generic Linux]:::linux
+    end
+  end
+
+  legend
+  ~~~ input_vcf[["Input VCF"]]:::input
+  --> pipeval:::linux
+  --> sv_vs_snv{{Variant Type?}}
+
+  sv_vs_snv ------> r_liftover
+  header_contigs .-> r_liftover
+  chain_file2 ..-> r_liftover
+  gnomad_rds .-> r_extract_sv
+
+  subgraph SV ["`**SV**`"]
+    %% Other input files
+    header_contigs([header_contigs]):::input
+    chain_file2([chain_file]):::input
+    gnomad_rds([gnomad_rds]):::input
+
+    r_liftover[liftover-Delly2-vcf.R]:::R
+    ---> r_extract_sv[extract-VCF-features-SV.R]:::R
+
+  end
+
+  chain_file .-> bcftools_liftover
+  sv_vs_snv --> bcftools_liftover
+
+  subgraph SNV ["`**SNV**`"]
+    funcotator_sources([funcotator_sources]):::input
+    chain_file([chain_file]):::input
+    repeat_bed([repeat_bed]):::input
+
+    bcftools_liftover[bcftools +liftover]:::bcftools
+    ---> gatk_func[gatk Funcotator]:::gatk
+    --> bcftools_annotate["`bcftools annotate*RepeatMasker*`"]:::bcftools
+    --> bcftools_annotate2["`bcftools annotate*Trinucleotide*`"]:::bcftools
+    --> r_extract_snv[extract-VCF-features.R]:::R
+  end
+
+  funcotator_sources .-> gatk_func
+  repeat_bed .-> bcftools_annotate
+
+  joinpaths{ }
+  r_extract_snv --> joinpaths
+  r_extract_sv --> joinpaths
+  joinpaths ---> r_predict_stability
+
+  subgraph Predict Stability ["`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Predict Stability**`"]
+    r_predict_stability[predict-liftover-stability.R]:::R
+    --> bcftools_annotate3["`bcftools annotate*Stability*`"]:::bcftools
+
+    rf_model([rf_model]):::input .-> r_predict_stability
+  end
+
+  bcftools_annotate3 --> output_vcfs[["Output VCFs"]]:::output

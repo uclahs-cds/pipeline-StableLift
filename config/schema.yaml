@@ -3,6 +3,17 @@ sample_id:
   type: 'String'
   required: true
   help: 'sample id supplied from input yaml'
+variant_caller:
+  type: 'String'
+  required: true
+  help: 'Tool used to call structural or somatic variants'
+  choices:
+    - Mutect2
+    - HaplotypeCaller
+    - Strelka2
+    - Muse2
+    - SomaticSniper
+    - Delly2
 save_intermediate_files:
   type: 'Bool'
   required: true

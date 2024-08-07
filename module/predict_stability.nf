@@ -1,58 +1,34 @@
-include { compress_and_index_HTSlib } from './annotations.nf'
-
-process extract_VCF_features_StableLift {
-    container params.docker_image_stablelift
-    containerOptions "-v ${moduleDir}:${moduleDir}"
-
-    publishDir path: "${intermediate_filepath}",
-        pattern: "features.Rds",
-        mode: "copy",
-        enabled: params.save_intermediate_files,
-        saveAs: { "${slug}.${file(it).getExtension()}" }
-
-    input:
-    tuple val(sample_id), path(vcf)
-
-    output:
-    tuple val(sample_id), path('features.Rds'), emit: r_annotations
-
-    script:
-    intermediate_filepath = "${params.output_dir_base}/stablelift-${params.stablelift_version}/intermediate/${task.process}"
-
-    slug = "stablelift-${sample_id}"
-
-    """
-    Rscript "${moduleDir}/scripts/extract-vcf-features.R" \
-        --input-vcf "${vcf}" \
-        --variant-caller ${params.variant_caller} \
-        --output-rds "features.Rds"
-    """
-}
+include { compress_and_index_HTSlib } from './utils.nf'
 
 process predict_stability_StableLift {
     container params.docker_image_stablelift
     containerOptions "-v ${moduleDir}:${moduleDir}"
 
     publishDir path: "${params.output_dir_base}/output",
-        pattern: "${output_file_name}",
-        mode: "copy"
+        pattern: "stability.tsv",
+        mode: "copy",
+        saveAs: { "StableLift-${sample_id}-${variant_caller}.tsv" }
 
     input:
     tuple val(sample_id), path(features_rds)
     path(rf_model)
+    val(variant_caller)
 
     output:
-    tuple val(sample_id), path(output_file_name), emit: stability_tsv
+    tuple val(sample_id), path("stability.tsv"), emit: stability_tsv
 
     script:
-    output_file_name = "stablelift-${sample_id}.tsv"
-
     """
     Rscript "${moduleDir}/scripts/predict-liftover-stability.R" \
         --features-dt "${features_rds}" \
         --rf-model "${rf_model}" \
-        --variant-caller "${params.variant_caller}" \
-        --output-tsv "${output_file_name}"
+        --variant-caller "${variant_caller}" \
+        --output-tsv "stability.tsv"
+    """
+
+    stub:
+    """
+    touch "stability.tsv"
     """
 }
 
@@ -60,8 +36,9 @@ process run_apply_stability_annotations {
     container params.docker_image_bcftools
 
     publishDir path: "${params.output_dir_base}/output",
-        pattern: "*.vcf.gz{,.tbi}",
-        mode: "copy"
+        pattern: "{stability,filtered}.vcf.gz{,.tbi}",
+        mode: "copy",
+        saveAs: { "${sample_id}-${it}" }
 
     input:
     tuple val(sample_id),
@@ -72,21 +49,19 @@ process run_apply_stability_annotations {
 
     output:
     tuple val(sample_id),
-        path(stability_vcf),
-        path(stability_vcf_tbi),
+        path("stability.vcf.gz"),
+        path("stability.vcf.gz.tbi"),
         emit: stability_vcf_with_index
     tuple val(sample_id),
-        path(filtered_vcf),
-        path(filtered_vcf_tbi),
+        path("filtered.vcf.gz"),
+        path("filtered.vcf.gz.tbi"),
         emit: filtered_vcf_with_index
 
     script:
-    slug = "${sample_id}_LiftOver"
-
-    stability_vcf = "${slug}_stability.vcf.gz"
+    stability_vcf = "stability.vcf.gz"
     stability_vcf_tbi = "${stability_vcf}.tbi"
 
-    filtered_vcf = "${slug}_filtered.vcf.gz"
+    filtered_vcf = "filtered.vcf.gz"
     filtered_vcf_tbi = "${filtered_vcf}.tbi"
 
     """
@@ -107,23 +82,29 @@ process run_apply_stability_annotations {
 
     bcftools index -t "${filtered_vcf}"
     """
+
+    stub:
+    """
+    touch "stability.vcf.gz"
+    touch "stability.vcf.gz.tbi"
+    touch "filtered.vcf.gz"
+    touch "filtered.vcf.gz.tbi"
+    """
 }
 
-workflow workflow_extract_features {
+workflow workflow_predict_stability {
     take:
     vcf_with_sample_id
+    r_annotations
+    rf_model
+    variant_caller
 
     main:
-    if (params.variant_caller == "HaplotypeCaller") {
-        error "HaplotypeCaller is not supported yet"
-    } else {
-        extract_VCF_features_StableLift(vcf_with_sample_id)
-        extract_VCF_features_StableLift.out.r_annotations.set { ch_annotations }
-    }
 
     predict_stability_StableLift(
-        ch_annotations,
-        Channel.value(params.rf_model)
+        r_annotations,
+        rf_model,
+        variant_caller
     )
 
     compress_and_index_HTSlib(

@@ -39,9 +39,7 @@ If you are using the UCLA Azure cluster, please use the [submission script](http
 
 ## Flow Diagram
 
-A directed acyclic graph of your pipeline. The [PlantUML](https://plantuml.com/) code defining this diagram is version-controlled in the [docs/](./docs/) folder, and a [GitHub Action](https://github.com/uclahs-cds/tool-PlantUML-action) automatically regenerates the SVG image when that file is changed.
-
-![Pipeline Graph](./docs/pipeline-flow.svg)
+![Pipeline Graph](./docs/pipeline.mmd.svg)
 
 ---
 

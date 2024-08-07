@@ -10,10 +10,9 @@ include { run_validate_PipeVal_with_metadata } from './external/pipeline-Nextflo
     ]
 )
 
-include { run_liftover_BCFtools } from './module/liftover.nf'
-include { run_Funcotator_GATK } from './module/funcotator.nf'
-include { workflow_apply_annotations } from './module/annotations.nf'
-include { workflow_extract_features} from './module/extract_features.nf'
+include { workflow_extract_sv_annotations } from './module/sv_workflow.nf'
+include { workflow_extract_snv_annotations } from './module/snv_workflow.nf'
+include { workflow_predict_stability } from './module/predict_stability.nf'
 
 // Log info here
 log.info """\
@@ -139,28 +138,45 @@ workflow {
         .map { filename, metadata -> [metadata[0].sample_id, metadata[0] + [(metadata[1]): filename]] }
         .groupTuple()
         .map { it[1].inject([:]) { result, i -> result + i } }
-        .set { validated_vcf_with_index }
+        .tap { validated_vcf_with_index }
+        .map { [it.sample_id, it.vcf, it.index] }
+        .set { validated_vcf_tuple }
 
     // The values of validated_vcf_with_index are maps with keys vcf, index, and sample_id.
-    run_liftover_BCFtools(
-        validated_vcf_with_index.map { [it.sample_id, it.vcf, it.index] },
-        input_ch_src_sequence,
-        input_ch_dest_sequence,
-        Channel.value(params.chain_file)
-    )
+    // The values of validated_vcf_tuple are tuples of (sample_id, vcf, index).
 
-    run_Funcotator_GATK(
-        run_liftover_BCFtools.out.liftover_vcf_with_index,
-        input_ch_dest_sequence,
-        Channel.value(params.funcotator_data.data_source)
-    )
+    if (params.variant_caller == "Delly2") {
+        // Take the SV branch
+        workflow_extract_sv_annotations(
+            validated_vcf_tuple,
+            Channel.value(params.header_contigs),
+            Channel.value(params.gnomad_rds),
+            Channel.value(params.chain_file),
+            Channel.value(params.variant_caller)
+        )
 
-    workflow_apply_annotations(
-        run_Funcotator_GATK.out.funcotator_vcf,
-        input_ch_dest_sequence
-    )
+        workflow_extract_sv_annotations.out.liftover_vcf.set { liftover_vcf }
+        workflow_extract_sv_annotations.out.r_annotations.set { r_annotations }
 
-    workflow_extract_features(
-        workflow_apply_annotations.out.annotated_vcf
+    } else {
+        // Take the SNV branch
+        workflow_extract_snv_annotations(
+            validated_vcf_tuple,
+            input_ch_src_sequence,
+            input_ch_dest_sequence,
+            Channel.value(params.chain_file),
+            Channel.value(params.variant_caller)
+        )
+
+        workflow_extract_snv_annotations.out.liftover_vcf.set { liftover_vcf }
+        workflow_extract_snv_annotations.out.r_annotations.set { r_annotations }
+    }
+
+    // Predict stability and apply annotate lifted VCF
+    workflow_predict_stability(
+        liftover_vcf,
+        r_annotations,
+        Channel.value(params.rf_model),
+        Channel.value(params.variant_caller)
     )
 }
