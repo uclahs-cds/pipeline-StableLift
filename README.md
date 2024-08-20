@@ -85,15 +85,15 @@ input:
 | Required Parameter                  | Type   | Description                                                                                                                     |
 | ----------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------- |
 | `output_dir`                        | path   | Path to the directory where the output files are to be saved.                                                                   |
-| `variant_caller`                    | string | Variant calling algorithm used to generate input VCF (HaplotypeCaller, Mutect2, Strelka2, SomaticSniper, Muse2, Delly2)         |
-| `rf_model`                          | path   | Path to corresponding pre-trained random forest model                                                                           |
-| `funcotator_data.data_source`       | path   | Path to Funcotator data source directory                                                                                        |
-| `funcotator_data.src_reference_id`  | string | Reference genome build ID for input VCF (hg19, hg38)                                                                            |
-| `funcotator_data.dest_reference_id` | string | Reference genome build ID for output VCF (hg19, hg38)                                                                           |
+| `variant_caller`                    | string | Variant calling algorithm used to generate input VCF (HaplotypeCaller, Mutect2, Strelka2, SomaticSniper, Muse2, Delly2).        |
+| `rf_model`                          | path   | Path to corresponding pre-trained random forest model.                                                                          |
+| `funcotator_data.data_source`       | path   | Path to Funcotator data source directory.                                                                                       |
+| `funcotator_data.src_reference_id`  | string | Reference genome build ID for input VCF (hg19, hg38).                                                                           |
+| `funcotator_data.dest_reference_id` | string | Reference genome build ID for output VCF (hg19, hg38).                                                                          |
 | `src_fasta_ref`                     | path   | Path to the source reference sequence in FASTA format. Must correspond with `functotator_data.src_reference_id`.                |
 | `dest_fasta_ref`                    | path   | Path to the destination reference sequence in FASTA format. Must correspond with `functotator_data.dest_reference_id`.          |
 | `chain_file`                        | path   | Path to LiftOver chain file between the source and destination sequences.                                                       |
-| `repeat_bed`                        | path   | Path to bundled RepeatMasker annotation file                                                                                    |
+| `repeat_bed`                        | path   | Path to bundled RepeatMasker annotation file.                                                                                   |
 
 
 | Optional Parameter          | Type                                                                                      | Default                      | Description                                                                                                                                                                                                                                                                                                                                                                           |
