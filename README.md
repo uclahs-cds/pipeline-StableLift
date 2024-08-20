@@ -81,16 +81,17 @@ input:
 
 | Required Parameter                  | Type   | Description                                                                                                                     |
 | ----------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------- |
-| `output_dir`                        | path   | Absolute path to the directory where the output files are to be saved.                                                          |
-| `variant_caller`                    | string | ???                                                                                                                             |
-| `rf_model`                          | path   | ???                                                                                                                             |
-| `funcotator_data.data_source`       | path   | ???                                                                                                                             |
-| `funcotator_data.src_reference_id`  | string | ???                                                                                                                             |
-| `funcotator_data.dest_reference_id` | string | ???                                                                                                                             |
-| `src_fasta_ref`                     | path   | Absolute path to the source reference sequence in FASTA format. Must correspond with `functotator_data.src_reference_id`.       |
-| `dest_fasta_ref`                    | path   | Absolute path to the destination reference sequence in FASTA format. Must correspond with `functotator_data.dest_reference_id`. |
-| `chain_file`                        | path   | LiftOver chain file between the source and destination sequences.                                                               |
-| `repeat_bed`                        | path   | ???                                                                                                                             |
+| `output_dir`                        | path   | Path to the directory where the output files are to be saved.                                                                   |
+| `variant_caller`                    | string | Variant calling algorithm used to generate input VCF (HaplotypeCaller, Mutect2, Strelka2, SomaticSniper, Muse2, Delly2)         |
+| `rf_model`                          | path   | Path to corresponding pre-trained random forest model                                                                           |
+| `funcotator_data.data_source`       | path   | Path to Funcotator data source directory                                                                                        |
+| `funcotator_data.src_reference_id`  | string | Reference genome build ID for input VCF (hg19, hg38)                                                                            |
+| `funcotator_data.dest_reference_id` | string | Reference genome build ID for output VCF (hg19, hg38)                                                                           |
+| `src_fasta_ref`                     | path   | Path to the source reference sequence in FASTA format. Must correspond with `functotator_data.src_reference_id`.                |
+| `dest_fasta_ref`                    | path   | Path to the destination reference sequence in FASTA format. Must correspond with `functotator_data.dest_reference_id`.     
+     |
+| `chain_file`                        | path   | Path to LiftOver chain file between the source and destination sequences.                                                       |
+| `repeat_bed`                        | path   | Path to bundled RepeatMasker annotation file                                                                                    |
 
 
 | Optional Parameter          | Type                                                                                      | Default                      | Description                                                                                                                                                                                                                                                                                                                                                                           |
@@ -101,7 +102,7 @@ input:
 | `max_cpus`                  | int                                                                                       | `SysHelper.getAvailCpus()`   | Maximum number of CPUs that can be assigned to each process.                                                                                                                                                                                                                                                                                                                          |
 | `min_memory`                | [MemoryUnit](https://www.nextflow.io/docs/latest/script.html#implicit-classes-memoryunit) | `1.MB`                       | Minimum amount of memory that can be assigned to each process.                                                                                                                                                                                                                                                                                                                        |
 | `max_memory`                | [MemoryUnit](https://www.nextflow.io/docs/latest/script.html#implicit-classes-memoryunit) | `SysHelper.getAvailMemory()` | Maximum amount of memory that can be assigned to each process.                                                                                                                                                                                                                                                                                                                        |
-| `dataset_id`                | string                                                                                    | `""`                         | ???                                                                                                                                                                                                                                                                                                                                                                                   |
+| `dataset_id`                | string                                                                                    | `""`                         | Dataset ID to be used as output filename prefix                                                                                                                                                                                                                                                                                                                                         |
 | `blcds_registered_dataset`  | boolean                                                                                   | false                        | Set to true when using BLCDS folder structure; use false for now.                                                                                                                                                                                                                                                                                                                     |
 | `ucla_cds`                  | boolean                                                                                   | true                         | If set, overwrite default memory and CPU values by UCLA cluster-specific configs.                                                                                                                                                                                                                                                                                                     |
 | `src_fasta_fai`             | path                                                                                      | Relative to `src_fasta_ref`  | Index for source reference sequence.                                                                                                                                                                                                                                                                                                                                                  |
@@ -131,10 +132,10 @@ The docker images in the following table are generally defined like `docker_imag
 
 | Output | Description |
 | ------------ | ------------------------ |
-| `*_stability.vcf.gz` | ??? |
-| `*_stability.vcf.gz.tbi` | ??? |
-| `*_filtered.vcf.gz` | ??? |
-| `*_filtered.vcf.gz.tbi` | ??? |
+| `*_stability.vcf.gz` | Output VCF in target build coordinates with variant annotations and predicted Stability Scores |
+| `*_stability.vcf.gz.tbi` | Output VCF tabix index |
+| `*_filtered.vcf.gz` | Filtered output VCF with predicted unstable variants removed |
+| `*_filtered.vcf.gz.tbi` | Filtered output VCF tabix index |
 
 ---
 
