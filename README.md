@@ -53,12 +53,13 @@ If you are using the UCLA Azure cluster, please use the [submission script](http
 
 ### 2. Variant annotation
 
-- For SNVs, add dbSNP, GENCODE, and HGNC annotations using GATK's Funcotator. Trinucleotide context and RepeatMasker intervals added with `bedtools`.
-- For SVs, variants are annotated with population allele frequency from the gnomAD-SV v4 database.
+- For SNVs, add dbSNP, GENCODE, and HGNC annotations using GATK's Funcotator. Add trinucleotide context and RepeatMasker intervals with `bedtools`.
+- For SVs, annotate variants with population allele frequency from the gnomAD-SV v4 database.
 
 ### 3. Predict variant stability
 
-> A 2-3 sentence description of each step/process in your pipeline that includes the purpose of the step/process, the tool(s) being used and their version, and the expected scientific inputs/outputs (e.g: FASTQs and BAMs) of the pipeline.
+- Predict variant stability with pre-trained random forest model and the `ranger` R package.
+- Annotate VCF with Stability Score and filter unstable variants.
 
 ---
 
