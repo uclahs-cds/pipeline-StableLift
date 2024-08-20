@@ -88,8 +88,7 @@ input:
 | `funcotator_data.src_reference_id`  | string | Reference genome build ID for input VCF (hg19, hg38)                                                                            |
 | `funcotator_data.dest_reference_id` | string | Reference genome build ID for output VCF (hg19, hg38)                                                                           |
 | `src_fasta_ref`                     | path   | Path to the source reference sequence in FASTA format. Must correspond with `functotator_data.src_reference_id`.                |
-| `dest_fasta_ref`                    | path   | Path to the destination reference sequence in FASTA format. Must correspond with `functotator_data.dest_reference_id`.     
-     |
+| `dest_fasta_ref`                    | path   | Path to the destination reference sequence in FASTA format. Must correspond with `functotator_data.dest_reference_id`.          |
 | `chain_file`                        | path   | Path to LiftOver chain file between the source and destination sequences.                                                       |
 | `repeat_bed`                        | path   | Path to bundled RepeatMasker annotation file                                                                                    |
 
