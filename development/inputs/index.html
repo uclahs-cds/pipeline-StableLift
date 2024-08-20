@@ -106,7 +106,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Inputs</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/1231afaffffc770be0300b4f384b7e4387c1ef25/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/dcab30ab599fce71722a540de3385f62c397f7dd/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -140,52 +140,52 @@ input:
 <tr>
 <td><code>output_dir</code></td>
 <td>path</td>
-<td>Absolute path to the directory where the output files are to be saved.</td>
+<td>Path to the directory where the output files are to be saved.</td>
 </tr>
 <tr>
 <td><code>variant_caller</code></td>
 <td>string</td>
-<td>???</td>
+<td>Variant calling algorithm used to generate input VCF (HaplotypeCaller, Mutect2, Strelka2, SomaticSniper, Muse2, Delly2).</td>
 </tr>
 <tr>
 <td><code>rf_model</code></td>
 <td>path</td>
-<td>???</td>
+<td>Path to corresponding pre-trained random forest model.</td>
 </tr>
 <tr>
 <td><code>funcotator_data.data_source</code></td>
 <td>path</td>
-<td>???</td>
+<td>Path to Funcotator data source directory.</td>
 </tr>
 <tr>
 <td><code>funcotator_data.src_reference_id</code></td>
 <td>string</td>
-<td>???</td>
+<td>Reference genome build ID for input VCF (hg19, hg38).</td>
 </tr>
 <tr>
 <td><code>funcotator_data.dest_reference_id</code></td>
 <td>string</td>
-<td>???</td>
+<td>Reference genome build ID for output VCF (hg19, hg38).</td>
 </tr>
 <tr>
 <td><code>src_fasta_ref</code></td>
 <td>path</td>
-<td>Absolute path to the source reference sequence in FASTA format. Must correspond with <code>functotator_data.src_reference_id</code>.</td>
+<td>Path to the source reference sequence in FASTA format. Must correspond with <code>functotator_data.src_reference_id</code>.</td>
 </tr>
 <tr>
 <td><code>dest_fasta_ref</code></td>
 <td>path</td>
-<td>Absolute path to the destination reference sequence in FASTA format. Must correspond with <code>functotator_data.dest_reference_id</code>.</td>
+<td>Path to the destination reference sequence in FASTA format. Must correspond with <code>functotator_data.dest_reference_id</code>.</td>
 </tr>
 <tr>
 <td><code>chain_file</code></td>
 <td>path</td>
-<td>LiftOver chain file between the source and destination sequences.</td>
+<td>Path to LiftOver chain file between the source and destination sequences.</td>
 </tr>
 <tr>
 <td><code>repeat_bed</code></td>
 <td>path</td>
-<td>???</td>
+<td>Path to bundled RepeatMasker annotation file.</td>
 </tr>
 </tbody>
 </table>
@@ -239,7 +239,7 @@ input:
 <td><code>dataset_id</code></td>
 <td>string</td>
 <td><code>""</code></td>
-<td>???</td>
+<td>Dataset ID to be used as output filename prefix</td>
 </tr>
 <tr>
 <td><code>blcds_registered_dataset</code></td>

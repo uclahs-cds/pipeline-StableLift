@@ -55,11 +55,11 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="./">Pipeline Steps</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#1-stepprocess-1">1. Step/Process 1</a>
+    <li class="toctree-l2"><a class="reference internal" href="#1-liftover-variant-coordinates">1. LiftOver variant coordinates</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#2-stepprocess-2">2. Step/Process 2</a>
+    <li class="toctree-l2"><a class="reference internal" href="#2-variant-annotation">2. Variant annotation</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#3-stepprocess-n">3. Step/Process n</a>
+    <li class="toctree-l2"><a class="reference internal" href="#3-predict-variant-stability">3. Predict variant stability</a>
     </li>
     </ul>
                 </li>
@@ -108,7 +108,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Pipeline Steps</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/1231afaffffc770be0300b4f384b7e4387c1ef25/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/dcab30ab599fce71722a540de3385f62c397f7dd/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -117,18 +117,21 @@
             <div class="section" itemprop="articleBody">
               
                 <h2 id="pipeline-steps">Pipeline Steps</h2>
-<h3 id="1-stepprocess-1">1. Step/Process 1</h3>
-<blockquote>
-<p>A 2-3 sentence description of each step/process in your pipeline that includes the purpose of the step/process, the tool(s) being used and their version, and the expected scientific inputs/outputs (e.g: FASTQs and BAMs) of the pipeline.</p>
-</blockquote>
-<h3 id="2-stepprocess-2">2. Step/Process 2</h3>
-<blockquote>
-<p>A 2-3 sentence description of each step/process in your pipeline that includes the purpose of the step/process, the tool(s) being used and their version, and the expected scientific inputs/outputs (e.g: FASTQs and BAMs) of the pipeline.</p>
-</blockquote>
-<h3 id="3-stepprocess-n">3. Step/Process n</h3>
-<blockquote>
-<p>A 2-3 sentence description of each step/process in your pipeline that includes the purpose of the step/process, the tool(s) being used and their version, and the expected scientific inputs/outputs (e.g: FASTQs and BAMs) of the pipeline.</p>
-</blockquote>
+<h3 id="1-liftover-variant-coordinates">1. LiftOver variant coordinates</h3>
+<ul>
+<li>For SNVs, convert variant coordinates using the <code>BCFtools</code> LiftOver plugin with UCSC chain files.</li>
+<li>For SVs, convert variant breakpoint coordinates using custom R script with UCSC chain files and <code>rtracklayer</code> and <code>GenomicRanges</code> R packages.</li>
+</ul>
+<h3 id="2-variant-annotation">2. Variant annotation</h3>
+<ul>
+<li>For SNVs, add dbSNP, GENCODE, and HGNC annotations using GATK's Funcotator. Add trinucleotide context and RepeatMasker intervals with <code>bedtools</code>.</li>
+<li>For SVs, annotate variants with population allele frequency from the gnomAD-SV v4 database.</li>
+</ul>
+<h3 id="3-predict-variant-stability">3. Predict variant stability</h3>
+<ul>
+<li>Predict variant stability with pre-trained random forest model and the <code>ranger</code> R package.</li>
+<li>Annotate VCF with Stability Score and filter unstable variants.</li>
+</ul>
 <hr />
               
             </div>
