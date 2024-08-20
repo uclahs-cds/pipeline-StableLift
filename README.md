@@ -1,13 +1,12 @@
 # StableLift
 
-- [Pipeline Name](#pipeline-name)
   - [Overview](#overview)
   - [How To Run](#how-to-run)
   - [Flow Diagram](#flow-diagram)
   - [Pipeline Steps](#pipeline-steps)
-    - [1. Step/Process 1](#1-stepprocess-1)
-    - [2. Step/Process 2](#2-stepprocess-2)
-    - [3. Step/Process n](#3-stepprocess-n)
+    - [1. LiftOver variant coordinates](#1-liftover-variant-coordinates)
+    - [2. Variant annotation](#2-variant-annotation)
+    - [3. Predict variant stability](#3-predict-variant-stability)
   - [Inputs](#inputs)
   - [Outputs](#outputs)
   - [Testing and Validation](#testing-and-validation)
@@ -22,7 +21,9 @@
 
 ## Overview
 
-A 3-4 sentence summary of the pipeline, including the pipeline's purpose, the type of expected scientific inputs/outputs of the pipeline (e.g: FASTQs and BAMs), and a list of tools/steps in the pipeline.
+StableLift is a machine learning approach designed to predict variant stability across reference genome builds. It addresses challenges in cross-build variant comparison, supplementing LiftOver coordinate conversion with a quantitative "Stability Score" for each variant, indicating the likelihood of consistent representation between the two most commonly used human reference genome builds (GRCh37 and GRCh38). StableLift is provided as a Nextflow pipeline, accepting either GRCh37 or GRCh38 input VCFs from six variant callers (HaplotypeCaller, MuTect2, Strelka2, SomaticSniper, Muse2, Delly2) spanning three variant types (germline SNPs, somatic SNVs, germline structural variants). Pre-trained models are provided along with performance in a whole genome validation set enabling threshold selection for variant filtering based on pre-calibrated sensitivity and specificity estimates.
+
+![StableLift Overview](./docs/stablelift-overview.svg)
 
 ---
 
@@ -45,17 +46,20 @@ If you are using the UCLA Azure cluster, please use the [submission script](http
 
 ## Pipeline Steps
 
-### 1. Step/Process 1
+### 1. LiftOver variant coordinates
 
-> A 2-3 sentence description of each step/process in your pipeline that includes the purpose of the step/process, the tool(s) being used and their version, and the expected scientific inputs/outputs (e.g: FASTQs and BAMs) of the pipeline.
+- For SNVs, convert variant coordinates using the `BCFtools` LiftOver plugin with UCSC chain files.
+- For SVs, convert variant breakpoint coordinates using custom R script with UCSC chain files and `rtracklayer` and `GenomicRanges` R packages.
 
-### 2. Step/Process 2
+### 2. Variant annotation
 
-> A 2-3 sentence description of each step/process in your pipeline that includes the purpose of the step/process, the tool(s) being used and their version, and the expected scientific inputs/outputs (e.g: FASTQs and BAMs) of the pipeline.
+- For SNVs, add dbSNP, GENCODE, and HGNC annotations using GATK's Funcotator. Add trinucleotide context and RepeatMasker intervals with `bedtools`.
+- For SVs, annotate variants with population allele frequency from the gnomAD-SV v4 database.
 
-### 3. Step/Process n
+### 3. Predict variant stability
 
-> A 2-3 sentence description of each step/process in your pipeline that includes the purpose of the step/process, the tool(s) being used and their version, and the expected scientific inputs/outputs (e.g: FASTQs and BAMs) of the pipeline.
+- Predict variant stability with pre-trained random forest model and the `ranger` R package.
+- Annotate VCF with Stability Score and filter unstable variants.
 
 ---
 
@@ -80,16 +84,16 @@ input:
 
 | Required Parameter                  | Type   | Description                                                                                                                     |
 | ----------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------- |
-| `output_dir`                        | path   | Absolute path to the directory where the output files are to be saved.                                                          |
-| `variant_caller`                    | string | ???                                                                                                                             |
-| `rf_model`                          | path   | ???                                                                                                                             |
-| `funcotator_data.data_source`       | path   | ???                                                                                                                             |
-| `funcotator_data.src_reference_id`  | string | ???                                                                                                                             |
-| `funcotator_data.dest_reference_id` | string | ???                                                                                                                             |
-| `src_fasta_ref`                     | path   | Absolute path to the source reference sequence in FASTA format. Must correspond with `functotator_data.src_reference_id`.       |
-| `dest_fasta_ref`                    | path   | Absolute path to the destination reference sequence in FASTA format. Must correspond with `functotator_data.dest_reference_id`. |
-| `chain_file`                        | path   | LiftOver chain file between the source and destination sequences.                                                               |
-| `repeat_bed`                        | path   | ???                                                                                                                             |
+| `output_dir`                        | path   | Path to the directory where the output files are to be saved.                                                                   |
+| `variant_caller`                    | string | Variant calling algorithm used to generate input VCF (HaplotypeCaller, Mutect2, Strelka2, SomaticSniper, Muse2, Delly2).        |
+| `rf_model`                          | path   | Path to corresponding pre-trained random forest model.                                                                          |
+| `funcotator_data.data_source`       | path   | Path to Funcotator data source directory.                                                                                       |
+| `funcotator_data.src_reference_id`  | string | Reference genome build ID for input VCF (hg19, hg38).                                                                           |
+| `funcotator_data.dest_reference_id` | string | Reference genome build ID for output VCF (hg19, hg38).                                                                          |
+| `src_fasta_ref`                     | path   | Path to the source reference sequence in FASTA format. Must correspond with `functotator_data.src_reference_id`.                |
+| `dest_fasta_ref`                    | path   | Path to the destination reference sequence in FASTA format. Must correspond with `functotator_data.dest_reference_id`.          |
+| `chain_file`                        | path   | Path to LiftOver chain file between the source and destination sequences.                                                       |
+| `repeat_bed`                        | path   | Path to bundled RepeatMasker annotation file.                                                                                   |
 
 
 | Optional Parameter          | Type                                                                                      | Default                      | Description                                                                                                                                                                                                                                                                                                                                                                           |
@@ -100,7 +104,7 @@ input:
 | `max_cpus`                  | int                                                                                       | `SysHelper.getAvailCpus()`   | Maximum number of CPUs that can be assigned to each process.                                                                                                                                                                                                                                                                                                                          |
 | `min_memory`                | [MemoryUnit](https://www.nextflow.io/docs/latest/script.html#implicit-classes-memoryunit) | `1.MB`                       | Minimum amount of memory that can be assigned to each process.                                                                                                                                                                                                                                                                                                                        |
 | `max_memory`                | [MemoryUnit](https://www.nextflow.io/docs/latest/script.html#implicit-classes-memoryunit) | `SysHelper.getAvailMemory()` | Maximum amount of memory that can be assigned to each process.                                                                                                                                                                                                                                                                                                                        |
-| `dataset_id`                | string                                                                                    | `""`                         | ???                                                                                                                                                                                                                                                                                                                                                                                   |
+| `dataset_id`                | string                                                                                    | `""`                         | Dataset ID to be used as output filename prefix                                                                                                                                                                                                                                                                                                                                         |
 | `blcds_registered_dataset`  | boolean                                                                                   | false                        | Set to true when using BLCDS folder structure; use false for now.                                                                                                                                                                                                                                                                                                                     |
 | `ucla_cds`                  | boolean                                                                                   | true                         | If set, overwrite default memory and CPU values by UCLA cluster-specific configs.                                                                                                                                                                                                                                                                                                     |
 | `src_fasta_fai`             | path                                                                                      | Relative to `src_fasta_ref`  | Index for source reference sequence.                                                                                                                                                                                                                                                                                                                                                  |
@@ -130,10 +134,10 @@ The docker images in the following table are generally defined like `docker_imag
 
 | Output | Description |
 | ------------ | ------------------------ |
-| `*_stability.vcf.gz` | ??? |
-| `*_stability.vcf.gz.tbi` | ??? |
-| `*_filtered.vcf.gz` | ??? |
-| `*_filtered.vcf.gz.tbi` | ??? |
+| `*_stability.vcf.gz` | Output VCF in target build coordinates with variant annotations and predicted Stability Scores |
+| `*_stability.vcf.gz.tbi` | Output VCF tabix index |
+| `*_filtered.vcf.gz` | Filtered output VCF with predicted unstable variants removed |
+| `*_filtered.vcf.gz.tbi` | Filtered output VCF tabix index |
 
 ---
 
@@ -187,7 +191,7 @@ Please see list of [Contributors](https://github.com/uclahs-cds/pipeline-StableL
 
 pipeline-StableLift is licensed under the GNU General Public License version 2. See the file LICENSE for the terms of the GNU GPL license.
 
-<one line to give the program's name and a brief idea of what it does.>
+StableLift is a machine learning approach designed to predict variant stability across reference genome builds, supplementing LiftOver coordinate conversion and increasing portability of variant calls.
 
 Copyright (C) 2024 University of California Los Angeles ("Boutros Lab") All rights reserved.
 
