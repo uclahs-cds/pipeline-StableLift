@@ -4,9 +4,9 @@
   - [How To Run](#how-to-run)
   - [Flow Diagram](#flow-diagram)
   - [Pipeline Steps](#pipeline-steps)
-    - [1. Step/Process 1](#1-stepprocess-1)
-    - [2. Step/Process 2](#2-stepprocess-2)
-    - [3. Step/Process n](#3-stepprocess-n)
+    - [1. LiftOver variant coordinates](#1-liftover-variant-coordinates)
+    - [2. Variant annotation](#2-variant-annotation)
+    - [3. Predict variant stability](#3-predict-variant-stability)
   - [Inputs](#inputs)
   - [Outputs](#outputs)
   - [Testing and Validation](#testing-and-validation)
@@ -46,15 +46,17 @@ If you are using the UCLA Azure cluster, please use the [submission script](http
 
 ## Pipeline Steps
 
-### 1. Step/Process 1
+### 1. LiftOver variant coordinates
 
-> A 2-3 sentence description of each step/process in your pipeline that includes the purpose of the step/process, the tool(s) being used and their version, and the expected scientific inputs/outputs (e.g: FASTQs and BAMs) of the pipeline.
+- For SNVs, convert variant coordinates using the `BCFtools` LiftOver plugin with UCSC chain files.
+- For SVs, convert variant breakpoint coordinates using custom R script with UCSC chain files and `rtracklayer` and `GenomicRanges` R packages.
 
-### 2. Step/Process 2
+### 2. Variant annotation
 
-> A 2-3 sentence description of each step/process in your pipeline that includes the purpose of the step/process, the tool(s) being used and their version, and the expected scientific inputs/outputs (e.g: FASTQs and BAMs) of the pipeline.
+- For SNVs, add dbSNP, GENCODE, and HGNC annotations using GATK's Funcotator. Trinucleotide context and RepeatMasker intervals added with `bedtools`.
+- For SVs, variants are annotated with population allele frequency from the gnomAD-SV v4 database.
 
-### 3. Step/Process n
+### 3. Predict variant stability
 
 > A 2-3 sentence description of each step/process in your pipeline that includes the purpose of the step/process, the tool(s) being used and their version, and the expected scientific inputs/outputs (e.g: FASTQs and BAMs) of the pipeline.
 
