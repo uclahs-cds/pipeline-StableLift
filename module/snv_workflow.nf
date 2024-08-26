@@ -57,7 +57,7 @@ process extract_VCF_features_StableLift {
         saveAs: { "StableLift-${sample_id}.Rds" }
 
     input:
-    tuple val(sample_id), path(vcf)
+    tuple val(sample_id), path(vcf), path(index)
 
     output:
     tuple val(sample_id), path('features.Rds'), emit: r_annotations
