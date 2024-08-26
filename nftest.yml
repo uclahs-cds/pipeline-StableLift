@@ -13,6 +13,13 @@ cases:
     skip: false
     verbose: true
 
+  - name: SNV-backward
+    nf_script: ./main.nf
+    nf_config: test/backward.config
+    params_file: test/snv-backward.yaml
+    skip: false
+    verbose: true
+
   - name: SV
     nf_script: ./main.nf
     nf_config: test/sv.config

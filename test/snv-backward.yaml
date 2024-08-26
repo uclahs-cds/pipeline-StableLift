@@ -1,0 +1,4 @@
+---
+sample_id: ExampleID
+input:
+  vcf: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/validation/TCGA-SARC_WXS/GRCh38/Mutect2/TCGA-SARC_WXS_Mutect2_merge.vcf.gz
