@@ -103,7 +103,7 @@ workflow workflow_extract_snv_annotations {
             dest_sequence
         )
 
-        workflow_apply_snv_annotations.out.annotated_vcf.set { annotated_vcf }
+        workflow_apply_snv_annotations.out.annotated_vcf.set { annotated_vcf_with_index }
 
     } else {
         // Step 1: Annotate with GRCh38
@@ -120,17 +120,23 @@ workflow workflow_extract_snv_annotations {
             chain_file
         )
 
-        run_liftover_BCFtools.out.liftover_vcf_with_index.set { annotated_vcf }
+        run_liftover_BCFtools.out.liftover_vcf_with_index.set { annotated_vcf_with_index }
     }
 
     // Step 3: Extract features
     // FIXME Parallelize HaplotypeCaller
     extract_VCF_features_StableLift(
-        annotated_vcf
+        annotated_vcf_with_index
     )
 
+    // For consistency with the SV branch, remove the index file from the
+    // output VCF channel
+    annotated_vcf_with_index
+        .map { sample_id, vcf, index -> [sample_id, vcf] }
+        .set { annotated_vcf }
+
     emit:
-    liftover_vcf = workflow_apply_snv_annotations.out.annotated_vcf
+    liftover_vcf = annotated_vcf
     r_annotations = extract_VCF_features_StableLift.out.r_annotations
 }
 
