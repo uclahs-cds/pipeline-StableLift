@@ -97,7 +97,7 @@ workflow workflow_extract_snv_annotations {
             chain_file
         )
 
-        // Step 2: Annotate
+        // Step 2: Annotate with GRCh38
         workflow_apply_snv_annotations(
             run_liftover_BCFtools.out.liftover_vcf_with_index,
             dest_sequence
@@ -106,10 +106,10 @@ workflow workflow_extract_snv_annotations {
         workflow_apply_snv_annotations.out.annotated_vcf.set { annotated_vcf }
 
     } else {
-        // Step 1: Annotate
+        // Step 1: Annotate with GRCh38
         workflow_apply_snv_annotations(
             vcf_with_sample_id,
-            dest_sequence
+            src_sequence
         )
 
         // Step 2: Liftover
