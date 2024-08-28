@@ -50,15 +50,24 @@ flowchart TD
   sv_vs_snv --> bcftools_liftover
 
   subgraph SNV ["`**SNV**`"]
-    funcotator_sources([funcotator_sources]):::input
-    chain_file([chain_file]):::input
-    repeat_bed([repeat_bed]):::input
+    subgraph SNV_liftover["`**Liftover**`"]
+        chain_file([chain_file]):::input
+        bcftools_liftover[bcftools +liftover]:::bcftools
+    end
 
-    bcftools_liftover[bcftools +liftover]:::bcftools
-    ---> gatk_func[gatk Funcotator]:::gatk
-    --> bcftools_annotate["`bcftools annotate*RepeatMasker*`"]:::bcftools
-    --> bcftools_annotate2["`bcftools annotate*Trinucleotide*`"]:::bcftools
-    --> r_extract_snv[extract-VCF-features.R]:::R
+    subgraph SNV_annotation["`**Annotation**`"]
+        funcotator_sources([funcotator_sources]):::input
+        repeat_bed([repeat_bed]):::input
+
+        gatk_func[gatk Funcotator]:::gatk
+        --> bcftools_annotate["`bcftools annotate*RepeatMasker*`"]:::bcftools
+        --> bcftools_annotate2["`bcftools annotate*Trinucleotide*`"]:::bcftools
+    end
+
+    blocknote["`**Note:** Annotation is performed before Liftover when lifting backward`"]
+
+    bcftools_liftover ---> gatk_func
+    bcftools_annotate2 --> r_extract_snv[extract-VCF-features.R]:::R
   end
 
   funcotator_sources .-> gatk_func
