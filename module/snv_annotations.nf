@@ -117,7 +117,7 @@ process annotate_trinucleotide_BCFtools {
     container params.docker_image_bcftools
 
     publishDir path: "${params.output_dir_base}/intermediate/${task.process.replace(':', '/')}",
-        pattern: "output.vcf.gz",
+        pattern: "output.vcf.gz{,.tbi}",
         mode: "copy",
         enabled: params.save_intermediate_files,
         saveAs: { "Trinucleotide-annotated-${sample_id}.vcf.gz" }
@@ -129,7 +129,7 @@ process annotate_trinucleotide_BCFtools {
         path(tsv_tbi, stageAs: 'inputs/*')
 
     output:
-    tuple val(sample_id), path('output.vcf.gz'), emit: trinucleotide_vcf
+    tuple val(sample_id), path('output.vcf.gz'), path('output.vcf.gz.tbi'), emit: trinucleotide_vcf
 
     script:
     """
@@ -137,6 +137,7 @@ process annotate_trinucleotide_BCFtools {
         --annotations ${tsv} \
         --columns CHROM,POS,TRINUCLEOTIDE \
         --header-lines <(echo '##INFO=<ID=TRINUCLEOTIDE,Number=1,Type=String,Description="Trinucleotide Context">') \
+        --write-index=tbi \
         --output output.vcf.gz \
         ${vcf}
     """
@@ -144,6 +145,7 @@ process annotate_trinucleotide_BCFtools {
     stub:
     """
     touch "output.vcf.gz"
+    touch "output.vcf.gz.tbi"
     """
 }
 

@@ -14,6 +14,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Add workflow for SNV callers (Mutect2, HaplotypeCaller, Strelka2, Muse2, SomaticSniper)
 - Add workflow for SV caller (Delly2)
 - Add pipeline diagram
+- Add reverse liftover (GRCh38 -> GRCh37) for SNV branch
 
 ### Changed
 

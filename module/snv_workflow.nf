@@ -57,7 +57,7 @@ process extract_VCF_features_StableLift {
         saveAs: { "StableLift-${sample_id}.Rds" }
 
     input:
-    tuple val(sample_id), path(vcf)
+    tuple val(sample_id), path(vcf), path(index)
 
     output:
     tuple val(sample_id), path('features.Rds'), emit: r_annotations
@@ -86,28 +86,57 @@ workflow workflow_extract_snv_annotations {
 
     main:
 
-    // Step 1: Liftover
-    run_liftover_BCFtools(
-        vcf_with_sample_id,
-        src_sequence,
-        dest_sequence,
-        chain_file
-    )
+    // We want to do all of the annotating with the GRCh38 / hg38 reference. If
+    // the liftover is going from h38 to hg19, defer until after annotations
+    if (params.liftover_forward) {
+        // Step 1: Liftover
+        run_liftover_BCFtools(
+            vcf_with_sample_id,
+            src_sequence,
+            dest_sequence,
+            chain_file
+        )
 
-    // Step 2: Annotate
-    workflow_apply_snv_annotations(
-        run_liftover_BCFtools.out.liftover_vcf_with_index,
-        dest_sequence
-    )
+        // Step 2: Annotate with GRCh38
+        workflow_apply_snv_annotations(
+            run_liftover_BCFtools.out.liftover_vcf_with_index,
+            dest_sequence
+        )
+
+        workflow_apply_snv_annotations.out.annotated_vcf.set { annotated_vcf_with_index }
+
+    } else {
+        // Step 1: Annotate with GRCh38
+        workflow_apply_snv_annotations(
+            vcf_with_sample_id,
+            src_sequence
+        )
+
+        // Step 2: Liftover
+        run_liftover_BCFtools(
+            workflow_apply_snv_annotations.out.annotated_vcf,
+            src_sequence,
+            dest_sequence,
+            chain_file
+        )
+
+        run_liftover_BCFtools.out.liftover_vcf_with_index.set { annotated_vcf_with_index }
+    }
 
     // Step 3: Extract features
     // FIXME Parallelize HaplotypeCaller
     extract_VCF_features_StableLift(
-        workflow_apply_snv_annotations.out.annotated_vcf
+        annotated_vcf_with_index
     )
 
+    // For consistency with the SV branch, remove the index file from the
+    // output VCF channel
+    annotated_vcf_with_index
+        .map { sample_id, vcf, index -> [sample_id, vcf] }
+        .set { annotated_vcf }
+
     emit:
-    liftover_vcf = workflow_apply_snv_annotations.out.annotated_vcf
+    liftover_vcf = annotated_vcf
     r_annotations = extract_VCF_features_StableLift.out.r_annotations
 }
 
