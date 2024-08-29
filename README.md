@@ -51,10 +51,11 @@ If you are using the UCLA Azure cluster, please use the [submission script](http
 - For SNVs, convert variant coordinates using the `BCFtools` LiftOver plugin with UCSC chain files.
 - For SVs, convert variant breakpoint coordinates using custom R script with UCSC chain files and `rtracklayer` and `GenomicRanges` R packages.
 
-### 2. Variant annotation
+### 2. Variant annotation*
 
 - For SNVs, add dbSNP, GENCODE, and HGNC annotations using GATK's Funcotator. Add trinucleotide context and RepeatMasker intervals with `bedtools`.
 - For SVs, annotate variants with population allele frequency from the gnomAD-SV v4 database.
+- *Variant annotation occurs prior to LiftOver when converting from GRCh38 -> GRCh37
 
 ### 3. Predict variant stability
 
