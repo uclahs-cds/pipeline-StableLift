@@ -23,6 +23,7 @@ parser$add_argument('--features-dt', type = 'character', help = 'Processed Rds f
 parser$add_argument('--rf-model', type = 'character', help = 'Pre-trained random forest model Rds file');
 parser$add_argument('--specificity', type = 'numeric', help = 'Target specificity based on whole genome validation set, overrides `--threshold`');
 parser$add_argument('--threshold', type = 'numeric', help = 'Stability score threshold, default based on maximizing F1-score in whole genome validation set');
+parser$add_argument('--output-tsv', type = 'character', help = 'Output TSV with predicted Stability Scores');
 args <- parser$parse_args();
 
 # Save command line arguments
@@ -103,11 +104,10 @@ stability.classification <- as.factor(stability.classification);
 ###################################################################################################
 # Output stability scores
 ###################################################################################################
-this.filename <- sub('_LiftOver-(.*)_annotated.Rds', '_StableLift-\\1_stability-scores.tsv', features.dt.path);
 annotation.dt <- data.table(
     CHROM = features.dt$CHROM,
     POS = features.dt$POS,
     STABILITY_SCORE = format(round(stability$predictions[, 1], 4), nsmall = 4),
     STABILITY = ifelse(stability.classification == '1', 'UNSTABLE', 'STABLE')
     );
-fwrite(annotation.dt, file = this.filename, sep = '\t', col.names = FALSE);
+fwrite(annotation.dt, file = output.tsv, sep = '\t', col.names = FALSE);

@@ -19,10 +19,10 @@ process predict_stability_StableLift {
 
     script:
     """
-    Rscript "${moduleDir}/scripts/predict-liftover-stability.R" \
+    Rscript "${moduleDir}/scripts/predict-variant-stability.R" \
+        --variant-caller "${variant_caller}" \
         --features-dt "${features_rds}" \
         --rf-model "${rf_model}" \
-        --variant-caller "${variant_caller}" \
         --output-tsv "stability.tsv"
     """
 
