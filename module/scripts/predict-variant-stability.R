@@ -110,4 +110,11 @@ annotation.dt <- data.table(
     STABILITY_SCORE = format(round(stability$predictions[, 1], 4), nsmall = 4),
     STABILITY = ifelse(stability.classification == '1', 'UNSTABLE', 'STABLE')
     );
+if (substr(1, 3, annotation.dt[1, CHROM]) == 'chr') {
+    annotation.dt[, CHROM := factor(CHROM, levels = paste0('chr', c(1:22, 'X', 'Y')))];
+} else {
+    annotation.dt[, CHROM := factor(CHROM, levels = c(1:22, 'X', 'Y'))];
+    }
+setorder(annotation.dt, CHROM, POS);
+
 fwrite(annotation.dt, file = output.tsv, sep = '\t', col.names = FALSE);
