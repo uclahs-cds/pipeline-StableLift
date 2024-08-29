@@ -186,7 +186,6 @@ for (i in seq_len(nrow(input.fix))) {
         this.INFO[['CHR2']] <- grange.target.dt[i, CHR2];
         this.INFO[['POS2']] <- grange.target.dt[i, POS2];
         }
-    if (this.INFO[['SVTYPE']] %in% )
     this.INFO <- lapply(names(this.INFO), function(x) paste(x, this.INFO[[x]], sep = '='));
     this.INFO <- paste(this.INFO, collapse = ';');
     this.INFO <- gsub('IMPRECISE=IMPRECISE', 'IMPRECISE', this.INFO);
