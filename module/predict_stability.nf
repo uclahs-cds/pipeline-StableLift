@@ -23,7 +23,9 @@ process predict_stability_StableLift {
         --variant-caller "${variant_caller}" \
         --features-dt "${features_rds}" \
         --rf-model "${rf_model}" \
-        --output-tsv "stability.tsv"
+        --output-tsv "stability.tsv" \
+        --specificity "${params.target_specificity}" \
+        --threshold "${params.target_threshold}"
     """
 
     stub:
@@ -43,7 +45,6 @@ process run_apply_stability_annotations {
     input:
     tuple val(sample_id),
         path(annotated_vcf, stageAs: 'inputs/*'),
-        // FIXME Should there be an annotated_vcf_tbi?
         path(stability_tsv, stageAs: 'inputs/*'),
         path(stability_tsv_tbi, stageAs: 'inputs/*')
 
