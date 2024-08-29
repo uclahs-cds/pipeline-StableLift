@@ -34,14 +34,6 @@ for (arg in names(args)) {
     assign(gsub('_', '.', arg), args[[arg]]);
     }
 
-input.vcf <- '/hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/gSV/bcftools-merge/CPCG-40QC_GRCh38/CPCG-40QC_GRCh38_regenotype-gSV_delly_bcftools-merge_delly-filter-germline.vcf.gz';
-source.build <- 'GRCh38';
-chain.file <- '/hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/publish/resource/hg38ToHg19.over.chain';
-header.contigs <- '/hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/publish/resource/GRCh37-vcf-header-contigs.txt';
-gnomad.rds <- '/hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/publish/resource/gnomad.v4.0.sv.Rds';
-output.vcf <- '/hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/gSV/stableLift/train_CPCG-40QC_Delly2_38_test/CPCG-40QC_Delly2_LiftOver-GRCh37.vcf.gz';
-output.rds <- '/hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/gSV/stableLift/train_CPCG-40QC_Delly2_38_test/CPCG-40QC_Delly2_LiftOver-GRCh37_annotated.Rds';
-
 ###################################################################################################
 # Functions
 ###################################################################################################
