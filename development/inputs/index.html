@@ -106,7 +106,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Inputs</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/5c2bc28634c9aa26fc86ffa11690108c188dba61/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/dda927bfba7d6a8657d48668b777303ed982d7ba/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -200,6 +200,18 @@ input:
 </thead>
 <tbody>
 <tr>
+<td><code>target_threshold</code></td>
+<td>numeric</td>
+<td><code>""</code></td>
+<td>Target Stability Score threshold for variant filtering: [0, 1]</td>
+</tr>
+<tr>
+<td><code>target_specificity</code></td>
+<td>numeric</td>
+<td><code>""</code></td>
+<td>Target specificity based on whole genome validation set for variant filtering: [0, 1]</td>
+</tr>
+<tr>
 <td><code>work_dir</code></td>
 <td>path</td>
 <td><code>/scratch/$SLURM_JOB_ID</code></td>
@@ -289,7 +301,7 @@ input:
 <ul>
 <li>Change <code>params.docker_container_registry</code>. This will affect all of the images (except for GATK).</li>
 <li>Change <code>params.&lt;tool&gt;_version</code>. This will pull a different version of the same image from the registry.</li>
-<li>Change <code>params.docker_image_&lt;tool&gt;</code>. This will explicitly set the image to use, ignoring <code>docker_container_registry</code> and <code>&lt;tool&gt;_version</code>, and thus requires that the docker tag be explicitly set (e.g. <code>broadinstitute/gatk:4.2.4.1</code>).</li>
+<li>Change <code>params.docker_image_&lt;tool&gt;</code>. This will explicitly set the image to use, ignoring <code>docker_container_registry</code> and <code>&lt;tool&gt;_version</code>, and thus requires that the docker tag be explicitly set (e.g. <code>broadinstitute/gatk:4.4.0.0</code>).</li>
 </ul>
 <table>
 <thead>
@@ -316,7 +328,7 @@ input:
 <tr>
 <td><code>docker_image_gatk</code></td>
 <td><code>gatk_version</code></td>
-<td><code>broadinstitute/gatk:4.2.4.1</code></td>
+<td><code>broadinstitute/gatk:4.4.0.0</code></td>
 <td></td>
 </tr>
 <tr>

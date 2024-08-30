@@ -57,7 +57,7 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#1-liftover-variant-coordinates">1. LiftOver variant coordinates</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#2-variant-annotation">2. Variant annotation</a>
+    <li class="toctree-l2"><a class="reference internal" href="#2-variant-annotation">2. Variant annotation*</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#3-predict-variant-stability">3. Predict variant stability</a>
     </li>
@@ -108,7 +108,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Pipeline Steps</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/5c2bc28634c9aa26fc86ffa11690108c188dba61/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/dda927bfba7d6a8657d48668b777303ed982d7ba/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -122,10 +122,11 @@
 <li>For SNVs, convert variant coordinates using the <code>BCFtools</code> LiftOver plugin with UCSC chain files.</li>
 <li>For SVs, convert variant breakpoint coordinates using custom R script with UCSC chain files and <code>rtracklayer</code> and <code>GenomicRanges</code> R packages.</li>
 </ul>
-<h3 id="2-variant-annotation">2. Variant annotation</h3>
+<h3 id="2-variant-annotation">2. Variant annotation*</h3>
 <ul>
 <li>For SNVs, add dbSNP, GENCODE, and HGNC annotations using GATK's Funcotator. Add trinucleotide context and RepeatMasker intervals with <code>bedtools</code>.</li>
 <li>For SVs, annotate variants with population allele frequency from the gnomAD-SV v4 database.</li>
+<li>*Variant annotation occurs prior to LiftOver when converting from GRCh38 -&gt; GRCh37</li>
 </ul>
 <h3 id="3-predict-variant-stability">3. Predict variant stability</h3>
 <ul>

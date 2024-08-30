@@ -64,7 +64,7 @@ flowchart TD
         --> bcftools_annotate2["`bcftools annotate*Trinucleotide*`"]:::bcftools
     end
 
-    blocknote["`**Note:** Annotation is performed before Liftover when lifting backward`"]
+    blocknote["`**Note:** Annotation is performed prior to LiftOver when converting from GRCh38 -> GRCh37`"]
 
     bcftools_liftover ---> gatk_func
     bcftools_annotate2 --> r_extract_snv[extract-VCF-features.R]:::R
@@ -79,7 +79,7 @@ flowchart TD
   joinpaths ---> r_predict_stability
 
   subgraph Predict Stability ["`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Predict Stability**`"]
-    r_predict_stability[predict-liftover-stability.R]:::R
+    r_predict_stability[predict-variant-stability.R]:::R
     --> bcftools_annotate3["`bcftools annotate*Stability*`"]:::bcftools
 
     rf_model([rf_model]):::input .-> r_predict_stability
