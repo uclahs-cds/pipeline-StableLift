@@ -51,10 +51,11 @@ If you are using the UCLA Azure cluster, please use the [submission script](http
 - For SNVs, convert variant coordinates using the `BCFtools` LiftOver plugin with UCSC chain files.
 - For SVs, convert variant breakpoint coordinates using custom R script with UCSC chain files and `rtracklayer` and `GenomicRanges` R packages.
 
-### 2. Variant annotation
+### 2. Variant annotation*
 
 - For SNVs, add dbSNP, GENCODE, and HGNC annotations using GATK's Funcotator. Add trinucleotide context and RepeatMasker intervals with `bedtools`.
 - For SVs, annotate variants with population allele frequency from the gnomAD-SV v4 database.
+- *Variant annotation occurs prior to LiftOver when converting from GRCh38 -> GRCh37
 
 ### 3. Predict variant stability
 
@@ -98,6 +99,8 @@ input:
 
 | Optional Parameter          | Type                                                                                      | Default                      | Description                                                                                                                                                                                                                                                                                                                                                                           |
 | --------------------------- | ----------------------------------------------------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `target_threshold`          | numeric                                                                                   | `""`             | Target Stability Score threshold for variant filtering: [0, 1] |
+| `target_specificity`          | numeric                                                                                   | `""`             | Target specificity based on whole genome validation set for variant filtering: [0, 1] |
 | `work_dir`                  | path                                                                                      | `/scratch/$SLURM_JOB_ID`     | Path of working directory for Nextflow. When included in the sample config file, Nextflow intermediate files and logs will be saved to this directory. With `ucla_cds`, the default is `/scratch` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. |
 | `save_intermediate_files`   | boolean                                                                                   | false                        | If set, save output files from intermediate pipeline processes.                                                                                                                                                                                                                                                                                                                       |
 | `min_cpus`                  | int                                                                                       | 1                            | Minimum number of CPUs that can be assigned to each process.                                                                                                                                                                                                                                                                                                                          |
@@ -117,13 +120,13 @@ The docker images in the following table are generally defined like `docker_imag
 
 * Change `params.docker_container_registry`. This will affect all of the images (except for GATK).
 * Change `params.<tool>_version`. This will pull a different version of the same image from the registry.
-* Change `params.docker_image_<tool>`. This will explicitly set the image to use, ignoring `docker_container_registry` and `<tool>_version`, and thus requires that the docker tag be explicitly set (e.g. `broadinstitute/gatk:4.2.4.1`).
+* Change `params.docker_image_<tool>`. This will explicitly set the image to use, ignoring `docker_container_registry` and `<tool>_version`, and thus requires that the docker tag be explicitly set (e.g. `broadinstitute/gatk:4.4.0.0`).
 
 | Tool Parameter           | Version Parameter    | Default                                                      | Notes                                                               |
 | ------------------------ | -------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------- |
 | `docker_image_bcftools`  | `bcftools_version`   | `ghcr.io/uclahs-cds/bcftools-score:1.20_score-1.20-20240505` | This image must have both BCFtools and the score plugins available. |
 | `docker_image_bedtools`  | `bedtools_version`   | `ghcr.io/uclahs-cds/bedtools:2.31.0`                         |                                                                     |
-| `docker_image_gatk`      | `gatk_version`       | `broadinstitute/gatk:4.2.4.1`                                |                                                                     |
+| `docker_image_gatk`      | `gatk_version`       | `broadinstitute/gatk:4.4.0.0`                                |                                                                     |
 | `docker_image_pipeval`   | `pipeval_version`    | `ghcr.io/uclahs-cds/pipeval:5.0.0-rc.3`                      |                                                                     |
 | `docker_image_samtools`  | `samtools_version`   | `ghcr.io/uclahs-cds/samtools:1.20`                           |                                                                     |
 | `doker_image_stablelift` | `stablelift_version` | `ghcr.io/uclahs-cds/stablelift:FIXME`                        | This image is built and maintained via this repository.             |
@@ -191,7 +194,7 @@ Please see list of [Contributors](https://github.com/uclahs-cds/pipeline-StableL
 
 pipeline-StableLift is licensed under the GNU General Public License version 2. See the file LICENSE for the terms of the GNU GPL license.
 
-StableLift is a machine learning approach designed to predict variant stability across reference genome builds, supplementing LiftOver coordinate conversion and increasing portability of variant calls.
+StableLift is a machine learning approach designed to predict variant stability across reference genome builds, supplementing LiftOver coordinate conversion to increase the portability of variant calls.
 
 Copyright (C) 2024 University of California Los Angeles ("Boutros Lab") All rights reserved.
 

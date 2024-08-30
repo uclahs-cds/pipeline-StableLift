@@ -64,7 +64,7 @@ process extract_VCF_features_StableLift {
 
     script:
     """
-    Rscript "${moduleDir}/scripts/extract-vcf-features.R" \
+    Rscript "${moduleDir}/scripts/extract-VCF-features.R" \
         --input-vcf "${vcf}" \
         --variant-caller ${params.variant_caller} \
         --output-rds "features.Rds"

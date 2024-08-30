@@ -18,12 +18,17 @@ process predict_stability_StableLift {
     tuple val(sample_id), path("stability.tsv"), emit: stability_tsv
 
     script:
+    spec_arg = (params.getOrDefault('target_specificity', null) != null) ? "--specificity \"${params.get('target_specificity')}\"" : ""
+    thresh_arg = (params.getOrDefault('target_threshold', null) != null) ? "--threshold \"${params.get('target_threshold')}\"" : ""
+
     """
-    Rscript "${moduleDir}/scripts/predict-liftover-stability.R" \
+    Rscript "${moduleDir}/scripts/predict-variant-stability.R" \
+        --variant-caller "${variant_caller}" \
         --features-dt "${features_rds}" \
         --rf-model "${rf_model}" \
-        --variant-caller "${variant_caller}" \
-        --output-tsv "stability.tsv"
+        --output-tsv "stability.tsv" \
+        ${spec_arg} \
+        ${thresh_arg}
     """
 
     stub:
@@ -43,7 +48,6 @@ process run_apply_stability_annotations {
     input:
     tuple val(sample_id),
         path(annotated_vcf, stageAs: 'inputs/*'),
-        // FIXME Should there be an annotated_vcf_tbi?
         path(stability_tsv, stageAs: 'inputs/*'),
         path(stability_tsv_tbi, stageAs: 'inputs/*')
 

@@ -1,10 +1,8 @@
 #!/usr/bin/env Rscript
-# extract-vcf-features.R
+# extract-VCF-features.R
 ####################################################################################################
 #
-# Extract features from vcf
-# Extract Funcotator annotations if present
-# Annotate with RepeatMasker regions if intersect file is provided
+# Extract VCF features and save as Rds for input to predict-variant-stability.R
 #
 ####################################################################################################
 
@@ -21,23 +19,16 @@ suppressPackageStartupMessages({
 ###################################################################################################
 # Define command line arguments
 parser <- ArgumentParser();
-parser$add_argument('--input-vcf', type = 'character', help = 'GRCh37 vcf lifted to GRCh38 for feature extraction');
-parser$add_argument('--input-dir', type = 'character', help = 'Directory with vcf subsets');
-parser$add_argument('--output-rds', type = 'character', help = 'Rds output for use in RF model');
-parser$add_argument('--variant-caller', type = 'character', help = '');
-parser$add_argument('--ncore', type = 'integer', help = 'Number of cores to use for parallelizing features extraction', default = 1);
+parser$add_argument('--input-vcf', type = 'character', help = 'Input VCF for feature extraction, mutually exclusive with --input-dir');
+parser$add_argument('--input-dir', type = 'character', help = 'Directory with VCF subsets for parallelization, mutually exclusive with --input-vcf');
+parser$add_argument('--output-rds', type = 'character', help = 'Rds output for input to RF model');
+parser$add_argument('--variant-caller', type = 'character', help = 'One of {HaplotypeCaller, Mutect2, Strelka2, SomaticSniper, Muse2, Delly2}');
+parser$add_argument('--ncore', type = 'integer', help = 'Number of cores to use for processing VCF subsets in --input-dir', default = 1);
 args <- parser$parse_args();
 
 # Save command line arguments
 for (arg in names(args)) {
     assign(gsub('_', '.', arg), args[[arg]]);
-    }
-
-# Set parameters for interactive runs
-if (interactive()) {
-    variant.caller <- 'Strelka2';
-    input.vcf <- '/hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/gSNP/stableLift/validate_TCGA-SARC_WXS/TCGA-SARC_WXS_HaplotypeCaller_LiftOver-GRCh38_annotated_exome.vcf.gz';
-    vcf.subset <- input.vcf;
     }
 
 if (!is.null(input.dir)) {
@@ -116,6 +107,21 @@ features.dt.subsets <- foreach(vcf.subset = vcf.subsets) %dopar% {
         info[input.vcf@fix[, 'REF'] == 'G', REFCOUNTS := apply(extract.gt(input.vcf, element = 'GU')[input.vcf@fix[, 'REF'] == 'G', ], 1, function(x) mean(sapply(strsplit(x, ','), function(y) as.numeric(y[1])), na.rm = TRUE))];
         info[input.vcf@fix[, 'ALT'] == 'G', ALTCOUNTS := apply(extract.gt(input.vcf, element = 'GU')[input.vcf@fix[, 'ALT'] == 'G', ], 1, function(x) mean(sapply(strsplit(x, ','), function(y) as.numeric(y[1])), na.rm = TRUE))];
         info[, AF := ALTCOUNTS / (REFCOUNTS + ALTCOUNTS)];
+    } else if (variant.caller == 'SomaticSniper') {
+        # Calculate VAF from allelic depths
+        info$AF <- apply(extract.gt(input.vcf, element = 'DP4'), 1, function(x) mean(
+            sapply(strsplit(x, ','), function(y) {
+                y <- as.numeric(y);
+                return((y[3] + y[4]) / sum(y));
+                }),
+            na.rm = TRUE
+            ));
+        info$AMQ <- apply(extract.gt(input.vcf, element = 'AMQ'), 1, function(x) mean(sapply(strsplit(x, ','), function(y) as.numeric(y[2])), na.rm = TRUE));
+        info$BQ <- apply(extract.gt(input.vcf, element = 'BQ'), 1, function(x) mean(sapply(strsplit(x, ','), function(y) as.numeric(y[2])), na.rm = TRUE));
+        info$GQ <- apply(extract.gt(input.vcf, element = 'GQ', as.numeric = TRUE), 1, mean, na.rm = TRUE);
+        info$MQ <- apply(extract.gt(input.vcf, element = 'GQ', as.numeric = TRUE), 1, mean, na.rm = TRUE);
+        info$SSC <- apply(extract.gt(input.vcf, element = 'SSC', as.numeric = TRUE), 1, mean, na.rm = TRUE);
+        info$VAQ <- apply(extract.gt(input.vcf, element = 'VAQ', as.numeric = TRUE), 1, mean, na.rm = TRUE);
         }
 
     # Get funcotation fields
@@ -229,6 +235,14 @@ if (variant.caller == 'Strelka2') continuous.features <- c(continuous.features,
     );
 if (variant.caller == 'Muse2') continuous.features <- c(continuous.features,
     'Variant Base Quality (BQ)' = 'BQ'
+    );
+if (variant.caller == 'SomaticSniper') continuous.features <- c(continuous.features,
+    'Variant Mapping Quality (AMQ)' = 'AMQ',
+    'Base Quality (BQ)' = 'BQ',
+    'Genotype Quality (GQ)' = 'GQ',
+    'Mapping Quality (MQ)' = 'MQ',
+    'Somatic Score (SSC)' = 'SSC',
+    'Variant Allele Quality (VAQ)' = 'VAQ'
     );
 
 categorical.features <- c(
