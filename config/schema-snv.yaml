@@ -1,0 +1,13 @@
+---
+repeat_bed:
+  type: 'Path'
+  mode: 'r'
+  required: true
+  help: 'FIXME ???'
+
+funcotator_data_source:
+  type: 'Path'
+  required: true
+  mode: 'r'
+  help: 'Root data source folder for Funcotator'
+

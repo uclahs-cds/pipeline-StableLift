@@ -1,0 +1,12 @@
+---
+header_contigs:
+  type: 'Path'
+  mode: 'r'
+  required: true
+  help: 'FIXME ???'
+
+gnomad_rds:
+  type: 'Path'
+  mode: 'r'
+  required: true
+  help: 'FIXME ???'
