@@ -21,3 +21,4 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Changed
 
 - Sort VCF after liftover in SV branch
+- Hide parametric complexity behind simpler user inputs
