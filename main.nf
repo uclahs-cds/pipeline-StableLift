@@ -42,6 +42,8 @@ log.info """\
         chain_file: ${params.chain_file}
         repeat_bed: ${params.repeat_bed}
 
+        header_contigs: ${params.header_contigs}
+
         funcotator_data:
             data_source:       ${params.funcotator_data.data_source}
             src_reference_id:  ${params.funcotator_data.src_reference_id}
@@ -149,10 +151,10 @@ workflow {
         // Take the SV branch
         workflow_extract_sv_annotations(
             validated_vcf_tuple,
+            input_ch_src_sequence,
             Channel.value(params.header_contigs),
             Channel.value(params.gnomad_rds),
-            Channel.value(params.chain_file),
-            Channel.value(params.variant_caller)
+            Channel.value(params.chain_file)
         )
 
         workflow_extract_sv_annotations.out.liftover_vcf.set { liftover_vcf }

@@ -1,35 +1,39 @@
-
-process liftover_SV_StableLift{
+process run_SV_liftover_and_annotate {
     container params.docker_image_stablelift
 
     publishDir path: "${params.output_dir_base}/intermediate/${task.process.replace(':', '/')}",
-        pattern: "liftover.vcf.gz",
+        pattern: "liftover.{vcf.gz,Rds}",
         mode: "copy",
         enabled: params.save_intermediate_files,
         saveAs: { "LiftOver-${sample_id}.vcf.gz" }
 
     input:
-        tuple val(sample_id),
-            path(vcf, stageAs: 'inputs/*'),
-            path(index, stageAs: 'inputs/*')
+        tuple val(sample_id), path(vcf, stageAs: 'inputs/*')
+        val(source_grch_label)
         path (header_contigs)
         path (chain_file)
+        path (gnomad_rds)
 
     output:
-        tuple val(sample_id), path('liftover.vcf.gz'), emit: liftover_vcf
+        tuple val(sample_id), path('annotations.vcf.gz'), emit: liftover_vcf
+        tuple val(sample_id), path('annotations.Rds'), emit: r_annotations
 
     script:
         """
-        Rscript "${moduleDir}/scripts/liftover-Delly2-vcf.R" \
+        Rscript "${moduleDir}/scripts/extract-VCF-features-SV.R" \
             --input-vcf "${vcf}" \
-            --header-contigs "${header_contigs}" \
+            --source-build "${source_grch_label}" \
             --chain-file "${chain_file}" \
-            --output "liftover.vcf.gz"
+            --header-contigs "${header_contigs}" \
+            --gnomad-rds ${gnomad_rds} \
+            --output-vcf "annotations.vcf.gz" \
+            --output-rds "annotations.Rds"
         """
 
     stub:
     """
-    touch "liftover.vcf.gz"
+    touch "annotations.Rds"
+    touch "annotations.vcf.gz"
     """
 }
 
@@ -62,66 +66,33 @@ process run_sort_BCFtools {
         """
 }
 
-process annotate_gnomAD_StableLift {
-    container params.docker_image_stablelift
-
-    publishDir path: "${params.output_dir_base}/intermediate/${task.process.replace(':', '/')}",
-        pattern: "annotations.Rds",
-        mode: "copy",
-        enabled: params.save_intermediate_files,
-        saveAs: { "LiftOver-${sample_id}-${variant_caller}.Rds" }
-
-    input:
-        tuple val(sample_id), path(vcf, stageAs: 'inputs/*')
-        path (gnomad_rds)
-        val (variant_caller)
-
-    output:
-        tuple val(sample_id), path('annotations.Rds'), emit: r_annotations
-
-    script:
-        """
-        Rscript "${moduleDir}/scripts/extract-vcf-features-SV.R" \
-            --variant-caller "${variant_caller}" \
-            --input-vcf "${vcf}" \
-            --output-rds "annotations.Rds" \
-            --gnomad-rds ${gnomad_rds}
-        """
-
-    stub:
-    """
-    touch "annotations.Rds"
-    """
-}
-
 workflow workflow_extract_sv_annotations {
     take:
     vcf_with_sample_id
+    src_sequence
     header_contigs
     gnomad_rds
     chain_file
-    variant_caller
 
     main:
 
-    // Step 1: Liftover
-    liftover_SV_StableLift(
-        vcf_with_sample_id,
+    run_SV_liftover_and_annotate(
+        // We don't need the index file
+        vcf_with_sample_id.map{ [it[0], it[1]] },
+
+        // We only need the sample ID
+        src_sequence.map{ ["hg19": "GRCh37", "hg38": "GRCh38"][it[0]] },
+
         header_contigs,
-        chain_file
-    )
-    run_sort_BCFtools(
-        liftover_SV_StableLift.out.liftover_vcf
+        chain_file,
+        gnomad_rds
     )
 
-    // Step 2: Extract features
-    annotate_gnomAD_StableLift(
-        run_sort_BCFtools.out.sorted_vcf,
-        gnomad_rds,
-        variant_caller
+    run_sort_BCFtools(
+        run_SV_liftover_and_annotate.out.liftover_vcf
     )
 
     emit:
     liftover_vcf = run_sort_BCFtools.out.sorted_vcf
-    r_annotations = annotate_gnomAD_StableLift.out.r_annotations
+    r_annotations = run_SV_liftover_and_annotate.out.r_annotations
 }
