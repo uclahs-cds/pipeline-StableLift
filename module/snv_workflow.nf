@@ -88,7 +88,7 @@ workflow workflow_extract_snv_annotations {
 
     // We want to do all of the annotating with the GRCh38 / hg38 reference. If
     // the liftover is going from h38 to hg19, defer until after annotations
-    if (params.liftover_forward) {
+    if (params.liftover_direction == "GRCh37ToGRCh38") {
         // Step 1: Liftover
         run_liftover_BCFtools(
             vcf_with_sample_id,

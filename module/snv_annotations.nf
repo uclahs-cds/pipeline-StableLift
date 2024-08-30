@@ -159,7 +159,7 @@ workflow workflow_apply_snv_annotations {
     run_Funcotator_GATK(
         vcf_with_sample_id,
         dest_fasta_data,
-        Channel.value(params.funcotator_data.data_source)
+        Channel.value(params.funcotator_data_source)
     )
 
     annotate_RepeatMasker_BCFtools(
