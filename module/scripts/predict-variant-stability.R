@@ -31,11 +31,6 @@ for (arg in names(args)) {
     assign(gsub('_', '.', arg), args[[arg]]);
     }
 
-variant.caller <- 'Mutect2';
-features.dt <- '/hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_sSNV_Mutect2_LiftOver-GRCh38_annotated.Rds';
-rf.model <- '/hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/publish/model/GRCh37-to-GRCh38/RF-model_GRCh37-to-GRCh38_sSNV_Mutect2.Rds';
-output.tsv <- '/hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_sSNV_Mutect2_StableLift-GRCh38_stability-scores.tsv';
-
 ###################################################################################################
 # Load data
 ###################################################################################################
