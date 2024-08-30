@@ -1,4 +1,4 @@
-process run_SV_liftover_and_annotate {
+process liftover_annotate_SV_StableLift {
     container params.docker_image_stablelift
 
     publishDir path: "${params.output_dir_base}/intermediate/${task.process.replace(':', '/')}",
@@ -76,7 +76,7 @@ workflow workflow_extract_sv_annotations {
 
     main:
 
-    run_SV_liftover_and_annotate(
+    liftover_annotate_SV_StableLift(
         // We don't need the index file
         vcf_with_sample_id.map{ [it[0], it[1]] },
 
@@ -89,10 +89,10 @@ workflow workflow_extract_sv_annotations {
     )
 
     run_sort_BCFtools(
-        run_SV_liftover_and_annotate.out.liftover_vcf
+        liftover_annotate_SV_StableLift.out.liftover_vcf
     )
 
     emit:
     liftover_vcf = run_sort_BCFtools.out.sorted_vcf
-    r_annotations = run_SV_liftover_and_annotate.out.r_annotations
+    r_annotations = liftover_annotate_SV_StableLift.out.r_annotations
 }
