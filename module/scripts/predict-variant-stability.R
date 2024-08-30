@@ -31,6 +31,11 @@ for (arg in names(args)) {
     assign(gsub('_', '.', arg), args[[arg]]);
     }
 
+variant.caller <- 'Mutect2';
+features.dt <- '/hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_sSNV_Mutect2_LiftOver-GRCh38_annotated.Rds';
+rf.model <- '/hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/publish/model/GRCh37-to-GRCh38/RF-model_GRCh37-to-GRCh38_sSNV_Mutect2.Rds';
+output.tsv <- '/hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_sSNV_Mutect2_StableLift-GRCh38_stability-scores.tsv';
+
 ###################################################################################################
 # Load data
 ###################################################################################################
@@ -110,11 +115,6 @@ annotation.dt <- data.table(
     STABILITY_SCORE = format(round(stability$predictions[, 1], 4), nsmall = 4),
     STABILITY = ifelse(stability.classification == '1', 'UNSTABLE', 'STABLE')
     );
-if (substr(1, 3, annotation.dt[1, CHROM]) == 'chr') {
-    annotation.dt[, CHROM := factor(CHROM, levels = paste0('chr', c(1:22, 'X', 'Y')))];
-} else {
-    annotation.dt[, CHROM := factor(CHROM, levels = c(1:22, 'X', 'Y'))];
-    }
 setorder(annotation.dt, CHROM, POS);
 
 fwrite(annotation.dt, file = output.tsv, sep = '\t', col.names = FALSE);
