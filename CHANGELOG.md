@@ -15,6 +15,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Add workflow for SV caller (Delly2)
 - Add pipeline diagram
 - Add reverse liftover (GRCh38 -> GRCh37) for SNV branch
+- Add reverse liftover (GRCh38 -> GRCh37) for SV branch
+- Add optional `target_threshold` and `target_specificity` parameters
 
 ### Changed
 
