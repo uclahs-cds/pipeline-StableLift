@@ -42,7 +42,7 @@ log.info """\
         chain_file: ${params.chain_file}
         repeat_bed: ${params.repeat_bed}
 
-        header_contigs: ${params.header_contigs}
+        header_contigs: ${params.getOrDefault('header_contigs', null)}
 
         funcotator_data:
             data_source:       ${params.funcotator_data.data_source}

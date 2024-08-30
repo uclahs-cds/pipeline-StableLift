@@ -18,8 +18,8 @@ process predict_stability_StableLift {
     tuple val(sample_id), path("stability.tsv"), emit: stability_tsv
 
     script:
-    spec_arg = params.target_specificity ? "--specificity \"${params.target_specificity}\"" : ""
-    thresh_arg = params.target_threshold ? "--threshold \"${params.target_threshold}\"" : ""
+    spec_arg = (params.getOrDefault('target_specificity', null) != null) ? "--specificity \"${params.get('target_specificity')}\"" : ""
+    thresh_arg = (params.getOrDefault('target_threshold', null) != null) ? "--threshold \"${params.get('target_threshold')}\"" : ""
 
     """
     Rscript "${moduleDir}/scripts/predict-variant-stability.R" \
