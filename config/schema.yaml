@@ -99,3 +99,20 @@ input:
       mode: 'r'
       required: true
       help: 'Input dataset supplied by input yaml'
+
+target_threshold:
+  type: 'Number'
+  required: false
+  help: >-
+    Optional parameter specifying target Stability Score threshold for variant
+    filtering Default behavior without `target_threshold` or
+    `target_specificity` specified uses threshold maximizing F1-score in whole
+    genome validation set'. Must be in the range [0, 1].
+
+target_specificity:
+  type: 'Number'
+  required: false
+  help: >-
+    Optional parameter specifying target specificity for variant filtering
+    based on whole genome validation set. Overrides `target_threshold`. Must be
+    in the range [0, 1].

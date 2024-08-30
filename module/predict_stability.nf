@@ -18,14 +18,17 @@ process predict_stability_StableLift {
     tuple val(sample_id), path("stability.tsv"), emit: stability_tsv
 
     script:
+    spec_arg = params.target_specificity ? "--specificity \"${params.target_specificity}\"" : ""
+    thresh_arg = params.target_threshold ? "--threshold \"${params.target_threshold}\"" : ""
+
     """
     Rscript "${moduleDir}/scripts/predict-variant-stability.R" \
         --variant-caller "${variant_caller}" \
         --features-dt "${features_rds}" \
         --rf-model "${rf_model}" \
         --output-tsv "stability.tsv" \
-        --specificity "${params.target_specificity}" \
-        --threshold "${params.target_threshold}"
+        ${spec_arg} \
+        ${thresh_arg}
     """
 
     stub:
