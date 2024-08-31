@@ -10,4 +10,3 @@ funcotator_data_source:
   required: true
   mode: 'r'
   help: 'Root data source folder for Funcotator'
-
