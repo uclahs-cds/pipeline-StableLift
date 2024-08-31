@@ -1,0 +1,4 @@
+---
+input:
+  vcf: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/input/TCGA-SARC_10TN-WGS_GRCh38/TCGA-SARC_10TN-WGS_GRCh38_gSNP_HaplotypeCaller_downsample-1000x.vcf.gz
+sample_id: TCGA-SARC_10TN-WGS_GRCh38
