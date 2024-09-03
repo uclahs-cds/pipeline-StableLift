@@ -21,8 +21,9 @@
 
 ## Overview
 
-StableLift is a machine learning approach designed to predict variant stability across reference genome builds. It addresses challenges in cross-build variant comparison, supplementing LiftOver coordinate conversion with a quantitative "Stability Score" for each variant, indicating the likelihood of consistent representation between the two most commonly used human reference genome builds (GRCh37 and GRCh38). StableLift is provided as a Nextflow pipeline, accepting either GRCh37 or GRCh38 input VCFs from six variant callers (HaplotypeCaller, MuTect2, Strelka2, SomaticSniper, MuSE2, Delly2) spanning three variant types (germline SNPs, somatic SNVs, germline structural variants). Pre-trained models are provided along with performance in a whole genome validation set enabling threshold selection for variant filtering based on pre-calibrated sensitivity and specificity estimates.
+StableLift is a machine learning approach designed to predict variant stability across reference genome builds. It addresses challenges in cross-build variant comparison, supplementing LiftOver coordinate conversion with a quantitative "Stability Score" for each variant, indicating the likelihood of consistent representation between the two most commonly used human reference genome builds (GRCh37 and GRCh38). StableLift is provided as a Nextflow pipeline, accepting either GRCh37 or GRCh38 input VCFs from six variant callers (HaplotypeCaller, MuTect2, Strelka2, SomaticSniper, MuSE2, Delly2) spanning three variant types (germline SNPs, somatic SNVs, germline structural variants). Pre-trained models are provided along with performance in a whole genome validation set to define the default F1-maximizing operating point and allow for custom filtering based on pre-calibrated specificity estimates.
 
+GRCh37 → GRCh38 workflow:
 ![StableLift Overview](./docs/stablelift-overview.svg)
 
 ---
