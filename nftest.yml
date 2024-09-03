@@ -3,7 +3,7 @@ global:
   temp_dir: test/work
   remove_temp: true
   clean_logs: true
-  nf_config: test/common.config
+  nf_config: nextflow.config
 
 cases:
   - name: HaplotypeCaller-37
@@ -15,10 +15,10 @@ cases:
     asserts:
       - method: test/compare-VCFs.sh
         actual: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_gSNP_HaplotypeCaller_StableLift-GRCh38.vcf.gz
-        expect: ''
+        expect: 'HaplotypeCaller-37/pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-stability.vcf.gz'
       - method: test/compare-VCFs.sh
         actual: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_gSNP_HaplotypeCaller_StableLift-GRCh38_filtered.vcf.gz
-        expect: ''
+        expect: 'HaplotypeCaller-37/pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-filtered.vcf.gz'
 
   - name: Delly2-37
     nf_script: ./main.nf

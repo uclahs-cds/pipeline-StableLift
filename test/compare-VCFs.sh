@@ -11,4 +11,5 @@ process_vcf() {
 # Run diff and check if it fails
 if ! diff -q <(process_vcf "$vcf1") <(process_vcf "$vcf2"); then
     echo "Warning: The VCF files are different!"
+    exit 1
 fi
