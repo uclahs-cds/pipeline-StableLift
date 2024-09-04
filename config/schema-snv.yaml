@@ -9,4 +9,4 @@ funcotator_data_source:
   type: 'Path'
   required: true
   mode: 'r'
-  help: 'Root data source folder for Funcotator'
+  help: 'Root data source folder for Funcotator from https://gatk.broadinstitute.org/hc/en-us/articles/360035889931-Funcotator-Information-and-Tutorial'
