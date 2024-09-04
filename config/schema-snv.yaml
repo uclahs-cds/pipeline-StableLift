@@ -3,7 +3,7 @@ repeat_bed:
   type: 'Path'
   mode: 'r'
   required: true
-  help: 'FIXME ???'
+  help: 'RepeatMasker (v3.0.1) intervals from UCSC Table Browser for variant annotation in GRCh38 coordinates, included in resource-bundle.zip'
 
 funcotator_data_source:
   type: 'Path'
