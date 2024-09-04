@@ -3,10 +3,10 @@ header_contigs:
   type: 'Path'
   mode: 'r'
   required: true
-  help: 'FIXME ???'
+  help: 'VCF header contigs of target build for LiftOver conversion, included in resource-bundle.zip'
 
 gnomad_rds:
   type: 'Path'
   mode: 'r'
   required: true
-  help: 'FIXME ???'
+  help: 'Pre-processed gnomAD-SV (v4) data.table (.Rds) for annotating population allele frequency, included in resource-bundle.zip'
