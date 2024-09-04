@@ -28,6 +28,9 @@ log.info """\
 
     - input:
         dataset_id: ${params.dataset_id}
+
+        liftover_direction: ${params.liftover_direction}
+
         variant_caller: ${params.variant_caller}
         rf_model: ${params.rf_model}
 
@@ -40,14 +43,14 @@ log.info """\
         dest_fasta_dict: ${params.dest_fasta_dict}
 
         chain_file: ${params.chain_file}
-        repeat_bed: ${params.repeat_bed}
 
+    - SV only:
         header_contigs: ${params.getOrDefault('header_contigs', null)}
+        gnomad_rds: ${params.getOrDefault('gnomad_rds', null)}
 
-        funcotator_data:
-            data_source:       ${params.funcotator_data.data_source}
-            src_reference_id:  ${params.funcotator_data.src_reference_id}
-            dest_reference_id: ${params.funcotator_data.dest_reference_id}
+    - SNV only:
+        repeat_bed: ${params.getOrDefault('repeat_bed', null)}
+        funcotator_data_source: ${params.getOrDefault('funcotator_data_source', null)}
 
     - output:
         output_dir_base: ${params.output_dir_base}
@@ -90,7 +93,7 @@ def indexFile(bam_or_vcf) {
 
 Channel
     .value( [
-        params.funcotator_data.src_reference_id,
+        params.src_fasta_id,
         params.src_fasta_ref,
         params.src_fasta_fai,
         params.src_fasta_dict,
@@ -99,7 +102,7 @@ Channel
 
 Channel
     .value( [
-        params.funcotator_data.dest_reference_id,
+        params.dest_fasta_id,
         params.dest_fasta_ref,
         params.dest_fasta_fai,
         params.dest_fasta_dict
