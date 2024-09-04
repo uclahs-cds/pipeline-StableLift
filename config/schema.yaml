@@ -2,12 +2,12 @@
 sample_id:
   type: 'String'
   required: true
-  help: 'sample id supplied from input yaml'
+  help: 'Sample id supplied from input yaml'
 
 liftover_direction:
   type: 'String'
   required: true
-  help: 'Direction of liftover to perform'
+  help: 'Direction of LiftOver to perform'
   choices:
     - GRCh37toGRCh38
     - GRCh38toGRCh37
@@ -15,7 +15,7 @@ liftover_direction:
 variant_caller:
   type: 'String'
   required: true
-  help: 'Tool used to call structural or somatic variants'
+  help: 'Tool used to call variants'
   choices:
     - Mutect2
     - HaplotypeCaller
@@ -34,7 +34,7 @@ output_dir:
   type: 'Path'
   mode: 'w'
   required: true
-  help: 'absolute path to directory to store output'
+  help: 'Absolute path to directory to store output'
 
 fasta_ref_37:
   type: 'Path'
@@ -88,13 +88,13 @@ chain_file:
   type: 'Path'
   mode: 'r'
   required: true
-  help: 'FIXME ???'
+  help: 'Chain file corresponding to LiftOver direction, included in resource-bundle.zip'
 
 rf_model:
   type: 'Path'
   mode: 'r'
   required: true
-  help: 'FIXME ???'
+  help: 'Path to pre-trained random forest model (.Rds) corresponding to variant caller and LiftOver direction'
 
 input:
   type: 'Namespace'
