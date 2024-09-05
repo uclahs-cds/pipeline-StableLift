@@ -3,26 +3,173 @@ global:
   temp_dir: test/work
   remove_temp: true
   clean_logs: true
-  nf_config: test/common.config
+  nf_config: nextflow.config
 
 cases:
-  - name: SNV
+  - name: HaplotypeCaller-37
     nf_script: ./main.nf
-    nf_config: test/snv.config
-    params_file: test/snv.yaml
+    nf_config: test/HaplotypeCaller-37.config
+    params_file: test/yamls/HaplotypeCaller-37.yaml
     skip: false
     verbose: true
+    asserts:
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_gSNP_HaplotypeCaller_StableLift-GRCh38.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-HaplotypeCaller-stability.vcf.gz'
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_gSNP_HaplotypeCaller_StableLift-GRCh38_filtered.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-HaplotypeCaller-filtered.vcf.gz'
 
-  - name: SNV-backward
+  - name: Delly2-37
     nf_script: ./main.nf
-    nf_config: test/backward.config
-    params_file: test/snv-backward.yaml
+    nf_config: test/Delly2-37.config
+    params_file: test/yamls/Delly2-37.yaml
     skip: false
     verbose: true
+    asserts:
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_gSV_Delly2_StableLift-GRCh38.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-Delly2-stability.vcf.gz'
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_gSV_Delly2_StableLift-GRCh38_filtered.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-Delly2-filtered.vcf.gz'
 
-  - name: SV
+  - name: Muse2-37
     nf_script: ./main.nf
-    nf_config: test/sv.config
-    params_file: test/sv.yaml
+    nf_config: test/Muse2-37.config
+    params_file: test/yamls/Muse2-37.yaml
     skip: false
     verbose: true
+    asserts:
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_sSNV_Muse2_StableLift-GRCh38.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-Muse2-stability.vcf.gz'
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_sSNV_Muse2_StableLift-GRCh38_filtered.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-Muse2-filtered.vcf.gz'
+
+  - name: Mutect2-37
+    nf_script: ./main.nf
+    nf_config: test/Mutect2-37.config
+    params_file: test/yamls/Mutect2-37.yaml
+    skip: false
+    verbose: true
+    asserts:
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_sSNV_Mutect2_StableLift-GRCh38.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-Mutect2-stability.vcf.gz'
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_sSNV_Mutect2_StableLift-GRCh38_filtered.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-Mutect2-filtered.vcf.gz'
+
+  - name: SomaticSniper-37
+    nf_script: ./main.nf
+    nf_config: test/SomaticSniper-37.config
+    params_file: test/yamls/SomaticSniper-37.yaml
+    skip: false
+    verbose: true
+    asserts:
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_sSNV_SomaticSniper_StableLift-GRCh38.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-SomaticSniper-stability.vcf.gz'
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_sSNV_SomaticSniper_StableLift-GRCh38_filtered.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-SomaticSniper-filtered.vcf.gz'
+
+  - name: Strelka2-37
+    nf_script: ./main.nf
+    nf_config: test/Strelka2-37.config
+    params_file: test/yamls/Strelka2-37.yaml
+    skip: false
+    verbose: true
+    asserts:
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_sSNV_Strelka2_StableLift-GRCh38.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-Strelka2-stability.vcf.gz'
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_sSNV_Strelka2_StableLift-GRCh38_filtered.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-Strelka2-filtered.vcf.gz'
+
+  - name: HaplotypeCaller-38
+    nf_script: ./main.nf
+    nf_config: test/HaplotypeCaller-38.config
+    params_file: test/yamls/HaplotypeCaller-38.yaml
+    skip: false
+    verbose: true
+    asserts:
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_gSNP_HaplotypeCaller_StableLift-GRCh37.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-HaplotypeCaller-stability.vcf.gz'
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_gSNP_HaplotypeCaller_StableLift-GRCh37_filtered.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-HaplotypeCaller-filtered.vcf.gz'
+
+  - name: Delly2-38
+    nf_script: ./main.nf
+    nf_config: test/Delly2-38.config
+    params_file: test/yamls/Delly2-38.yaml
+    skip: false
+    verbose: true
+    asserts:
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_gSV_Delly2_StableLift-GRCh37.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-Delly2-stability.vcf.gz'
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_gSV_Delly2_StableLift-GRCh37_filtered.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-Delly2-filtered.vcf.gz'
+
+  - name: Muse2-38
+    nf_script: ./main.nf
+    nf_config: test/Muse2-38.config
+    params_file: test/yamls/Muse2-38.yaml
+    skip: false
+    verbose: true
+    asserts:
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_sSNV_Muse2_StableLift-GRCh37.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-Muse2-stability.vcf.gz'
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_sSNV_Muse2_StableLift-GRCh37_filtered.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-Muse2-filtered.vcf.gz'
+
+  - name: Mutect2-38
+    nf_script: ./main.nf
+    nf_config: test/Mutect2-38.config
+    params_file: test/yamls/Mutect2-38.yaml
+    skip: false
+    verbose: true
+    asserts:
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_sSNV_Mutect2_StableLift-GRCh37.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-Mutect2-stability.vcf.gz'
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_sSNV_Mutect2_StableLift-GRCh37_filtered.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-Mutect2-filtered.vcf.gz'
+
+  - name: SomaticSniper-38
+    nf_script: ./main.nf
+    nf_config: test/SomaticSniper-38.config
+    params_file: test/yamls/SomaticSniper-38.yaml
+    skip: false
+    verbose: true
+    asserts:
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_sSNV_SomaticSniper_StableLift-GRCh37.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-SomaticSniper-stability.vcf.gz'
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_sSNV_SomaticSniper_StableLift-GRCh37_filtered.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-SomaticSniper-filtered.vcf.gz'
+
+  - name: Strelka2-38
+    nf_script: ./main.nf
+    nf_config: test/Strelka2-38.config
+    params_file: test/yamls/Strelka2-38.yaml
+    skip: false
+    verbose: true
+    asserts:
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_sSNV_Strelka2_StableLift-GRCh37.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-Strelka2-stability.vcf.gz'
+      - script: test/compare-VCFs.sh
+        expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_sSNV_Strelka2_StableLift-GRCh37_filtered.vcf.gz
+        actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-Strelka2-filtered.vcf.gz'
