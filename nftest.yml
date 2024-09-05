@@ -13,10 +13,10 @@ cases:
     skip: false
     verbose: true
     asserts:
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_gSNP_HaplotypeCaller_StableLift-GRCh38.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-HaplotypeCaller-stability.vcf.gz'
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_gSNP_HaplotypeCaller_StableLift-GRCh38_filtered.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-HaplotypeCaller-filtered.vcf.gz'
 
@@ -27,10 +27,10 @@ cases:
     skip: false
     verbose: true
     asserts:
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_gSV_Delly2_StableLift-GRCh38.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-Delly2-stability.vcf.gz'
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_gSV_Delly2_StableLift-GRCh38_filtered.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-Delly2-filtered.vcf.gz'
 
@@ -41,10 +41,10 @@ cases:
     skip: false
     verbose: true
     asserts:
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_sSNV_Muse2_StableLift-GRCh38.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-Muse2-stability.vcf.gz'
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_sSNV_Muse2_StableLift-GRCh38_filtered.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-Muse2-filtered.vcf.gz'
 
@@ -55,10 +55,10 @@ cases:
     skip: false
     verbose: true
     asserts:
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_sSNV_Mutect2_StableLift-GRCh38.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-Mutect2-stability.vcf.gz'
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_sSNV_Mutect2_StableLift-GRCh38_filtered.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-Mutect2-filtered.vcf.gz'
 
@@ -69,10 +69,10 @@ cases:
     skip: false
     verbose: true
     asserts:
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_sSNV_SomaticSniper_StableLift-GRCh38.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-SomaticSniper-stability.vcf.gz'
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_sSNV_SomaticSniper_StableLift-GRCh38_filtered.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-SomaticSniper-filtered.vcf.gz'
 
@@ -83,10 +83,10 @@ cases:
     skip: false
     verbose: true
     asserts:
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_sSNV_Strelka2_StableLift-GRCh38.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-Strelka2-stability.vcf.gz'
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh37-to-GRCh38/TCGA-SARC_10TN-WGS_GRCh37_sSNV_Strelka2_StableLift-GRCh38_filtered.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh37/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh37-Strelka2-filtered.vcf.gz'
 
@@ -97,10 +97,10 @@ cases:
     skip: false
     verbose: true
     asserts:
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_gSNP_HaplotypeCaller_StableLift-GRCh37.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-HaplotypeCaller-stability.vcf.gz'
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_gSNP_HaplotypeCaller_StableLift-GRCh37_filtered.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-HaplotypeCaller-filtered.vcf.gz'
 
@@ -111,10 +111,10 @@ cases:
     skip: false
     verbose: true
     asserts:
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_gSV_Delly2_StableLift-GRCh37.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-Delly2-stability.vcf.gz'
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_gSV_Delly2_StableLift-GRCh37_filtered.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-Delly2-filtered.vcf.gz'
 
@@ -125,10 +125,10 @@ cases:
     skip: false
     verbose: true
     asserts:
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_sSNV_Muse2_StableLift-GRCh37.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-Muse2-stability.vcf.gz'
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_sSNV_Muse2_StableLift-GRCh37_filtered.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-Muse2-filtered.vcf.gz'
 
@@ -139,10 +139,10 @@ cases:
     skip: false
     verbose: true
     asserts:
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_sSNV_Mutect2_StableLift-GRCh37.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-Mutect2-stability.vcf.gz'
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_sSNV_Mutect2_StableLift-GRCh37_filtered.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-Mutect2-filtered.vcf.gz'
 
@@ -153,10 +153,10 @@ cases:
     skip: false
     verbose: true
     asserts:
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_sSNV_SomaticSniper_StableLift-GRCh37.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-SomaticSniper-stability.vcf.gz'
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_sSNV_SomaticSniper_StableLift-GRCh37_filtered.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-SomaticSniper-filtered.vcf.gz'
 
@@ -167,9 +167,9 @@ cases:
     skip: false
     verbose: true
     asserts:
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_sSNV_Strelka2_StableLift-GRCh37.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-Strelka2-stability.vcf.gz'
-      - method: test/compare-VCFs.sh
+      - script: test/compare-VCFs.sh
         expect: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/output/TCGA-SARC_10TN-WGS_GRCh38-to-GRCh37/TCGA-SARC_10TN-WGS_GRCh38_sSNV_Strelka2_StableLift-GRCh37_filtered.vcf.gz
         actual: 'pipeline-StableLift-*/TCGA-SARC_10TN-WGS_GRCh38/StableLift-*/output/TCGA-SARC_10TN-WGS_GRCh38-Strelka2-filtered.vcf.gz'
