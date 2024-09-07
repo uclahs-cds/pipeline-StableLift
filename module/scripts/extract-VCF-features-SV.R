@@ -254,7 +254,6 @@ all.features <- c(continuous.features, categorical.features, 'ID');
 features.dt <- features.dt[, ..all.features];
 features.dt[, (continuous.features) := lapply(.SD, as.numeric), .SDcols = continuous.features];
 features.dt[, (continuous.features) := lapply(.SD, function(x) ifelse(is.na(x), 0, x)), .SDcols = continuous.features];
-# features.dt[, (categorical.features) := lapply(.SD, function(x) ifelse(is.na(x), '', x)), .SDcols = categorical.features];
 features.dt[, (categorical.features) := lapply(.SD, as.factor), .SDcols = categorical.features];
 names(features.dt) <- make.names(names(features.dt));
 
