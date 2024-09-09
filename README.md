@@ -31,7 +31,7 @@ GRCh37 → GRCh38 workflow:
 
 1. Copy [`./config/template.config`](./config/template.config) (e.g. project.config) and fill in all required parameters.
 2. Copy [`./input/template.yaml`](./input/template.yaml) (e.g. project.yaml) and update with input VCF ID and path.
-3. Run the pipeline `nextflow run -c project.config -params-file project.yaml main.nf`
+3. Run the pipeline using [Nextflow](https://www.nextflow.io/docs/latest/install.html#install-nextflow) `nextflow run -c project.config -params-file project.yaml main.nf`
 
 ---
 
