@@ -149,19 +149,20 @@ The docker images in the following table are generally defined like `docker_imag
 
 ### Test Data Set
 
-A 2-3 sentence description of the test data set(s) used to validate and test this pipeline. If possible, include references and links for how to access and use the test dataset
+10 whole genomes from [The Cancer Genome Atlas (TCGA-SARC)](https://portal.gdc.cancer.gov/projects/TCGA-SARC) were used to test pipeline outputs and validate model performance. All data was processed using [standardized Nextflow pipelines](https://github.com/uclahs-cds/metapipeline-DNA). Somatic VCFs are available as [release attachments](https://github.com/uclahs-cds/pipeline-StableLift/releases).
 
-### Validation <version number\>
-
-| Input/Output | Description | Result |
-| ------------ | ------------------------ | ------------------------ |
-| metric 1 | 1 - 2 sentence description of the metric | quantifiable result |
-| metric 2 | 1 - 2 sentence description of the metric | quantifiable result |
-| metric n | 1 - 2 sentence description of the metric | quantifiable result |
-
-- [Reference/External Link/Path 1 to any files/plots or other validation results](<link>)
-- [Reference/External Link/Path 2 to any files/plots or other validation results](<link>)
-- [Reference/External Link/Path n to any files/plots or other validation results](<link>)
+| Donor ID       | Normal Sample ID          | Tumour Sample ID          |
+|----------------|---------------------------|---------------------------|
+| TCGASTSA000008 | TCGASTSA000008-N001-B01-P | TCGASTSA000008-T001-P01-P |
+| TCGASTSA000014 | TCGASTSA000014-N001-B01-P | TCGASTSA000014-T001-P01-P |
+| TCGASTSA000026 | TCGASTSA000026-N002-A01-P | TCGASTSA000026-T001-P01-P |
+| TCGASTSA000041 | TCGASTSA000041-N001-B01-P | TCGASTSA000041-T001-P01-P |
+| TCGASTSA000045 | TCGASTSA000045-N001-B01-P | TCGASTSA000045-T001-P01-P |
+| TCGASTSA000060 | TCGASTSA000060-N001-B01-P | TCGASTSA000060-T001-P01-P |
+| TCGASTSA000064 | TCGASTSA000064-N001-B01-P | TCGASTSA000064-T001-P01-P |
+| TCGASTSA000112 | TCGASTSA000112-N001-B01-P | TCGASTSA000112-T001-P01-P |
+| TCGASTSA000131 | TCGASTSA000131-N001-B01-P | TCGASTSA000131-T001-P01-P |
+| TCGASTSA000200 | TCGASTSA000200-N001-B01-P | TCGASTSA000200-T001-P01-P |
 
 ### Validation Tool
 
@@ -171,9 +172,9 @@ Included is a template for validating your input files. For more information on 
 
 ## References
 
-1. [Reference 1](<links-to-papers/external-code/documentation/metadata/other-repos/or-anything-else>)
-2. [Reference 2](<links-to-papers/external-code/documentation/metadata/other-repos/or-anything-else>)
-3. [Reference n](<links-to-papers/external-code/documentation/metadata/other-repos/or-anything-else>)
+1. [StableLift: Optimized Germline and Somatic Variant Detection Across Genome Builds]()
+2. [Metapipeline-DNA: A Comprehensive Germline & Somatic Genomics Nextflow Pipeline](https://www.biorxiv.org/content/10.1101/2024.09.04.611267v1)
+3. [uclahs-cds/metapipeline-DNA](https://github.com/uclahs-cds/metapipeline-DNA)
 
 ---
 
