@@ -137,7 +137,7 @@ The docker images in the following table are generally defined like `docker_imag
 | ------------ | ------------------------ |
 | `*_stability.vcf.gz` | Output VCF in target build coordinates with variant annotations and predicted Stability Scores |
 | `*_stability.vcf.gz.tbi` | Output VCF tabix index |
-| `*_filtered.vcf.gz` | Filtered output VCF with predicted unstable variants removed |
+| `*_filtered.vcf.gz` | Filtered output VCF with predicted "Unstable" variants removed |
 | `*_filtered.vcf.gz.tbi` | Filtered output VCF tabix index |
 
 ---
