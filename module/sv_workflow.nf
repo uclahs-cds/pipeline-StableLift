@@ -1,5 +1,6 @@
 process liftover_annotate_SV_StableLift {
     container params.docker_image_stablelift
+    containerOptions "-v ${moduleDir}:${moduleDir}"
 
     publishDir path: "${params.output_dir_base}/intermediate/${task.process.replace(':', '/')}",
         pattern: "liftover.{vcf.gz,Rds}",

@@ -43,13 +43,14 @@ process run_apply_stability_annotations {
     publishDir path: "${params.output_dir_base}/output",
         pattern: "{stability,filtered}.vcf.gz{,.tbi}",
         mode: "copy",
-        saveAs: { "${sample_id}-${it}" }
+        saveAs: { "${sample_id}-${variant_caller}-${it}" }
 
     input:
     tuple val(sample_id),
         path(annotated_vcf, stageAs: 'inputs/*'),
         path(stability_tsv, stageAs: 'inputs/*'),
         path(stability_tsv_tbi, stageAs: 'inputs/*')
+    val(variant_caller)
 
     output:
     tuple val(sample_id),
@@ -120,7 +121,8 @@ workflow workflow_predict_stability {
             compress_and_index_HTSlib.out.compressed_tsv_with_index,
             failOnDuplicate: true,
             failOnMismatch: true
-        )
+        ),
+        variant_caller
     )
 
     emit:
