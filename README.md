@@ -2,11 +2,11 @@
 
   - [Overview](#overview)
   - [How To Run](#how-to-run)
-  - [Flow Diagram](#flow-diagram)
   - [Pipeline Steps](#pipeline-steps)
     - [1. LiftOver variant coordinates](#1-liftover-variant-coordinates)
     - [2. Variant annotation](#2-variant-annotation)
     - [3. Predict variant stability](#3-predict-variant-stability)
+  - [Flow Diagram](#flow-diagram)
   - [Inputs](#inputs)
   - [Outputs](#outputs)
   - [Testing and Validation](#testing-and-validation)
@@ -35,12 +35,6 @@ GRCh37 → GRCh38 workflow:
 
 ---
 
-## Flow Diagram
-
-<img src="./docs/pipeline.mmd.svg" width="80%">
-
----
-
 ## Pipeline Steps
 
 ### 1. LiftOver variant coordinates
@@ -58,6 +52,12 @@ GRCh37 → GRCh38 workflow:
 
 - Predict variant stability with pre-trained random forest model and the `ranger` R package.
 - Annotate VCF with Stability Score and filter unstable variants.
+
+---
+
+## Flow Diagram
+
+<img src="./docs/pipeline.mmd.svg" width="80%">
 
 ---
 
