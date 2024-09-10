@@ -102,7 +102,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">How To Run</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/f6f9a91803b22a6381a54fbe8216a261e3c80945/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/c12bc873da9e3082504ef4a8750d29b63a24c936/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -112,9 +112,9 @@
               
                 <h2 id="how-to-run">How To Run</h2>
 <ol>
-<li>Copy <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/f6f9a91803b22a6381a54fbe8216a261e3c80945/config/template.config"><code>./config/template.config</code></a> (e.g. <code>project.config</code>) and fill in all required parameters.</li>
+<li>Copy <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/c12bc873da9e3082504ef4a8750d29b63a24c936/config/template.config"><code>./config/template.config</code></a> (e.g. <code>project.config</code>) and fill in all required parameters.</li>
 <li>For each input sample:</li>
-<li>Copy <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/f6f9a91803b22a6381a54fbe8216a261e3c80945/input/template.yaml"><code>./input/template.yaml</code></a> (e.g. <code>sample-002.yaml</code>) and update with the sample ID and VCF path.</li>
+<li>Copy <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/c12bc873da9e3082504ef4a8750d29b63a24c936/input/template.yaml"><code>./input/template.yaml</code></a> (e.g. <code>sample-002.yaml</code>) and update with the sample ID and VCF path.</li>
 <li>Start the sample-specific pipeline run with <code>nextflow run -c project.config -params-file sample-002.yaml main.nf</code></li>
 </ol>
 <p>If you are using the UCLA Azure cluster, please use the <a href="https://github.com/uclahs-cds/tool-submit-nf">submission script</a> to submit your pipeline rather than calling <code>nextflow</code> directly.</p>
