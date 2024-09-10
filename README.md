@@ -11,7 +11,6 @@
   - [Outputs](#outputs)
   - [Testing and Validation](#testing-and-validation)
     - [Test Dataset](#test-dataset)
-    - [Validation Tool](#validation-tool)
   - [References](#references)
   - [Discussions](#discussions)
   - [Contributors](#contributors)
