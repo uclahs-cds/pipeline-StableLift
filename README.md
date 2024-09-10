@@ -126,7 +126,7 @@ input:
 
 ### Test Dataset
 
-10 whole genomes from [The Cancer Genome Atlas (TCGA-SARC)](https://portal.gdc.cancer.gov/projects/TCGA-SARC) were used to test pipeline outputs and validate model performance. All data was processed using [standardized Nextflow pipelines](https://github.com/uclahs-cds/metapipeline-DNA). Somatic VCFs are available as [release attachments](https://github.com/uclahs-cds/pipeline-StableLift/releases).
+10 whole genomes from [The Cancer Genome Atlas (TCGA-SARC)](https://portal.gdc.cancer.gov/projects/TCGA-SARC) were used to test pipeline outputs and validate model performance. All data was processed using [standardized Nextflow pipelines](https://github.com/uclahs-cds/metapipeline-DNA). Somatic VCFs from GRCh37 and GRCh38 alignments are available for the four supported sSNV callers as [release attachments](https://github.com/uclahs-cds/pipeline-StableLift/releases).
 
 | Donor ID       | Normal Sample ID          | Tumour Sample ID          |
 |----------------|---------------------------|---------------------------|
@@ -140,10 +140,6 @@ input:
 | TCGASTSA000112 | TCGASTSA000112-N001-B01-P | TCGASTSA000112-T001-P01-P |
 | TCGASTSA000131 | TCGASTSA000131-N001-B01-P | TCGASTSA000131-T001-P01-P |
 | TCGASTSA000200 | TCGASTSA000200-N001-B01-P | TCGASTSA000200-T001-P01-P |
-
-### Validation Tool
-
-Included is a template for validating your input files. For more information on the tool check out: https://github.com/uclahs-cds/package-PipeVal
 
 ---
 
