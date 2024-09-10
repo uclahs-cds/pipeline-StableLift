@@ -28,9 +28,11 @@ GRCh37 → GRCh38 workflow:
 
 ## How To Run
 
-1. Copy [`./config/template.config`](./config/template.config) (e.g. project.config) and fill in all required parameters.
-2. Copy [`./input/template.yaml`](./input/template.yaml) (e.g. project.yaml) and update with input VCF ID and path.
-3. Run the pipeline using [Nextflow](https://www.nextflow.io/docs/latest/install.html#install-nextflow) `nextflow run -c project.config -params-file project.yaml main.nf`
+1. Download and extract [resource bundle](https://github.com/uclahs-cds/pipeline-StableLift/releases/download/v1.0.0/resource-bundle.zip) and [source code](https://github.com/uclahs-cds/pipeline-StableLift/releases/download/v1.0.0/source_code_with_submodules.tar.gz).
+2. Download [pre-trained model](https://github.com/uclahs-cds/pipeline-StableLift/releases/tag/v1.0.0) depending on variant caller and conversion direction.
+3. Copy [`./config/template.config`](./config/template.config) (e.g. project.config) and fill in all required parameters.
+4. Copy [`./input/template.yaml`](./input/template.yaml) (e.g. project.yaml) and update with input VCF ID and path.
+5. Run the pipeline using [Nextflow](https://www.nextflow.io/docs/latest/install.html#install-nextflow) `nextflow run -c project.config -params-file project.yaml main.nf`.
 
 ---
 
