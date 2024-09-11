@@ -58,7 +58,7 @@ GRCh37 → GRCh38 workflow:
 
 ## Flow Diagram
 
-<img src="./docs/pipeline.mmd.svg" width="80%">
+<img src="./docs/pipeline.mmd.svg" width="900">
 
 ---
 
