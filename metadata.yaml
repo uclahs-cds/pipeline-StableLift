@@ -1,9 +1,7 @@
 ---
 category: "pipeline"
-description: "A template Nextflow pipeline for styling and standardization"
-maintainers: "Boutros Lab Infrastructure <BoutrosLabInfrastructure@mednet.ucla.edu>"
-languages: ["Nextflow", "Docker"]
-dependencies: ["Java", "Nextflow", "Docker"]
-references: "https://uclahs-cds.atlassian.net/wiki/spaces/BOUTROSLAB/pages/3189620/Guide+to+Nextflow"
-tools: ["tool_a:v1.1.0", "tool_b:v1.1.0"]
+description: "Nextflow pipeline for predicting variant stability across reference genome builds."
+maintainers: "Nicholas Wiltsie <nwiltsie@mednet.ucla.edu>, Nicholas K. Wang <nkwang@mednet.ucla.edu>"
+languages: ["Nextflow", "R"]
+dependencies: ["Nextflow", "R", "Docker"]
 image_name: "stablelift"
