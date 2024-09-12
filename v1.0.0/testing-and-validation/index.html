@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Testing and Validation - pipeline-StableLift</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/version-select.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Testing and Validation";
+        var mkdocs_page_input_path = "testing-and-validation.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> pipeline-StableLift
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../how-to-run/">How To Run</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../pipeline-steps/">Pipeline Steps</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../flow-diagram/">Flow Diagram</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../inputs/">Inputs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../outputs/">Outputs</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Testing and Validation</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#test-dataset">Test Dataset</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../references/">References</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../discussions/">Discussions</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../contributors/">Contributors</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">pipeline-StableLift</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Testing and Validation</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/v1.0.0/README.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h2 id="testing-and-validation">Testing and Validation</h2>
+<h3 id="test-dataset">Test Dataset</h3>
+<p>10 whole genomes from <a href="https://portal.gdc.cancer.gov/projects/TCGA-SARC">The Cancer Genome Atlas (TCGA-SARC)</a> were used to test pipeline outputs and validate model performance. All data was processed using <a href="https://github.com/uclahs-cds/metapipeline-DNA">standardized Nextflow pipelines</a>. Somatic VCFs from GRCh37 and GRCh38 alignments are available for the four supported sSNV callers as <a href="https://github.com/uclahs-cds/pipeline-StableLift/releases">release attachments</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Donor ID</th>
+<th>Normal Sample ID</th>
+<th>Tumour Sample ID</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TCGASTSA000008</td>
+<td>TCGASTSA000008-N001-B01-P</td>
+<td>TCGASTSA000008-T001-P01-P</td>
+</tr>
+<tr>
+<td>TCGASTSA000014</td>
+<td>TCGASTSA000014-N001-B01-P</td>
+<td>TCGASTSA000014-T001-P01-P</td>
+</tr>
+<tr>
+<td>TCGASTSA000026</td>
+<td>TCGASTSA000026-N002-A01-P</td>
+<td>TCGASTSA000026-T001-P01-P</td>
+</tr>
+<tr>
+<td>TCGASTSA000041</td>
+<td>TCGASTSA000041-N001-B01-P</td>
+<td>TCGASTSA000041-T001-P01-P</td>
+</tr>
+<tr>
+<td>TCGASTSA000045</td>
+<td>TCGASTSA000045-N001-B01-P</td>
+<td>TCGASTSA000045-T001-P01-P</td>
+</tr>
+<tr>
+<td>TCGASTSA000060</td>
+<td>TCGASTSA000060-N001-B01-P</td>
+<td>TCGASTSA000060-T001-P01-P</td>
+</tr>
+<tr>
+<td>TCGASTSA000064</td>
+<td>TCGASTSA000064-N001-B01-P</td>
+<td>TCGASTSA000064-T001-P01-P</td>
+</tr>
+<tr>
+<td>TCGASTSA000112</td>
+<td>TCGASTSA000112-N001-B01-P</td>
+<td>TCGASTSA000112-T001-P01-P</td>
+</tr>
+<tr>
+<td>TCGASTSA000131</td>
+<td>TCGASTSA000131-N001-B01-P</td>
+<td>TCGASTSA000131-T001-P01-P</td>
+</tr>
+<tr>
+<td>TCGASTSA000200</td>
+<td>TCGASTSA000200-N001-B01-P</td>
+<td>TCGASTSA000200-T001-P01-P</td>
+</tr>
+</tbody>
+</table>
+<hr />
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../outputs/" class="btn btn-neutral float-left" title="Outputs"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../references/" class="btn btn-neutral float-right" title="References">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/uclahs-cds/pipeline-StableLift/tree/v1.0.0" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../outputs/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../references/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../js/version-select.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
