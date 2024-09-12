@@ -30,9 +30,9 @@ flowchart TD
   --> pipeval:::linux
   --> sv_vs_snv{{Variant Type?}}
 
-  sv_vs_snv ------> r_liftover
-  header_contigs .-> r_liftover
-  chain_file2 ..-> r_liftover
+  sv_vs_snv ------> r_extract_sv
+  header_contigs .-> r_extract_sv
+  chain_file2 ..-> r_extract_sv
   gnomad_rds .-> r_extract_sv
 
   subgraph SV ["`**SV**`"]
@@ -41,8 +41,7 @@ flowchart TD
     chain_file2([chain_file]):::input
     gnomad_rds([gnomad_rds]):::input
 
-    r_liftover[liftover-Delly2-vcf.R]:::R
-    ---> r_extract_sv[extract-VCF-features-SV.R]:::R
+    r_extract_sv[extract-VCF-features-SV.R]:::R
 
   end
 
@@ -64,7 +63,7 @@ flowchart TD
         --> bcftools_annotate2["`bcftools annotate*Trinucleotide*`"]:::bcftools
     end
 
-    blocknote["`**Note:** Annotation is performed prior to LiftOver when converting from GRCh38 -> GRCh37`"]
+    blocknote["`**Note:** Annotation is performed prior to LiftOver when converting from GRCh38 to GRCh37`"]
 
     bcftools_liftover ---> gatk_func
     bcftools_annotate2 --> r_extract_snv[extract-VCF-features.R]:::R
