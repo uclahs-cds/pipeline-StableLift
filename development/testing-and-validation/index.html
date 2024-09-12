@@ -49,11 +49,11 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../flow-diagram/">Flow Diagram</a>
+                <li class="toctree-l1"><a class="reference internal" href="../pipeline-steps/">Pipeline Steps</a>
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../pipeline-steps/">Pipeline Steps</a>
+                <li class="toctree-l1"><a class="reference internal" href="../flow-diagram/">Flow Diagram</a>
                 </li>
               </ul>
               <ul>
@@ -67,11 +67,7 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="./">Testing and Validation</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#test-data-set">Test Data Set</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#validation">Validation \</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#validation-tool">Validation Tool</a>
+    <li class="toctree-l2"><a class="reference internal" href="#test-dataset">Test Dataset</a>
     </li>
     </ul>
                 </li>
@@ -108,7 +104,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Testing and Validation</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/c12bc873da9e3082504ef4a8750d29b63a24c936/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/bd98eb42944b09ebf19cd6ad7d5200a7565470b5/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -117,42 +113,69 @@
             <div class="section" itemprop="articleBody">
               
                 <h2 id="testing-and-validation">Testing and Validation</h2>
-<h3 id="test-data-set">Test Data Set</h3>
-<p>A 2-3 sentence description of the test data set(s) used to validate and test this pipeline. If possible, include references and links for how to access and use the test dataset</p>
-<h3 id="validation">Validation \<version number></h3>
+<h3 id="test-dataset">Test Dataset</h3>
+<p>10 whole genomes from <a href="https://portal.gdc.cancer.gov/projects/TCGA-SARC">The Cancer Genome Atlas (TCGA-SARC)</a> were used to test pipeline outputs and validate model performance. All data was processed using <a href="https://github.com/uclahs-cds/metapipeline-DNA">standardized Nextflow pipelines</a>. Somatic VCFs from GRCh37 and GRCh38 alignments are available for the four supported sSNV callers as <a href="https://github.com/uclahs-cds/pipeline-StableLift/releases">release attachments</a>.</p>
 <table>
 <thead>
 <tr>
-<th>Input/Output</th>
-<th>Description</th>
-<th>Result</th>
+<th>Donor ID</th>
+<th>Normal Sample ID</th>
+<th>Tumour Sample ID</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>metric 1</td>
-<td>1 - 2 sentence description of the metric</td>
-<td>quantifiable result</td>
+<td>TCGASTSA000008</td>
+<td>TCGASTSA000008-N001-B01-P</td>
+<td>TCGASTSA000008-T001-P01-P</td>
 </tr>
 <tr>
-<td>metric 2</td>
-<td>1 - 2 sentence description of the metric</td>
-<td>quantifiable result</td>
+<td>TCGASTSA000014</td>
+<td>TCGASTSA000014-N001-B01-P</td>
+<td>TCGASTSA000014-T001-P01-P</td>
 </tr>
 <tr>
-<td>metric n</td>
-<td>1 - 2 sentence description of the metric</td>
-<td>quantifiable result</td>
+<td>TCGASTSA000026</td>
+<td>TCGASTSA000026-N002-A01-P</td>
+<td>TCGASTSA000026-T001-P01-P</td>
+</tr>
+<tr>
+<td>TCGASTSA000041</td>
+<td>TCGASTSA000041-N001-B01-P</td>
+<td>TCGASTSA000041-T001-P01-P</td>
+</tr>
+<tr>
+<td>TCGASTSA000045</td>
+<td>TCGASTSA000045-N001-B01-P</td>
+<td>TCGASTSA000045-T001-P01-P</td>
+</tr>
+<tr>
+<td>TCGASTSA000060</td>
+<td>TCGASTSA000060-N001-B01-P</td>
+<td>TCGASTSA000060-T001-P01-P</td>
+</tr>
+<tr>
+<td>TCGASTSA000064</td>
+<td>TCGASTSA000064-N001-B01-P</td>
+<td>TCGASTSA000064-T001-P01-P</td>
+</tr>
+<tr>
+<td>TCGASTSA000112</td>
+<td>TCGASTSA000112-N001-B01-P</td>
+<td>TCGASTSA000112-T001-P01-P</td>
+</tr>
+<tr>
+<td>TCGASTSA000131</td>
+<td>TCGASTSA000131-N001-B01-P</td>
+<td>TCGASTSA000131-T001-P01-P</td>
+</tr>
+<tr>
+<td>TCGASTSA000200</td>
+<td>TCGASTSA000200-N001-B01-P</td>
+<td>TCGASTSA000200-T001-P01-P</td>
 </tr>
 </tbody>
 </table>
-<ul>
-<li><a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/c12bc873da9e3082504ef4a8750d29b63a24c936/link">Reference/External Link/Path 1 to any files/plots or other validation results</a></li>
-<li><a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/c12bc873da9e3082504ef4a8750d29b63a24c936/link">Reference/External Link/Path 2 to any files/plots or other validation results</a></li>
-<li><a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/c12bc873da9e3082504ef4a8750d29b63a24c936/link">Reference/External Link/Path n to any files/plots or other validation results</a></li>
-</ul>
-<h3 id="validation-tool">Validation Tool</h3>
-<p>Included is a template for validating your input files. For more information on the tool check out: https://github.com/uclahs-cds/package-PipeVal</p>
 <hr />
               
             </div>

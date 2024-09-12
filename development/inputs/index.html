@@ -49,11 +49,11 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../flow-diagram/">Flow Diagram</a>
+                <li class="toctree-l1"><a class="reference internal" href="../pipeline-steps/">Pipeline Steps</a>
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../pipeline-steps/">Pipeline Steps</a>
+                <li class="toctree-l1"><a class="reference internal" href="../flow-diagram/">Flow Diagram</a>
                 </li>
               </ul>
               <ul class="current">
@@ -106,7 +106,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Inputs</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/c12bc873da9e3082504ef4a8750d29b63a24c936/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/bd98eb42944b09ebf19cd6ad7d5200a7565470b5/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -117,15 +117,15 @@
                 <h2 id="inputs">Inputs</h2>
 <p>UCLA pipelines have a hierarchical configuration structure to reduce code repetition:</p>
 <ul>
-<li><code>config/default.config</code>: Parameters with sensible defaults that may be overridden in <code>myconfig.config</code>.</li>
-<li><code>config/template.config -&gt; myconfig.config</code>: Required sample-agnostic parameters. Often shared for many samples.</li>
-<li><code>input/template.yaml -&gt; mysample.yaml</code>: Required sample-specific parameters.</li>
+<li><code>config/default.config</code>: Parameters with sensible defaults that may be overridden in <code>project.config</code>.</li>
+<li><code>config/template.config -&gt; project.config</code>: Required pipeline parameters. Often shared for many inputs.</li>
+<li><code>input/template.yaml -&gt; project.yaml</code>: Required input-specific parameters.</li>
 </ul>
 <h3 id="input-yaml">Input YAML</h3>
 <pre><code class="language-yaml">---
-sample_id: &quot;&quot;  # Identifying string for the input sample
+sample_id: &quot;&quot;  # Identifying string for the input VCF
 input:
-  vcf: &quot;&quot;      # Path to the sample's VCF file
+  vcf: &quot;&quot;      # Path to the input VCF file
 </code></pre>
 <h3 id="input-configuration">Input Configuration</h3>
 <table>
@@ -145,7 +145,7 @@ input:
 <tr>
 <td><code>variant_caller</code></td>
 <td>string</td>
-<td>Variant calling algorithm used to generate input VCF (HaplotypeCaller, Mutect2, Strelka2, SomaticSniper, Muse2, Delly2).</td>
+<td>Variant calling algorithm used to generate input VCF {HaplotypeCaller, Mutect2, Strelka2, SomaticSniper, Muse2, Delly2}.</td>
 </tr>
 <tr>
 <td><code>rf_model</code></td>
@@ -153,39 +153,44 @@ input:
 <td>Path to corresponding pre-trained random forest model.</td>
 </tr>
 <tr>
-<td><code>funcotator_data.data_source</code></td>
-<td>path</td>
-<td>Path to Funcotator data source directory.</td>
-</tr>
-<tr>
-<td><code>funcotator_data.src_reference_id</code></td>
+<td><code>liftover_direction</code></td>
 <td>string</td>
-<td>Reference genome build ID for input VCF (hg19, hg38).</td>
+<td>Conversion direction {GRCh37ToGRCh38, GRCh38ToGRCh37}.</td>
 </tr>
 <tr>
-<td><code>funcotator_data.dest_reference_id</code></td>
-<td>string</td>
-<td>Reference genome build ID for output VCF (hg19, hg38).</td>
-</tr>
-<tr>
-<td><code>src_fasta_ref</code></td>
+<td><code>fasta_ref_37</code></td>
 <td>path</td>
-<td>Path to the source reference sequence in FASTA format. Must correspond with <code>functotator_data.src_reference_id</code>.</td>
+<td>Path to the GRCh37 reference sequence (FASTA).</td>
 </tr>
 <tr>
-<td><code>dest_fasta_ref</code></td>
+<td><code>fasta_ref_38</code></td>
 <td>path</td>
-<td>Path to the destination reference sequence in FASTA format. Must correspond with <code>functotator_data.dest_reference_id</code>.</td>
+<td>Path to the GRCh38 reference sequence (FASTA).</td>
 </tr>
 <tr>
 <td><code>chain_file</code></td>
 <td>path</td>
-<td>Path to LiftOver chain file between the source and destination sequences.</td>
+<td>Path to LiftOver chain file between the source and target genome builds (included in resource-bundle.zip).</td>
+</tr>
+<tr>
+<td><code>funcotator_data_source</code></td>
+<td>path</td>
+<td>Path to <a href="https://gatk.broadinstitute.org/hc/en-us/articles/360050815792-FuncotatorDataSourceDownloader">Funcotator data source</a> directory.</td>
 </tr>
 <tr>
 <td><code>repeat_bed</code></td>
 <td>path</td>
-<td>Path to bundled RepeatMasker annotation file.</td>
+<td>Path to bundled RepeatMasker annotation file (included in resource-bundle.zip).</td>
+</tr>
+<tr>
+<td><code>header_contigs</code></td>
+<td>path</td>
+<td>Path to header contigs file corresponding to target genome build (included in resource-bundle.zip).</td>
+</tr>
+<tr>
+<td><code>gnomad_rds</code></td>
+<td>path</td>
+<td>Path to gnomAD SV data.table for annotation (included in resource-bundle.zip).</td>
 </tr>
 </tbody>
 </table>
@@ -203,13 +208,13 @@ input:
 <td><code>target_threshold</code></td>
 <td>numeric</td>
 <td><code>""</code></td>
-<td>Target Stability Score threshold for variant filtering: [0, 1]</td>
+<td>Target Stability Score threshold for variant filtering: [0, 1].</td>
 </tr>
 <tr>
 <td><code>target_specificity</code></td>
 <td>numeric</td>
 <td><code>""</code></td>
-<td>Target specificity based on whole genome validation set for variant filtering: [0, 1]</td>
+<td>Target specificity based on whole genome validation set for variant filtering: [0, 1].</td>
 </tr>
 <tr>
 <td><code>work_dir</code></td>
@@ -251,7 +256,7 @@ input:
 <td><code>dataset_id</code></td>
 <td>string</td>
 <td><code>""</code></td>
-<td>Dataset ID to be used as output filename prefix</td>
+<td>Dataset ID to be used as output filename prefix.</td>
 </tr>
 <tr>
 <td><code>blcds_registered_dataset</code></td>
@@ -265,90 +270,6 @@ input:
 <td>true</td>
 <td>If set, overwrite default memory and CPU values by UCLA cluster-specific configs.</td>
 </tr>
-<tr>
-<td><code>src_fasta_fai</code></td>
-<td>path</td>
-<td>Relative to <code>src_fasta_ref</code></td>
-<td>Index for source reference sequence.</td>
-</tr>
-<tr>
-<td><code>src_fasta_dict</code></td>
-<td>path</td>
-<td>Relative to <code>src_fasta_ref</code></td>
-<td>Dictionary for source reference sequence.</td>
-</tr>
-<tr>
-<td><code>dest_fasta_fai</code></td>
-<td>path</td>
-<td>Relative to <code>dest_fasta_ref</code></td>
-<td>Index for destination reference sequence.</td>
-</tr>
-<tr>
-<td><code>dest_fasta_dict</code></td>
-<td>path</td>
-<td>Relative to <code>src_fasta_ref</code></td>
-<td>Dictionary for destination reference sequence.</td>
-</tr>
-<tr>
-<td><code>docker_container_registry</code></td>
-<td>string</td>
-<td><code>ghcr.io/uclahs-cds</code></td>
-<td>Container registry for the docker images in the following table.</td>
-</tr>
-</tbody>
-</table>
-<p>The docker images in the following table are generally defined like <code>docker_image_pipeval = "${-&gt; params.docker_container_registry}/pipeval:${params.pipeval_version}"</code>. As such, there are three ways to modify each image:</p>
-<ul>
-<li>Change <code>params.docker_container_registry</code>. This will affect all of the images (except for GATK).</li>
-<li>Change <code>params.&lt;tool&gt;_version</code>. This will pull a different version of the same image from the registry.</li>
-<li>Change <code>params.docker_image_&lt;tool&gt;</code>. This will explicitly set the image to use, ignoring <code>docker_container_registry</code> and <code>&lt;tool&gt;_version</code>, and thus requires that the docker tag be explicitly set (e.g. <code>broadinstitute/gatk:4.4.0.0</code>).</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Tool Parameter</th>
-<th>Version Parameter</th>
-<th>Default</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>docker_image_bcftools</code></td>
-<td><code>bcftools_version</code></td>
-<td><code>ghcr.io/uclahs-cds/bcftools-score:1.20_score-1.20-20240505</code></td>
-<td>This image must have both BCFtools and the score plugins available.</td>
-</tr>
-<tr>
-<td><code>docker_image_bedtools</code></td>
-<td><code>bedtools_version</code></td>
-<td><code>ghcr.io/uclahs-cds/bedtools:2.31.0</code></td>
-<td></td>
-</tr>
-<tr>
-<td><code>docker_image_gatk</code></td>
-<td><code>gatk_version</code></td>
-<td><code>broadinstitute/gatk:4.4.0.0</code></td>
-<td></td>
-</tr>
-<tr>
-<td><code>docker_image_pipeval</code></td>
-<td><code>pipeval_version</code></td>
-<td><code>ghcr.io/uclahs-cds/pipeval:5.0.0-rc.3</code></td>
-<td></td>
-</tr>
-<tr>
-<td><code>docker_image_samtools</code></td>
-<td><code>samtools_version</code></td>
-<td><code>ghcr.io/uclahs-cds/samtools:1.20</code></td>
-<td></td>
-</tr>
-<tr>
-<td><code>doker_image_stablelift</code></td>
-<td><code>stablelift_version</code></td>
-<td><code>ghcr.io/uclahs-cds/stablelift:FIXME</code></td>
-<td>This image is built and maintained via this repository.</td>
-</tr>
 </tbody>
 </table>
 <hr />
@@ -356,7 +277,7 @@ input:
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../pipeline-steps/" class="btn btn-neutral float-left" title="Pipeline Steps"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../flow-diagram/" class="btn btn-neutral float-left" title="Flow Diagram"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../outputs/" class="btn btn-neutral float-right" title="Outputs">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
@@ -384,7 +305,7 @@ input:
         </span>
     
     
-      <span><a href="../pipeline-steps/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../flow-diagram/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
       <span><a href="../outputs/" style="color: #fcfcfc">Next &raquo;</a></span>
