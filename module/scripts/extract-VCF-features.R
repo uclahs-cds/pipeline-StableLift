@@ -22,7 +22,7 @@ parser <- ArgumentParser();
 parser$add_argument('--input-vcf', type = 'character', help = 'Input VCF for feature extraction, mutually exclusive with --input-dir');
 parser$add_argument('--input-dir', type = 'character', help = 'Directory with VCF subsets for parallelization, mutually exclusive with --input-vcf');
 parser$add_argument('--output-rds', type = 'character', help = 'Rds output for input to RF model');
-parser$add_argument('--variant-caller', type = 'character', help = 'One of {HaplotypeCaller, Mutect2, Strelka2, SomaticSniper, Muse2, Delly2}');
+parser$add_argument('--variant-caller', type = 'character', help = 'One of {HaplotypeCaller, Mutect2, Strelka2, SomaticSniper, Muse2}');
 parser$add_argument('--ncore', type = 'integer', help = 'Number of cores to use for processing VCF subsets in --input-dir', default = 1);
 args <- parser$parse_args();
 
@@ -49,7 +49,10 @@ vcf.info.to.dt <- function(vcf.info) {
     vcf.info <- strsplit(vcf.info, ';');
     vcf.info <- lapply(vcf.info, function(x) {
         x <- strsplit(x, '=');
-        as.list(stats::setNames(sapply(x, `[`, 2), sapply(x, `[`, 1)));
+        as.list(stats::setNames(
+            sapply(x, function(pair) if (length(pair) == 1) pair[1] else pair[2]),
+            sapply(x, `[`, 1)
+            ));
         })
 
     # Combine the list of key-value pairs into a data table
@@ -177,11 +180,6 @@ features.dt.subsets <- foreach(vcf.subset = vcf.subsets) %dopar% {
             x;
             }
         })];
-    features.dt[Gencode_34_variantType == 'SNP', TRINUCLEOTIDE_SEQ := TRINUCLEOTIDE];
-    # Add substitution base
-    features.dt[Gencode_34_variantType == 'SNP', ALT := sapply(ALT, function(x) unlist(strsplit(x, ','))[1])];
-    features.dt[Gencode_34_variantType == 'SNP' & REF %in% c('A', 'G'), ALT := chartr('ATGC', 'TACG', ALT)];
-    features.dt[Gencode_34_variantType == 'SNP' & TRINUCLEOTIDE != '', TRINUCLEOTIDE := paste0(TRINUCLEOTIDE, '->', substr(TRINUCLEOTIDE, 1, 1), ALT, substr(TRINUCLEOTIDE, 3, 3))];
 
     cat(format(Sys.time() - start.subset, nsmall = 2), '\n');
     return(features.dt);
@@ -197,9 +195,9 @@ cat(format(Sys.time() - start.extract, nsmall = 2), '\n');
 ###################################################################################################
 continuous.features <- c(
     'Chromosome Position (POS)' = 'POS',
-    'Local GC Content' = 'Gencode_34_gcContent', #
-    '1000 Genomes Allele Frequency' = 'dbSNP_CAF', #
-    'TOPMED Allele Frequency' = 'dbSNP_TOPMED', #
+    'Local GC Content' = 'Gencode_34_gcContent',
+    '1k Genomes Pop AF' = 'dbSNP_CAF',
+    'TOPMED Pop AF' = 'dbSNP_TOPMED',
     'Sequencing Depth (DP)' = 'DP',
     'Variant Frequency (AF)' = 'AF'
     );
@@ -247,14 +245,15 @@ if (variant.caller == 'SomaticSniper') continuous.features <- c(continuous.featu
 
 categorical.features <- c(
     'Chromosome (CHR)' = 'CHROM',
-    'GENCODE Variant Type' = 'Gencode_34_variantType', #
-    'GENCODE Variant Type' = 'Gencode_34_variantClassification', #
-    'HGNC Locus Group' = 'HGNC_Locus_Group', #
-    'Repeat Class' = 'REPEAT', ##
-    'Trinucleotide Substitution' = 'TRINUCLEOTIDE', ##
-    'Trinucleotide Context' = 'TRINUCLEOTIDE_SEQ', ##
-    'VQSR Culprit' = 'culprit', # HaplotypeCaller
-    'Somatic Genotype (SGT)' = 'SGT' # Strelka2
+    'GENCODE Variant Type' = 'Gencode_34_variantType',
+    'GENCODE Variant Type' = 'Gencode_34_variantClassification',
+    'HGNC Locus Group' = 'HGNC_Locus_Group',
+    'Repeat Class' = 'REPEAT',
+    'Trinucleotide Context' = 'TRINUCLEOTIDE',
+    'VQSR Culprit' = 'culprit',
+    'Somatic Genotype (SGT)' = 'SGT',
+    'LiftOver Allele Flip' = 'FLIP',
+    'LiftOver Allele Swap' = 'SWAP'
     );
 
 # Extract features and format

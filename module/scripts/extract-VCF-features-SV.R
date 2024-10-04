@@ -20,6 +20,7 @@ suppressPackageStartupMessages({
 ###################################################################################################
 # Define command line arguments
 parser <- ArgumentParser();
+parser$add_argument('--variant-caller', type = 'character', help = 'One of {Delly2-gSV, Delly2-sSV}');
 parser$add_argument('--input-vcf', type = 'character', help = 'Input Delly2 VCF');
 parser$add_argument('--source-build', type = 'character', help = 'One of {GRCh37, GRCh38}');
 parser$add_argument('--chain-file', type = 'character', help = 'Chain file for coordinate conversion');
@@ -39,10 +40,15 @@ for (arg in names(args)) {
 ###################################################################################################
 # vcfR::getINFO() to data.table
 vcf.info.to.dt <- function(vcf.info) {
-    vcf.info <- lapply(vcf.info, function(x) vcf.info.string.to.list(x));
-    feature.names <- unique(unlist(lapply(vcf.info, names)));
-    vcf.info <- do.call(mapply, c(FUN = list, lapply(vcf.info, `[`, feature.names)));
-    setNames(as.data.table(vcf.info), feature.names);
+    # Split each string by semicolon and convert to a list of key-value pairs
+    vcf.info <- strsplit(vcf.info, ';');
+    vcf.info <- lapply(vcf.info, function(x) {
+        x <- strsplit(x, '=');
+        as.list(stats::setNames(sapply(x, `[`, 2), sapply(x, `[`, 1)));
+        })
+
+    # Combine the list of key-value pairs into a data table
+    rbindlist(vcf.info, fill = TRUE);
     }
 
 # Split VCF info field to list
@@ -55,12 +61,6 @@ vcf.info.string.to.list <- function(vcf.info, keep.columns = NULL) {
     if (is.null(keep.columns)) return(values);
     values <- values[labels %in% keep.columns];
     return(values);
-    }
-
-calculate.VAF <- function(GT.row) {
-    total <- sum(GT.row %in% c('0/0', '0/1', '1/1'), na.rm = TRUE) * 2;
-    alt <- sum(GT.row == '0/1', na.rm = TRUE) + sum(GT.row == '1/1', na.rm = TRUE) * 2;
-    return(alt / total);
     }
 
 get.overlap <- function(start1, end1, start2, end2) {
@@ -87,7 +87,7 @@ find.SV.match <- function(this.ID, input, reference, overlap, offset) {
     }
 
 annotate.gnomad.features <- function(features.dt, features.dt.gnomad) {
-    gnomad.features <- c('ID', 'AF', 'POPMAX_AF');
+    gnomad.features <- c('ID', 'AF');
     features.dt[, c('gnomad.match.ID', 'gnomad.matches') := rbindlist(lapply(ID, find.SV.match, input = features.dt, reference = features.dt.gnomad, overlap = 0.8, offset = 500))];
     features.dt <- merge(features.dt, features.dt.gnomad[, ..gnomad.features], all.x = TRUE, by.x = 'gnomad.match.ID', by.y = 'ID');
     }
@@ -111,18 +111,17 @@ features.dt <- cbind(input.fix[, -c('INFO')], input.info);
 
 # Format columns
 features.dt[, CONSENSUS := NULL];
-numeric.columns <- c('POS', 'QUAL', 'END', 'PE', 'MAPQ', 'SRMAPQ', 'INSLEN', 'HOMLEN', 'SR', 'SRQ', 'CE', 'RDRATIO', 'SVLEN', 'POS2');
-character.columns <- names(features.dt)[!names(features.dt) %in% numeric.columns];
-features.dt[, (numeric.columns) := lapply(.SD, as.numeric), .SDcols = numeric.columns];
-features.dt[, (character.columns) := lapply(.SD, as.character), .SDcols = character.columns];
+features.dt[, c('POS', 'END') := lapply(.SD, as.numeric), .SDcols = c('POS', 'END')];
+if (!'SVLEN' %in% names(features.dt)) features.dt[, SVLEN := 0];
 
 # Extract and aggregate per sample GT fields
-gt.fields <- c('GQ', 'RC', 'RDCN', 'DR', 'DV', 'RR', 'RV');
+gt.fields <- c('GQ', 'RC', 'DR', 'DV', 'RR', 'RV');
 for (field in gt.fields) {
     features.dt[, (field) := apply(extract.gt(input.vcf, element = ..field, as.numeric = TRUE), 1, mean, na.rm = TRUE)];
     }
-features.dt[, COHORT_AF := apply(extract.gt(input.vcf, element = 'GT'), 1, calculate.VAF)];
 features.dt[, CIPOS := as.numeric(sapply(CIPOS, function(x) unlist(strsplit(x, ','))[2]))];
+features.dt[, DP := DR + DV + RR + RV]
+if (variant.caller == 'Delly2-sSV') features.dt[, VAF := (DV + RV) / DP];
 
 if (source.build == 'GRCh37') {
     features.dt[, CHROM := paste0('chr', CHROM)];
@@ -209,6 +208,7 @@ features.dt <- features.dt[ID %in% grange.target.dt$ID];
 features.dt <- features.dt[match(input.fix$ID, features.dt$ID)];
 features.dt[, c('CHROM', 'POS', 'END', 'CHR2', 'POS2') := grange.target.dt[, .(seqnames, start, end, CHR2, POS2)]];
 features.dt[!SVTYPE %in% c('BND', 'INS'), SVLEN := END - POS + 1];
+features.dt[SVTYPE == 'INS', SVLEN := INSLEN];
 
 if (source.build == 'GRCh37') {
     features.dt <- annotate.gnomad.features(features.dt, features.dt.gnomad);
@@ -221,23 +221,18 @@ continuous.features <- c(
     'PE',
     'MAPQ',
     'CIPOS',
+    'RDRATIO',
     'SRMAPQ',
     'HOMLEN',
     'SR',
     'SRQ',
     'CE',
-    'RDRATIO',
     'SVLEN',
     'GQ',
     'RC',
-    'RDCN',
-    'DR',
-    'DV',
-    'RR',
-    'RV',
+    'DP',
+    'VAF',
     'AF',
-    'gnomad.matches',
-    'POPMAX_AF'
     );
 
 categorical.features <- c(
