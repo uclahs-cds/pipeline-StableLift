@@ -150,7 +150,7 @@ workflow {
     // The values of validated_vcf_with_index are maps with keys vcf, index, and sample_id.
     // The values of validated_vcf_tuple are tuples of (sample_id, vcf, index).
 
-    if (params.variant_caller == "Delly2") {
+    if (params.variant_caller == "Delly2-gSV" || params.variant_caller == "Delly2-sSV") {
         // Take the SV branch
         workflow_extract_sv_annotations(
             validated_vcf_tuple,
