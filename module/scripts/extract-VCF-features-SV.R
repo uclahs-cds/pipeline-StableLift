@@ -232,7 +232,7 @@ continuous.features <- c(
     'RC',
     'DP',
     'VAF',
-    'AF',
+    'AF'
     );
 
 categorical.features <- c(

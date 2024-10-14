@@ -43,17 +43,9 @@ rf.model <- readRDS(rf.model);
 # Feature engineering
 ####################################################################################################
 if (variant.caller == 'HaplotypeCaller') {
-    normalize.features <- c('FS', 'VQSLOD', 'QD', 'SOR');
+    normalize.features <- c('DP', 'VQSLOD');
     features.dt[, (normalize.features) := lapply(.SD, scale), .SDcols = normalize.features];
-    features.dt[, c('QUAL', 'GQ', 'DP') := NULL];
-} else if (variant.caller == 'Mutect2') {
-    features.dt[, c('TRINUCLEOTIDE') := NULL];
-} else if (variant.caller == 'Muse2') {
-    features.dt[, c('TRINUCLEOTIDE', 'Gencode_34_variantType') := NULL];
-} else if (variant.caller == 'Strelka2') {
-    features.dt[, c('TRINUCLEOTIDE_SEQ', 'DP', 'Gencode_34_variantType') := NULL];
-} else if (variant.caller == 'SomaticSniper') {
-    features.dt[, c('DP', 'BQ', 'GQ', 'MQ', 'SSC', 'Gencode_34_variantType', 'TRINUCLEOTIDE', 'TRINUCLEOTIDE_SEQ', 'Gencode_34_variantClassification', 'Gencode_34_gcContent', 'dbSNP_CAF') := NULL];
+    features.dt[, c('QUAL', 'GQ') := NULL];
     }
 
 cat('Input data dimensions:\n');
