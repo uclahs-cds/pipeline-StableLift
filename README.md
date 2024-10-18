@@ -3,9 +3,9 @@
   - [Overview](#overview)
   - [How To Run](#how-to-run)
   - [Pipeline Steps](#pipeline-steps)
-    - [1. LiftOver variant coordinates](#1-liftover-variant-coordinates)
-    - [2. Variant annotation](#2-variant-annotation)
-    - [3. Predict variant stability](#3-predict-variant-stability)
+    - [1. LiftOver Variant Coordinates](#1-liftover-variant-coordinates)
+    - [2. Annotate Variants](#2-annotate-variants)
+    - [3. Predict Variant Stability](#3-predict-variant-stability)
   - [Flow Diagram](#flow-diagram)
   - [Inputs](#inputs)
   - [Outputs](#outputs)
@@ -19,9 +19,28 @@
 
 ## Overview
 
-StableLift is a machine learning approach designed to predict variant stability across reference genome builds. It addresses challenges in cross-build variant comparison, supplementing LiftOver coordinate conversion with a quantitative "Stability Score" for each variant, indicating the probability of consistent representation across the two most commonly used human reference builds (GRCh37 and GRCh38). StableLift is implemented as a Nextflow pipeline, accepting either GRCh37 or GRCh38 input VCFs from six variant callers (HaplotypeCaller, MuTect2, Strelka2, SomaticSniper, MuSE2, DELLY2) spanning four variant types (germline SNPs, somatic SNVs, germline SVs, somatic SVs). Pre-trained models are provided along with performance in a whole genome validation set to define the default F1-maximizing operating point and allow for custom filtering based on pre-calibrated specificity estimates.
+StableLift is a machine learning approach designed to predict variant stability across reference genome builds. It addresses challenges in cross-build variant comparison, supplementing LiftOver coordinate conversion with a quantitative "Stability Score" for each variant, indicating the probability of consistent representation across the two most commonly used human reference builds (GRCh37 and GRCh38).
 
-<img src="./docs/stablelift-overview.png" width="85%">
+StableLift is implemented as a Nextflow pipeline featuring:
+  - Robust LiftOver of SNVs, indels, and structural variants
+  - Variant annotation with external databases
+  - Variant filtering based on predicted cross-build stability
+
+Pre-trained models are provided along with performance in a whole genome validation set to define the default F1-maximizing operating point and allow for custom filtering based on pre-calibrated specificity estimates.
+
+<img src="./docs/stablelift-overview.png" width="95%">
+
+Supported conversions:
+  - GRCh37->GRCh38
+  - GRCh38->GRCh37
+
+Supported variant callers:
+  - HaplotypeCaller (gSNP)
+  - MuTect2 (sSNV)
+  - Strelka2 (sSNV)
+  - SomaticSniper (sSNV)
+  - MuSE2 (sSNV)
+  - DELLY2 (gSV, sSV)
 
 ---
 
@@ -37,17 +56,17 @@ StableLift is a machine learning approach designed to predict variant stability 
 
 ## Pipeline Steps
 
-### 1. LiftOver variant coordinates
+### 1. LiftOver Variant Coordinates
 
 - For SNVs, convert variant coordinates using the `BCFtools` LiftOver plugin with UCSC chain files.
 - For SVs, convert variant breakpoint coordinates using custom R script with UCSC chain files and `rtracklayer` and `GenomicRanges` R packages.
 
-### 2. Variant annotation
+### 2. Annotate Variants
 
 - For SNVs, add dbSNP, GENCODE, and HGNC annotations using GATK's Funcotator. Add trinucleotide context and RepeatMasker intervals with `bedtools`.
 - For SVs, annotate variants with population allele frequency from the gnomAD-SV v4 database.
 
-### 3. Predict variant stability
+### 3. Predict Variant Stability
 
 - Predict variant stability with pre-trained random forest model and the `ranger` R package.
 - Annotate VCF with Stability Score and filter unstable variants.
