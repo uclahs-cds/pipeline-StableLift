@@ -115,9 +115,9 @@ workflow workflow_predict_stability {
 
     run_apply_stability_annotations(
         vcf_with_sample_id.join(
-            compress_and_index_tsv.out.compressed_tsv_with_index
-            // failOnDuplicate: true,
-            // failOnMismatch: true
+            compress_and_index_tsv.out.compressed_tsv_with_index,
+            failOnDuplicate: true,
+            failOnMismatch: true
         ),
         variant_caller,
         dest_fasta_id

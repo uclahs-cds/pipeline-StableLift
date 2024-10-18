@@ -222,9 +222,9 @@ workflow workflow_annotate_snvs {
 
     annotate_trinucleotide_BCFtools(
         annotate_RepeatMasker_BCFtools.out.repeatmasker_vcf.join(
-            compress_and_index_tsv.out.compressed_tsv_with_index
-            // failOnDuplicate: true,
-            // failOnMismatch: true
+            compress_and_index_tsv.out.compressed_tsv_with_index,
+            failOnDuplicate: true,
+            failOnMismatch: true
         )
     )
 
