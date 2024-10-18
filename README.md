@@ -6,7 +6,6 @@
     - [1. LiftOver Variant Coordinates](#1-liftover-variant-coordinates)
     - [2. Annotate Variants](#2-annotate-variants)
     - [3. Predict Variant Stability](#3-predict-variant-stability)
-  - [Flow Diagram](#flow-diagram)
   - [Inputs](#inputs)
   - [Outputs](#outputs)
   - [Testing and Validation](#testing-and-validation)
@@ -70,12 +69,6 @@ Supported variant callers:
 
 - Predict variant stability with pre-trained random forest model and the `ranger` R package.
 - Annotate VCF with Stability Score and filter unstable variants.
-
----
-
-## Flow Diagram
-
-<img src="./docs/pipeline.mmd.svg" width="800">
 
 ---
 
