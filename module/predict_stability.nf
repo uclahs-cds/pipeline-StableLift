@@ -36,7 +36,7 @@ process run_apply_stability_annotations {
     container params.docker_image_bcftools
 
     publishDir path: "${params.output_dir_base}/output",
-        pattern: "{StableLift-${dest_fasta_id},StableLift-${dest_fasta_id}_filtered}.vcf.gz{,.tbi}",
+        pattern: "StableLift-${dest_fasta_id}{,_filtered}.vcf.gz{,.tbi}",
         mode: "copy",
         saveAs: { "${sample_id}_${variant_caller}_${it}" }
 
