@@ -7,6 +7,20 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [1.1.0] - 2024-10-17
+
+### Added
+
+- Add Delly2-sSV support
+- Add preprocessing script for Strelka2 VCFs to add GT field for Funcotator
+- Add process to split large VCFs to parse in chunks
+
+### Changed
+
+- Standardize annotation workflow to always annotate variants after LiftOver
+- Rename Delly2 to Delly2-gSV
+- Upgrade to score version 1.20
+
 ## [1.0.0] - 2024-09-10
 
 ### Added
