@@ -49,8 +49,9 @@ process compress_and_index_tsv {
 
     script:
     """
-    bgzip ${input_tsv} --output output.tsv.gz
-    tabix -s 1 -b 2 -e 2 output.tsv.gz
+    sort ${input_tsv} > sorted_input.tsv
+    bgzip sorted_input.tsv --output output.tsv.gz
+    tabix --sequence 1 --begin 2 --end 2 output.tsv.gz
     """
 
     stub:
