@@ -10,7 +10,7 @@ cases:
     nf_script: ./main.nf
     nf_config: test/HaplotypeCaller-37.config
     params_file: test/yamls/HaplotypeCaller-37.yaml
-    skip: true
+    skip: false
     verbose: true
     asserts:
       - script: test/compare-VCFs.sh
