@@ -49,7 +49,7 @@ process compress_and_index_tsv {
 
     script:
     """
-    sort ${input_tsv} > sorted_input.tsv
+    sort -k1,1 -k2,2n ${input_tsv} > sorted_input.tsv
     bgzip sorted_input.tsv --output output.tsv.gz
     tabix --sequence 1 --begin 2 --end 2 output.tsv.gz
     """
