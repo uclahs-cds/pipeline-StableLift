@@ -9,8 +9,8 @@ liftover_direction:
   required: true
   help: 'Direction of LiftOver to perform'
   choices:
-    - GRCh37toGRCh38
-    - GRCh38toGRCh37
+    - GRCh37ToGRCh38
+    - GRCh38ToGRCh37
 
 variant_caller:
   type: 'String'
@@ -22,7 +22,8 @@ variant_caller:
     - Strelka2
     - Muse2
     - SomaticSniper
-    - Delly2
+    - Delly2-gSV
+    - Delly2-sSV
 
 save_intermediate_files:
   type: 'Bool'

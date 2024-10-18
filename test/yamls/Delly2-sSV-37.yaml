@@ -1,0 +1,4 @@
+---
+input:
+  vcf: /hot/project/method/AlgorithmEvaluation/BNCH-000142-GRCh37v38/test/input/TCGA-SARC_10TN-WGS_GRCh37/TCGA-SARC_10TN-WGS_GRCh37_sSV_Delly2.vcf.gz
+sample_id: TCGA-SARC_10TN-WGS_GRCh37

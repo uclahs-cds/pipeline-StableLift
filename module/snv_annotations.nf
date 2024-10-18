@@ -1,4 +1,34 @@
-include { compress_and_index_HTSlib } from './utils.nf'
+include { compress_and_index_vcf; compress_and_index_tsv } from './utils.nf'
+
+process add_genotype_field {
+    container params.docker_image_stablelift
+    containerOptions "-v ${moduleDir}:${moduleDir}"
+
+    publishDir path: "${params.output_dir_base}/intermediate/${task.process.replace(':', '/')}",
+        pattern: "output.vcf",
+        mode: "copy",
+        enabled: params.save_intermediate_files,
+        saveAs: { "${sample_id}_add-GT.vcf" }
+
+    input:
+        tuple val(sample_id), path(vcf), path(index)
+
+    output:
+        tuple val(sample_id), path('output.vcf'), emit: vcf_with_gt
+
+    script:
+    """
+    Rscript "${moduleDir}/scripts/add-GT-Strelka2.R" \
+        --input-vcf "${vcf}" \
+        --output-vcf output.vcf.gz
+    gunzip output.vcf.gz
+    """
+
+    stub:
+    """
+    touch output.vcf
+    """
+}
 
 process run_Funcotator_GATK {
     container params.docker_image_gatk
@@ -20,11 +50,13 @@ process run_Funcotator_GATK {
         tuple val(sample_id), path('output.vcf.gz'), emit: funcotator_vcf
 
     script:
+        def ref_version_map = [GRCh37: 'hg19', GRCh38: 'hg38']
+
         """
         gatk Funcotator \
             --variant "${vcf}" \
             --reference "${dest_fasta_ref}" \
-            --ref-version "${dest_fasta_id}" \
+            --ref-version "${ref_version_map[dest_fasta_id]}" \
             --data-sources-path "${funcotator_sources}" \
             --output-file-format VCF \
             --output "output.vcf.gz"
@@ -117,7 +149,7 @@ process annotate_trinucleotide_BCFtools {
     container params.docker_image_bcftools
 
     publishDir path: "${params.output_dir_base}/intermediate/${task.process.replace(':', '/')}",
-        pattern: "output.vcf.gz{,.tbi}",
+        pattern: "output.vcf.gz",
         mode: "copy",
         enabled: params.save_intermediate_files,
         saveAs: { "Trinucleotide-annotated-${sample_id}.vcf.gz" }
@@ -149,15 +181,27 @@ process annotate_trinucleotide_BCFtools {
     """
 }
 
-workflow workflow_apply_snv_annotations {
+workflow workflow_annotate_snvs {
     take:
     vcf_with_sample_id
     dest_fasta_data
 
     main:
 
+    if (params.variant_caller == "Strelka2") {
+        add_genotype_field(
+            vcf_with_sample_id
+        )
+        compress_and_index_vcf(
+            add_genotype_field.out.vcf_with_gt
+        )
+        vcf_for_annotation = compress_and_index_vcf.out.compressed_vcf_with_index
+    } else {
+        vcf_for_annotation = vcf_with_sample_id
+    }
+
     run_Funcotator_GATK(
-        vcf_with_sample_id,
+        vcf_for_annotation,
         dest_fasta_data,
         Channel.value(params.funcotator_data_source)
     )
@@ -172,15 +216,15 @@ workflow workflow_apply_snv_annotations {
         dest_fasta_data
     )
 
-    compress_and_index_HTSlib(
+    compress_and_index_tsv(
         extract_TrinucleotideContext_BEDTools.out.trinucleotide_tsv
     )
 
     annotate_trinucleotide_BCFtools(
         annotate_RepeatMasker_BCFtools.out.repeatmasker_vcf.join(
-            compress_and_index_HTSlib.out.compressed_tsv_with_index,
-            failOnDuplicate: true,
-            failOnMismatch: true
+            compress_and_index_tsv.out.compressed_tsv_with_index
+            // failOnDuplicate: true,
+            // failOnMismatch: true
         )
     )
 

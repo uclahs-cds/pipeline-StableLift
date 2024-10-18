@@ -169,6 +169,16 @@ if (source.build == 'GRCh38') {
     grange.target.dt[, CHR2 := ifelse(is.na(CHR2), CHR2, sub('chr', '', CHR2))];
     }
 
+features.dt <- features.dt[ID %in% grange.target.dt$ID];
+features.dt <- features.dt[match(input.fix$ID[input.fix$ID %in% features.dt$ID], features.dt$ID)];
+features.dt[, c('CHROM', 'POS', 'END', 'CHR2', 'POS2') := grange.target.dt[, .(seqnames, start, end, CHR2, POS2)]];
+features.dt[!SVTYPE %in% c('BND', 'INS'), SVLEN := END - POS + 1];
+features.dt[SVTYPE == 'INS', SVLEN := INSLEN];
+
+if (source.build == 'GRCh37') {
+    features.dt <- annotate.gnomad.features(features.dt, features.dt.gnomad);
+    }
+
 ###################################################################################################
 # Write output VCF
 ###################################################################################################
@@ -185,6 +195,10 @@ for (i in seq_len(nrow(input.fix))) {
         this.INFO[['CHR2']] <- grange.target.dt[i, CHR2];
         this.INFO[['POS2']] <- grange.target.dt[i, POS2];
         }
+    # Add gnomAD AF to INFO field
+    if (!is.na(features.dt[ID == this.ID, AF])) {
+        this.INFO[['gnomAD_AF']] <- format(features.dt[ID == this.ID, AF], scientific = FALSE, digits = 6);
+        }
     this.INFO <- lapply(names(this.INFO), function(x) paste(x, this.INFO[[x]], sep = '='));
     this.INFO <- paste(this.INFO, collapse = ';');
     this.INFO <- gsub('IMPRECISE=IMPRECISE', 'IMPRECISE', this.INFO);
@@ -199,21 +213,15 @@ lifted.vcf@gt <- as.matrix(input.gt);
 lifted.vcf@meta <- lifted.vcf@meta[!grepl('^##(contig|reference)', lifted.vcf@meta)];
 lifted.vcf@meta <- c(lifted.vcf@meta, header.contigs);
 
+# Add gnomAD_AF to the VCF header
+gnomad.header <- '##INFO=<ID=gnomAD_AF,Number=A,Type=Float,Description="Allele Frequency in gnomAD">';
+lifted.vcf@meta <- c(lifted.vcf@meta, gnomad.header);
+
 write.vcf(lifted.vcf, output.vcf);
 
 ###################################################################################################
 # Format features for RF
 ###################################################################################################
-features.dt <- features.dt[ID %in% grange.target.dt$ID];
-features.dt <- features.dt[match(input.fix$ID, features.dt$ID)];
-features.dt[, c('CHROM', 'POS', 'END', 'CHR2', 'POS2') := grange.target.dt[, .(seqnames, start, end, CHR2, POS2)]];
-features.dt[!SVTYPE %in% c('BND', 'INS'), SVLEN := END - POS + 1];
-features.dt[SVTYPE == 'INS', SVLEN := INSLEN];
-
-if (source.build == 'GRCh37') {
-    features.dt <- annotate.gnomad.features(features.dt, features.dt.gnomad);
-    }
-
 continuous.features <- c(
     'POS',
     'QUAL',
