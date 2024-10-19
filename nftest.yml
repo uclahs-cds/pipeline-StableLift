@@ -1,7 +1,7 @@
 ---
 global:
   temp_dir: temp
-  remove_temp: true
+  remove_temp: false
   clean_logs: true
   nf_config: nextflow.config
 
