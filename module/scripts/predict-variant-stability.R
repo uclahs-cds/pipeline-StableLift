@@ -18,7 +18,7 @@ suppressPackageStartupMessages({
 ###################################################################################################
 # Define command line arguments
 parser <- ArgumentParser();
-parser$add_argument('--variant-caller', type = 'character', help = 'One of {HaplotypeCaller, Mutect2, Strelka2, SomaticSniper, Muse2, Delly2}');
+parser$add_argument('--variant-caller', type = 'character', help = 'One of {HaplotypeCaller, Mutect2, Strelka2, SomaticSniper, Muse2, Delly2-gSV, Delly2-sSV}');
 parser$add_argument('--features-dt', type = 'character', help = 'Processed Rds file with variant info and annotations');
 parser$add_argument('--rf-model', type = 'character', help = 'Pre-trained random forest model Rds file');
 parser$add_argument('--specificity', type = 'numeric', help = 'Target specificity based on whole genome validation set, overrides `--threshold`');
@@ -43,20 +43,9 @@ rf.model <- readRDS(rf.model);
 # Feature engineering
 ####################################################################################################
 if (variant.caller == 'HaplotypeCaller') {
-    normalize.features <- c('FS', 'VQSLOD', 'QD', 'SOR');
+    normalize.features <- c('DP', 'VQSLOD');
     features.dt[, (normalize.features) := lapply(.SD, scale), .SDcols = normalize.features];
-    features.dt[, c('QUAL', 'GQ', 'DP') := NULL];
-} else if (variant.caller == 'Mutect2') {
-    features.dt[, c('TRINUCLEOTIDE') := NULL];
-} else if (variant.caller == 'Muse2') {
-    features.dt[, c('TRINUCLEOTIDE', 'Gencode_34_variantType') := NULL];
-} else if (variant.caller == 'Strelka2') {
-    features.dt[, c('TRINUCLEOTIDE_SEQ', 'DP', 'Gencode_34_variantType') := NULL];
-} else if (variant.caller == 'SomaticSniper') {
-    features.dt[, c('DP', 'BQ', 'GQ', 'MQ', 'SSC', 'Gencode_34_variantType', 'TRINUCLEOTIDE', 'TRINUCLEOTIDE_SEQ', 'Gencode_34_variantClassification', 'Gencode_34_gcContent', 'dbSNP_CAF') := NULL];
-} else if (variant.caller == 'Delly2') {
-    normalize.features <- c('SR', 'SRQ', 'DV');
-    features.dt[, (normalize.features) := lapply(.SD, scale), .SDcols = normalize.features];
+    features.dt[, c('QUAL', 'GQ') := NULL];
     }
 
 cat('Input data dimensions:\n');

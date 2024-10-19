@@ -60,10 +60,8 @@ flowchart TD
 
         gatk_func[gatk Funcotator]:::gatk
         --> bcftools_annotate["`bcftools annotate*RepeatMasker*`"]:::bcftools
-        --> bcftools_annotate2["`bcftools annotate*Trinucleotide*`"]:::bcftools
+        --> bcftools_annotate2["`bcftools annotate*TrinucleotideContext*`"]:::bcftools
     end
-
-    blocknote["`**Note:** Annotation is performed prior to LiftOver when converting from GRCh38 to GRCh37`"]
 
     bcftools_liftover ---> gatk_func
     bcftools_annotate2 --> r_extract_snv[extract-VCF-features.R]:::R
@@ -79,7 +77,7 @@ flowchart TD
 
   subgraph Predict Stability ["`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Predict Stability**`"]
     r_predict_stability[predict-variant-stability.R]:::R
-    --> bcftools_annotate3["`bcftools annotate*Stability*`"]:::bcftools
+    --> bcftools_annotate3["`bcftools annotate*StabilityScore*`"]:::bcftools
 
     rf_model([rf_model]):::input .-> r_predict_stability
   end

@@ -3,10 +3,9 @@
   - [Overview](#overview)
   - [How To Run](#how-to-run)
   - [Pipeline Steps](#pipeline-steps)
-    - [1. LiftOver variant coordinates](#1-liftover-variant-coordinates)
-    - [2. Variant annotation](#2-variant-annotation)
-    - [3. Predict variant stability](#3-predict-variant-stability)
-  - [Flow Diagram](#flow-diagram)
+    - [1. LiftOver Variant Coordinates](#1-liftover-variant-coordinates)
+    - [2. Annotate Variants](#2-annotate-variants)
+    - [3. Predict Variant Stability](#3-predict-variant-stability)
   - [Inputs](#inputs)
   - [Outputs](#outputs)
   - [Testing and Validation](#testing-and-validation)
@@ -19,17 +18,35 @@
 
 ## Overview
 
-StableLift is a machine learning approach designed to predict variant stability across reference genome builds. It addresses challenges in cross-build variant comparison, supplementing LiftOver coordinate conversion with a quantitative "Stability Score" for each variant, indicating the likelihood of consistent representation between the two most commonly used human reference genome builds (GRCh37 and GRCh38). StableLift is provided as a Nextflow pipeline, accepting either GRCh37 or GRCh38 input VCFs from six variant callers (HaplotypeCaller, MuTect2, Strelka2, SomaticSniper, MuSE2, Delly2) spanning three variant types (germline SNPs, somatic SNVs, germline structural variants). Pre-trained models are provided along with performance in a whole genome validation set to define the default F1-maximizing operating point and allow for custom filtering based on pre-calibrated specificity estimates.
+StableLift is a machine learning approach designed to predict variant stability across reference genome builds. It addresses challenges in cross-build variant comparison, supplementing LiftOver coordinate conversion with a quantitative "Stability Score" for each variant, indicating the probability of consistent representation across the two most commonly used human reference builds (GRCh37 and GRCh38).
 
-GRCh37 → GRCh38 workflow:
-<img src="./docs/stablelift-overview.png" width="80%">
+StableLift is implemented as a Nextflow pipeline featuring:
+  - Robust LiftOver of SNVs, indels, and structural variants
+  - Variant annotation with external databases
+  - Variant filtering based on predicted cross-build stability
+
+Pre-trained models are provided along with performance in a whole genome validation set to define the default F1-maximizing operating point and allow for custom filtering based on pre-calibrated specificity estimates.
+
+<img src="./docs/stablelift-overview.png" width="95%">
+
+Supported conversions:
+  - GRCh37->GRCh38
+  - GRCh38->GRCh37
+
+Supported variant callers:
+  - HaplotypeCaller (gSNP)
+  - MuTect2 (sSNV)
+  - Strelka2 (sSNV)
+  - SomaticSniper (sSNV)
+  - MuSE2 (sSNV)
+  - DELLY2 (gSV, sSV)
 
 ---
 
 ## How To Run
 
 1. Download and extract [resource bundle](https://github.com/uclahs-cds/pipeline-StableLift/releases/download/v1.0.0/resource-bundle.zip) and [source code](https://github.com/uclahs-cds/pipeline-StableLift/releases/download/v1.0.0/source_code_with_submodules.tar.gz).
-2. Download [pre-trained model](https://github.com/uclahs-cds/pipeline-StableLift/releases/tag/v1.0.0) depending on variant caller and conversion direction.
+2. Download [pre-trained model](https://github.com/uclahs-cds/pipeline-StableLift/releases/tag/v1.0.0) corresponding to variant caller and conversion direction.
 3. Copy [`./config/template.config`](./config/template.config) (e.g. project.config) and fill in all required parameters.
 4. Copy [`./input/template.yaml`](./input/template.yaml) (e.g. project.yaml) and update with input VCF ID and path.
 5. Run the pipeline using [Nextflow](https://www.nextflow.io/docs/latest/install.html#install-nextflow) `nextflow run -c project.config -params-file project.yaml main.nf`.
@@ -38,27 +55,20 @@ GRCh37 → GRCh38 workflow:
 
 ## Pipeline Steps
 
-### 1. LiftOver variant coordinates
+### 1. LiftOver Variant Coordinates
 
 - For SNVs, convert variant coordinates using the `BCFtools` LiftOver plugin with UCSC chain files.
 - For SVs, convert variant breakpoint coordinates using custom R script with UCSC chain files and `rtracklayer` and `GenomicRanges` R packages.
 
-### 2. Variant annotation*
+### 2. Annotate Variants
 
 - For SNVs, add dbSNP, GENCODE, and HGNC annotations using GATK's Funcotator. Add trinucleotide context and RepeatMasker intervals with `bedtools`.
 - For SVs, annotate variants with population allele frequency from the gnomAD-SV v4 database.
-- *Variant annotation occurs prior to LiftOver when converting from GRCh38 -> GRCh37.
 
-### 3. Predict variant stability
+### 3. Predict Variant Stability
 
 - Predict variant stability with pre-trained random forest model and the `ranger` R package.
 - Annotate VCF with Stability Score and filter unstable variants.
-
----
-
-## Flow Diagram
-
-<img src="./docs/pipeline.mmd.svg" width="900">
 
 ---
 
@@ -98,15 +108,16 @@ input:
 
 | Optional Parameter          | Type                                                                                      | Default                      | Description                                                                                                                                                                                                                                                                                                                                                                           |
 | --------------------------- | ----------------------------------------------------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `target_threshold`          | numeric                                                                                   | `""`             | Target Stability Score threshold for variant filtering: [0, 1]. |
-| `target_specificity`        | numeric                                                                                   | `""`             | Target specificity based on whole genome validation set for variant filtering: [0, 1]. |
+| `target_threshold`          | numeric                                                                                   | `""`                         | Target Stability Score threshold for variant filtering: [0, 1]. |
+| `target_specificity`        | numeric                                                                                   | `""`                         | Target specificity based on whole genome validation set for variant filtering: [0, 1]. |
+| `extract_features_cpus`     | int                                                                                       | `4`                          | Number of cpus to use for parallel parsing of large VCFs (>1GB). |
 | `work_dir`                  | path                                                                                      | `/scratch/$SLURM_JOB_ID`     | Path of working directory for Nextflow. When included in the sample config file, Nextflow intermediate files and logs will be saved to this directory. With `ucla_cds`, the default is `/scratch` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. |
 | `save_intermediate_files`   | boolean                                                                                   | false                        | If set, save output files from intermediate pipeline processes.                                                                                                                                                                                                                                                                                                                       |
 | `min_cpus`                  | int                                                                                       | 1                            | Minimum number of CPUs that can be assigned to each process.                                                                                                                                                                                                                                                                                                                          |
 | `max_cpus`                  | int                                                                                       | `SysHelper.getAvailCpus()`   | Maximum number of CPUs that can be assigned to each process.                                                                                                                                                                                                                                                                                                                          |
 | `min_memory`                | [MemoryUnit](https://www.nextflow.io/docs/latest/script.html#implicit-classes-memoryunit) | `1.MB`                       | Minimum amount of memory that can be assigned to each process.                                                                                                                                                                                                                                                                                                                        |
 | `max_memory`                | [MemoryUnit](https://www.nextflow.io/docs/latest/script.html#implicit-classes-memoryunit) | `SysHelper.getAvailMemory()` | Maximum amount of memory that can be assigned to each process.                                                                                                                                                                                                                                                                                                                        |
-| `dataset_id`                | string                                                                                    | `""`                         | Dataset ID to be used as output filename prefix.                                                                                                                                                                                                                                                                                                                                         |
+| `dataset_id`                | string                                                                                    | `""`                         | Dataset ID to be used as output filename prefix.                                                                                                                                                                                                                                                                                                                                      |
 | `blcds_registered_dataset`  | boolean                                                                                   | false                        | Set to true when using BLCDS folder structure; use false for now.                                                                                                                                                                                                                                                                                                                     |
 | `ucla_cds`                  | boolean                                                                                   | true                         | If set, overwrite default memory and CPU values by UCLA cluster-specific configs.                                                                                                                                                                                                                                                                                                     |
 
@@ -116,10 +127,10 @@ input:
 
 | Output | Description |
 | ------------ | ------------------------ |
-| `*_stability.vcf.gz` | Output VCF in target build coordinates with variant annotations and predicted Stability Scores. |
-| `*_stability.vcf.gz.tbi` | Output VCF tabix index. |
-| `*_filtered.vcf.gz` | Filtered output VCF with predicted "Unstable" variants removed. |
-| `*_filtered.vcf.gz.tbi` | Filtered output VCF tabix index. |
+| `*_StableLift-${target_build}.vcf.gz` | Output VCF in target build coordinates with variant annotations and predicted Stability Scores. |
+| `*_StableLift-${target_build}.vcf.gz.tbi` | Output VCF tabix index. |
+| `*_StableLift-${target_build}_filtered.vcf.gz` | Filtered output VCF with predicted "Unstable" variants removed. |
+| `*_StableLift-${target_build}_filtered.vcf.gz.tbi` | Filtered output VCF tabix index. |
 
 ---
 
@@ -127,7 +138,7 @@ input:
 
 ### Test Dataset
 
-10 whole genomes from [The Cancer Genome Atlas (TCGA-SARC)](https://portal.gdc.cancer.gov/projects/TCGA-SARC) were used to test pipeline outputs and validate model performance. All data was processed using [standardized Nextflow pipelines](https://github.com/uclahs-cds/metapipeline-DNA). Somatic VCFs from GRCh37 and GRCh38 alignments are available for the four supported sSNV callers as [release attachments](https://github.com/uclahs-cds/pipeline-StableLift/releases).
+10 whole genomes from [The Cancer Genome Atlas (TCGA-SARC)](https://portal.gdc.cancer.gov/projects/TCGA-SARC) were used to test pipeline outputs and validate model performance. All data was processed using [standardized Nextflow pipelines](https://github.com/uclahs-cds/metapipeline-DNA). Somatic VCFs from GRCh37 and GRCh38 alignments are available for the four supported sSNV callers and DELLY2 sSV as [release attachments](https://github.com/uclahs-cds/pipeline-StableLift/releases).
 
 | Donor ID       | Normal Sample ID          | Tumour Sample ID          |
 |----------------|---------------------------|---------------------------|

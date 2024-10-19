@@ -11,9 +11,10 @@ process liftover_annotate_SV_StableLift {
     input:
         tuple val(sample_id), path(vcf, stageAs: 'inputs/*')
         val(source_grch_label)
-        path (header_contigs)
-        path (chain_file)
-        path (gnomad_rds)
+        path(header_contigs)
+        path(chain_file)
+        path(gnomad_rds)
+        val(variant_caller)
 
     output:
         tuple val(sample_id), path('annotations.vcf.gz'), emit: liftover_vcf
@@ -22,6 +23,7 @@ process liftover_annotate_SV_StableLift {
     script:
         """
         Rscript "${moduleDir}/scripts/extract-VCF-features-SV.R" \
+            --variant-caller "${variant_caller}" \
             --input-vcf "${vcf}" \
             --source-build "${source_grch_label}" \
             --chain-file "${chain_file}" \
@@ -74,6 +76,7 @@ workflow workflow_extract_sv_annotations {
     header_contigs
     gnomad_rds
     chain_file
+    variant_caller
 
     main:
 
@@ -82,11 +85,12 @@ workflow workflow_extract_sv_annotations {
         vcf_with_sample_id.map{ [it[0], it[1]] },
 
         // We only need the sample ID
-        src_sequence.map{ ["hg19": "GRCh37", "hg38": "GRCh38"][it[0]] },
+        src_sequence.map{ it[0] },
 
         header_contigs,
         chain_file,
-        gnomad_rds
+        gnomad_rds,
+        variant_caller
     )
 
     run_sort_BCFtools(

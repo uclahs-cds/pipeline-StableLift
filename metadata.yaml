@@ -1,7 +1,7 @@
 ---
 category: "pipeline"
 description: "Nextflow pipeline for predicting variant stability across reference genome builds."
-maintainers: "Nicholas Wiltsie <nwiltsie@mednet.ucla.edu>, Nicholas K. Wang <nkwang@mednet.ucla.edu>"
+maintainers: "Nicholas K. Wang <nkwang@mednet.ucla.edu>, Nicholas Wiltsie <nwiltsie@mednet.ucla.edu>"
 languages: ["Nextflow", "R"]
 dependencies: ["Nextflow", "R", "Docker"]
 image_name: "stablelift"
