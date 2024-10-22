@@ -53,10 +53,6 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../flow-diagram/">Flow Diagram</a>
-                </li>
-              </ul>
-              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../inputs/">Inputs</a>
                 </li>
               </ul>
@@ -102,7 +98,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Outputs</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/4d5d65d870ffd04996c222b874f17a521ec7c3ca/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/d325b1febf55d6ad3cc44514b0ad0c7224f9e116/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -120,19 +116,19 @@
 </thead>
 <tbody>
 <tr>
-<td><code>*_stability.vcf.gz</code></td>
+<td><code>*_StableLift-${target_build}.vcf.gz</code></td>
 <td>Output VCF in target build coordinates with variant annotations and predicted Stability Scores.</td>
 </tr>
 <tr>
-<td><code>*_stability.vcf.gz.tbi</code></td>
+<td><code>*_StableLift-${target_build}.vcf.gz.tbi</code></td>
 <td>Output VCF tabix index.</td>
 </tr>
 <tr>
-<td><code>*_filtered.vcf.gz</code></td>
+<td><code>*_StableLift-${target_build}_filtered.vcf.gz</code></td>
 <td>Filtered output VCF with predicted "Unstable" variants removed.</td>
 </tr>
 <tr>
-<td><code>*_filtered.vcf.gz.tbi</code></td>
+<td><code>*_StableLift-${target_build}_filtered.vcf.gz.tbi</code></td>
 <td>Filtered output VCF tabix index.</td>
 </tr>
 </tbody>
