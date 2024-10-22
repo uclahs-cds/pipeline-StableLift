@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Inputs - pipeline-StableLift</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/version-select.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Inputs";
+        var mkdocs_page_input_path = "inputs.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> pipeline-StableLift
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../how-to-run/">How To Run</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../pipeline-steps/">Pipeline Steps</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Inputs</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#input-yaml">Input YAML</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#input-configuration">Input Configuration</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../outputs/">Outputs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../testing-and-validation/">Testing and Validation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../references/">References</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../discussions/">Discussions</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../contributors/">Contributors</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">pipeline-StableLift</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Inputs</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/v1.1.0/README.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h2 id="inputs">Inputs</h2>
+<p>UCLA pipelines have a hierarchical configuration structure to reduce code repetition:</p>
+<ul>
+<li><code>config/default.config</code>: Parameters with sensible defaults that may be overridden in <code>project.config</code>.</li>
+<li><code>config/template.config -&gt; project.config</code>: Required pipeline parameters. Often shared for many inputs.</li>
+<li><code>input/template.yaml -&gt; project.yaml</code>: Required input-specific parameters.</li>
+</ul>
+<h3 id="input-yaml">Input YAML</h3>
+<pre><code class="language-yaml">---
+sample_id: &quot;&quot;  # Identifying string for the input VCF
+input:
+  vcf: &quot;&quot;      # Path to the input VCF file
+</code></pre>
+<h3 id="input-configuration">Input Configuration</h3>
+<table>
+<thead>
+<tr>
+<th>Required Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>output_dir</code></td>
+<td>path</td>
+<td>Path to the directory where the output files are to be saved.</td>
+</tr>
+<tr>
+<td><code>variant_caller</code></td>
+<td>string</td>
+<td>Variant calling algorithm used to generate input VCF {HaplotypeCaller, Mutect2, Strelka2, SomaticSniper, Muse2, Delly2}.</td>
+</tr>
+<tr>
+<td><code>rf_model</code></td>
+<td>path</td>
+<td>Path to corresponding pre-trained random forest model.</td>
+</tr>
+<tr>
+<td><code>liftover_direction</code></td>
+<td>string</td>
+<td>Conversion direction {GRCh37ToGRCh38, GRCh38ToGRCh37}.</td>
+</tr>
+<tr>
+<td><code>fasta_ref_37</code></td>
+<td>path</td>
+<td>Path to the GRCh37 reference sequence (FASTA).</td>
+</tr>
+<tr>
+<td><code>fasta_ref_38</code></td>
+<td>path</td>
+<td>Path to the GRCh38 reference sequence (FASTA).</td>
+</tr>
+<tr>
+<td><code>chain_file</code></td>
+<td>path</td>
+<td>Path to LiftOver chain file between the source and target genome builds (included in resource-bundle.zip).</td>
+</tr>
+<tr>
+<td><code>funcotator_data_source</code></td>
+<td>path</td>
+<td>Path to <a href="https://gatk.broadinstitute.org/hc/en-us/articles/360050815792-FuncotatorDataSourceDownloader">Funcotator data source</a> directory.</td>
+</tr>
+<tr>
+<td><code>repeat_bed</code></td>
+<td>path</td>
+<td>Path to bundled RepeatMasker annotation file (included in resource-bundle.zip).</td>
+</tr>
+<tr>
+<td><code>header_contigs</code></td>
+<td>path</td>
+<td>Path to header contigs file corresponding to target genome build (included in resource-bundle.zip).</td>
+</tr>
+<tr>
+<td><code>gnomad_rds</code></td>
+<td>path</td>
+<td>Path to gnomAD SV data.table for annotation (included in resource-bundle.zip).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Optional Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>target_threshold</code></td>
+<td>numeric</td>
+<td><code>""</code></td>
+<td>Target Stability Score threshold for variant filtering: [0, 1].</td>
+</tr>
+<tr>
+<td><code>target_specificity</code></td>
+<td>numeric</td>
+<td><code>""</code></td>
+<td>Target specificity based on whole genome validation set for variant filtering: [0, 1].</td>
+</tr>
+<tr>
+<td><code>extract_features_cpus</code></td>
+<td>int</td>
+<td><code>4</code></td>
+<td>Number of cpus to use for parallel parsing of large VCFs (&gt;1GB).</td>
+</tr>
+<tr>
+<td><code>work_dir</code></td>
+<td>path</td>
+<td><code>/scratch/$SLURM_JOB_ID</code></td>
+<td>Path of working directory for Nextflow. When included in the sample config file, Nextflow intermediate files and logs will be saved to this directory. With <code>ucla_cds</code>, the default is <code>/scratch</code> and should only be changed for testing/development. Changing this directory to <code>/hot</code> or <code>/tmp</code> can lead to high server latency and potential disk space limitations, respectively.</td>
+</tr>
+<tr>
+<td><code>save_intermediate_files</code></td>
+<td>boolean</td>
+<td>false</td>
+<td>If set, save output files from intermediate pipeline processes.</td>
+</tr>
+<tr>
+<td><code>min_cpus</code></td>
+<td>int</td>
+<td>1</td>
+<td>Minimum number of CPUs that can be assigned to each process.</td>
+</tr>
+<tr>
+<td><code>max_cpus</code></td>
+<td>int</td>
+<td><code>SysHelper.getAvailCpus()</code></td>
+<td>Maximum number of CPUs that can be assigned to each process.</td>
+</tr>
+<tr>
+<td><code>min_memory</code></td>
+<td><a href="https://www.nextflow.io/docs/latest/script.html#implicit-classes-memoryunit">MemoryUnit</a></td>
+<td><code>1.MB</code></td>
+<td>Minimum amount of memory that can be assigned to each process.</td>
+</tr>
+<tr>
+<td><code>max_memory</code></td>
+<td><a href="https://www.nextflow.io/docs/latest/script.html#implicit-classes-memoryunit">MemoryUnit</a></td>
+<td><code>SysHelper.getAvailMemory()</code></td>
+<td>Maximum amount of memory that can be assigned to each process.</td>
+</tr>
+<tr>
+<td><code>dataset_id</code></td>
+<td>string</td>
+<td><code>""</code></td>
+<td>Dataset ID to be used as output filename prefix.</td>
+</tr>
+<tr>
+<td><code>blcds_registered_dataset</code></td>
+<td>boolean</td>
+<td>false</td>
+<td>Set to true when using BLCDS folder structure; use false for now.</td>
+</tr>
+<tr>
+<td><code>ucla_cds</code></td>
+<td>boolean</td>
+<td>true</td>
+<td>If set, overwrite default memory and CPU values by UCLA cluster-specific configs.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../pipeline-steps/" class="btn btn-neutral float-left" title="Pipeline Steps"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../outputs/" class="btn btn-neutral float-right" title="Outputs">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/uclahs-cds/pipeline-StableLift/tree/v1.1.0" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../pipeline-steps/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../outputs/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../js/version-select.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
