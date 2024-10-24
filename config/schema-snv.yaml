@@ -3,10 +3,10 @@ repeat_bed:
   type: 'Path'
   mode: 'r'
   required: true
-  help: 'RepeatMasker (v3.0.1) intervals from UCSC Table Browser for variant annotation in GRCh38 coordinates, included in resource-bundle.zip'
+  help: 'RepeatMasker (v3.0.1) intervals from UCSC Table Browser for variant annotation in target build coordinates, included in resource-bundle.zip'
 
 funcotator_data_source:
   type: 'Path'
-  required: true
   mode: 'r'
-  help: 'Root data source folder for Funcotator from https://gatk.broadinstitute.org/hc/en-us/articles/360035889931-Funcotator-Information-and-Tutorial'
+  required: true
+  help: 'Path to Funcotator data source directory containing dbSNP, GENCODE and HGNC sources for SNV annotation'
