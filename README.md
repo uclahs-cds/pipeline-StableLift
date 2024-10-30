@@ -18,14 +18,14 @@
 
 ## Overview
 
-StableLift is a machine learning approach designed to predict variant stability across reference genome builds. It addresses challenges in cross-build variant comparison, supplementing LiftOver coordinate conversion with a quantitative "Stability Score" for each variant, indicating the probability of consistent representation across the two most commonly used human reference builds (GRCh37 and GRCh38).
+StableLift is a machine learning approach designed to predict variant stability across reference genome builds. It addresses challenges in cross-build variant comparison, supplementing LiftOver coordinate conversion with a quantitative "Stability Score" for each variant, indicating the likelihood of consistent representation across the two most commonly used human reference builds (GRCh37 and GRCh38).
 
 StableLift is implemented as a Nextflow pipeline featuring:
   - Robust LiftOver of SNVs, indels, and structural variants
   - Variant annotation with external databases
   - Variant filtering based on predicted cross-build stability
 
-Pre-trained models are provided along with performance in a whole genome validation set to define the default F1-maximizing operating point and allow for custom filtering based on pre-calibrated specificity estimates.
+Pre-trained models are provided along with performance in a whole genome validation set to define the default F<sub>1</sub>-maximizing operating point and allow for custom filtering based on pre-calibrated specificity estimates.
 
 <img src="./docs/stablelift-overview.png" width="95%">
 
@@ -45,8 +45,8 @@ Supported variant callers:
 
 ## How To Run
 
-1. Download and extract [resource bundle](https://github.com/uclahs-cds/pipeline-StableLift/releases/download/v1.0.0/resource-bundle.zip) and [source code](https://github.com/uclahs-cds/pipeline-StableLift/releases/download/v1.0.0/source_code_with_submodules.tar.gz).
-2. Download [pre-trained model](https://github.com/uclahs-cds/pipeline-StableLift/releases/tag/v1.0.0) corresponding to variant caller and conversion direction.
+1. Download and extract resource bundle and source code from [latest release](https://github.com/uclahs-cds/pipeline-StableLift/releases).
+2. Download [pre-trained model](https://github.com/uclahs-cds/pipeline-StableLift/releases) corresponding to variant caller and conversion direction.
 3. Copy [`./config/template.config`](./config/template.config) (e.g. project.config) and fill in all required parameters.
 4. Copy [`./input/template.yaml`](./input/template.yaml) (e.g. project.yaml) and update with input VCF ID and path.
 5. Run the pipeline using [Nextflow](https://www.nextflow.io/docs/latest/install.html#install-nextflow) `nextflow run -c project.config -params-file project.yaml main.nf`.
@@ -99,7 +99,7 @@ input:
 | `liftover_direction`        | string | Conversion direction: [GRCh37ToGRCh38, GRCh38ToGRCh37].                                                                                            |
 | `fasta_ref_37`              | path   | Path to the GRCh37 reference sequence (FASTA).                                                                                                     |
 | `fasta_ref_38`              | path   | Path to the GRCh38 reference sequence (FASTA).                                                                                                     |
-| `resource_bundle_path`      | path   | Path to unpacked [resource-bundle.zip](https://github.com/uclahs-cds/pipeline-StableLift/releases/download/v1.1.0/resource-bundle.zip).            |
+| `resource_bundle_path`      | path   | Path to unpacked [resource-bundle.zip](https://github.com/uclahs-cds/pipeline-StableLift/releases).            |
 | `funcotator_data_source`    | path   | Path to [Funcotator data source](https://gatk.broadinstitute.org/hc/en-us/articles/360050815792-FuncotatorDataSourceDownloader) directory containing dbSNP, GENCODE and HGNC sources (required for SNV annotation).|
 
 | Optional Parameter          | Type                                                                                      | Default                      | Description                                                                                                                                                                                                                                                                                                                                                                           |
