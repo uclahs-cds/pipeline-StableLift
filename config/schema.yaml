@@ -1,5 +1,21 @@
 ---
-# Required Parameters
+# Input specification
+sample_id:
+  type: 'String'
+  required: true
+
+input:
+  type: 'Namespace'
+  required: true
+  help: 'Input sample'
+  elements:
+    vcf:
+      type: 'Path'
+      mode: 'r'
+      required: true
+      help: 'Input dataset supplied by input yaml'
+
+# Required parameters
 output_dir:
   type: 'Path'
   mode: 'w'
@@ -51,13 +67,12 @@ resource_bundle_path:
   required: true
   help: 'Path to unpacked resource-bundle.zip'
 
-# Optional Parameters
+# Optional parameters
 target_threshold:
   type: 'RangedNumber'
   required: false
   min: 0
   max: 1
-  default: ''
   help: 'Target Stability Score threshold for variant filtering'
 
 target_specificity:
@@ -65,7 +80,6 @@ target_specificity:
   required: false
   min: 0
   max: 1
-  default: ''
   help: 'Target specificity based on whole genome validation set for variant filtering'
 
 extract_features_cpus:
@@ -73,6 +87,12 @@ extract_features_cpus:
   required: false
   default: 4
   help: 'Number of cpus to use for parallel parsing of large VCFs (>1GB)'
+
+work_dir:
+  type: 'Path'
+  mode: 'r'
+  required: false
+  help: 'Path of working directory for Nextflow'
 
 save_intermediate_files:
   type: 'Bool'
