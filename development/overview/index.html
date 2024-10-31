@@ -98,7 +98,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Overview</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/30d5674c2c913a8a36442deaa0ce7a2fbc69b923/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/407aaa83d89325d4106bdda1070941a95daaf418/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -107,14 +107,14 @@
             <div class="section" itemprop="articleBody">
               
                 <h2 id="overview">Overview</h2>
-<p>StableLift is a machine learning approach designed to predict variant stability across reference genome builds. It addresses challenges in cross-build variant comparison, supplementing LiftOver coordinate conversion with a quantitative "Stability Score" for each variant, indicating the probability of consistent representation across the two most commonly used human reference builds (GRCh37 and GRCh38).</p>
+<p>StableLift is a machine learning approach designed to predict variant stability across reference genome builds. It addresses challenges in cross-build variant comparison, supplementing LiftOver coordinate conversion with a quantitative "Stability Score" for each variant, indicating the likelihood of consistent representation across the two most commonly used human reference builds (GRCh37 and GRCh38).</p>
 <p>StableLift is implemented as a Nextflow pipeline featuring:</p>
 <ul>
 <li>Robust LiftOver of SNVs, indels, and structural variants</li>
 <li>Variant annotation with external databases</li>
 <li>Variant filtering based on predicted cross-build stability</li>
 </ul>
-<p>Pre-trained models are provided along with performance in a whole genome validation set to define the default F1-maximizing operating point and allow for custom filtering based on pre-calibrated specificity estimates.</p>
+<p>Pre-trained models are provided along with performance in a whole genome validation set to define the default F<sub>1</sub>-maximizing operating point and allow for custom filtering based on pre-calibrated specificity estimates.</p>
 <p><img src="./docs/stablelift-overview.png" width="95%"></p>
 <p>Supported conversions:</p>
 <ul>

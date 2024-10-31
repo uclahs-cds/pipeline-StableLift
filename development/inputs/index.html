@@ -102,7 +102,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Inputs</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/30d5674c2c913a8a36442deaa0ce7a2fbc69b923/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/uclahs-cds/pipeline-StableLift/blob/407aaa83d89325d4106bdda1070941a95daaf418/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -141,7 +141,7 @@ input:
 <tr>
 <td><code>variant_caller</code></td>
 <td>string</td>
-<td>Variant calling algorithm used to generate input VCF {HaplotypeCaller, Mutect2, Strelka2, SomaticSniper, Muse2, Delly2}.</td>
+<td>Variant calling algorithm used to generate input VCF: [HaplotypeCaller, Mutect2, Strelka2, SomaticSniper, Muse2, Delly2-gSV, Delly2-sSV].</td>
 </tr>
 <tr>
 <td><code>rf_model</code></td>
@@ -151,7 +151,7 @@ input:
 <tr>
 <td><code>liftover_direction</code></td>
 <td>string</td>
-<td>Conversion direction {GRCh37ToGRCh38, GRCh38ToGRCh37}.</td>
+<td>Conversion direction: [GRCh37ToGRCh38, GRCh38ToGRCh37].</td>
 </tr>
 <tr>
 <td><code>fasta_ref_37</code></td>
@@ -164,29 +164,14 @@ input:
 <td>Path to the GRCh38 reference sequence (FASTA).</td>
 </tr>
 <tr>
-<td><code>chain_file</code></td>
+<td><code>resource_bundle_path</code></td>
 <td>path</td>
-<td>Path to LiftOver chain file between the source and target genome builds (included in resource-bundle.zip).</td>
+<td>Path to unpacked <a href="https://github.com/uclahs-cds/pipeline-StableLift/releases">resource-bundle.zip</a>.</td>
 </tr>
 <tr>
 <td><code>funcotator_data_source</code></td>
 <td>path</td>
-<td>Path to <a href="https://gatk.broadinstitute.org/hc/en-us/articles/360050815792-FuncotatorDataSourceDownloader">Funcotator data source</a> directory.</td>
-</tr>
-<tr>
-<td><code>repeat_bed</code></td>
-<td>path</td>
-<td>Path to bundled RepeatMasker annotation file (included in resource-bundle.zip).</td>
-</tr>
-<tr>
-<td><code>header_contigs</code></td>
-<td>path</td>
-<td>Path to header contigs file corresponding to target genome build (included in resource-bundle.zip).</td>
-</tr>
-<tr>
-<td><code>gnomad_rds</code></td>
-<td>path</td>
-<td>Path to gnomAD SV data.table for annotation (included in resource-bundle.zip).</td>
+<td>Path to <a href="https://gatk.broadinstitute.org/hc/en-us/articles/360050815792-FuncotatorDataSourceDownloader">Funcotator data source</a> directory containing dbSNP, GENCODE and HGNC sources (required for SNV annotation).</td>
 </tr>
 </tbody>
 </table>
@@ -221,7 +206,7 @@ input:
 <tr>
 <td><code>work_dir</code></td>
 <td>path</td>
-<td><code>/scratch/$SLURM_JOB_ID</code></td>
+<td><code>System.getenv("NXF_WORK")</code></td>
 <td>Path of working directory for Nextflow. When included in the sample config file, Nextflow intermediate files and logs will be saved to this directory. With <code>ucla_cds</code>, the default is <code>/scratch</code> and should only be changed for testing/development. Changing this directory to <code>/hot</code> or <code>/tmp</code> can lead to high server latency and potential disk space limitations, respectively.</td>
 </tr>
 <tr>
@@ -269,7 +254,7 @@ input:
 <tr>
 <td><code>ucla_cds</code></td>
 <td>boolean</td>
-<td>true</td>
+<td>false</td>
 <td>If set, overwrite default memory and CPU values by UCLA cluster-specific configs.</td>
 </tr>
 </tbody>
