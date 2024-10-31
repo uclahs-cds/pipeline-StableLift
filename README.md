@@ -18,14 +18,14 @@
 
 ## Overview
 
-StableLift is a machine learning approach designed to predict variant stability across reference genome builds. It addresses challenges in cross-build variant comparison, supplementing LiftOver coordinate conversion with a quantitative "Stability Score" for each variant, indicating the probability of consistent representation across the two most commonly used human reference builds (GRCh37 and GRCh38).
+StableLift is a machine learning approach designed to predict variant stability across reference genome builds. It addresses challenges in cross-build variant comparison, supplementing LiftOver coordinate conversion with a quantitative "Stability Score" for each variant, indicating the likelihood of consistent representation across the two most commonly used human reference builds (GRCh37 and GRCh38).
 
 StableLift is implemented as a Nextflow pipeline featuring:
   - Robust LiftOver of SNVs, indels, and structural variants
   - Variant annotation with external databases
   - Variant filtering based on predicted cross-build stability
 
-Pre-trained models are provided along with performance in a whole genome validation set to define the default F1-maximizing operating point and allow for custom filtering based on pre-calibrated specificity estimates.
+Pre-trained models are provided along with performance in a whole genome validation set to define the default F<sub>1</sub>-maximizing operating point and allow for custom filtering based on pre-calibrated specificity estimates.
 
 <img src="./docs/stablelift-overview.png" width="95%">
 
@@ -45,8 +45,8 @@ Supported variant callers:
 
 ## How To Run
 
-1. Download and extract [resource bundle](https://github.com/uclahs-cds/pipeline-StableLift/releases/download/v1.0.0/resource-bundle.zip) and [source code](https://github.com/uclahs-cds/pipeline-StableLift/releases/download/v1.0.0/source_code_with_submodules.tar.gz).
-2. Download [pre-trained model](https://github.com/uclahs-cds/pipeline-StableLift/releases/tag/v1.0.0) corresponding to variant caller and conversion direction.
+1. Download and extract resource bundle and source code from [latest release](https://github.com/uclahs-cds/pipeline-StableLift/releases).
+2. Download [pre-trained model](https://github.com/uclahs-cds/pipeline-StableLift/releases) corresponding to variant caller and conversion direction.
 3. Copy [`./config/template.config`](./config/template.config) (e.g. project.config) and fill in all required parameters.
 4. Copy [`./input/template.yaml`](./input/template.yaml) (e.g. project.yaml) and update with input VCF ID and path.
 5. Run the pipeline using [Nextflow](https://www.nextflow.io/docs/latest/install.html#install-nextflow) `nextflow run -c project.config -params-file project.yaml main.nf`.
@@ -91,27 +91,23 @@ input:
 
 ### Input Configuration
 
-| Required Parameter                  | Type   | Description                                                                                                                                        |
-| ----------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `output_dir`                        | path   | Path to the directory where the output files are to be saved.                                                                                      |
-| `variant_caller`                    | string | Variant calling algorithm used to generate input VCF {HaplotypeCaller, Mutect2, Strelka2, SomaticSniper, Muse2, Delly2}.                           |
-| `rf_model`                          | path   | Path to corresponding pre-trained random forest model.                                                                                             |
-| `liftover_direction`                | string | Conversion direction {GRCh37ToGRCh38, GRCh38ToGRCh37}.                                                                                             |
-| `fasta_ref_37`                      | path   | Path to the GRCh37 reference sequence (FASTA).                                                                                                     |
-| `fasta_ref_38`                      | path   | Path to the GRCh38 reference sequence (FASTA).                                                                                                     |
-| `chain_file`                        | path   | Path to LiftOver chain file between the source and target genome builds (included in resource-bundle.zip).                                         |
-| `funcotator_data_source`            | path   | Path to [Funcotator data source](https://gatk.broadinstitute.org/hc/en-us/articles/360050815792-FuncotatorDataSourceDownloader) directory.         |
-| `repeat_bed`                        | path   | Path to bundled RepeatMasker annotation file (included in resource-bundle.zip).                                                                    |
-| `header_contigs`                    | path   | Path to header contigs file corresponding to target genome build (included in resource-bundle.zip).                                                |
-| `gnomad_rds`                        | path   | Path to gnomAD SV data.table for annotation (included in resource-bundle.zip).                                                                     |
-
+| Required Parameter          | Type   | Description                                                                                                                                        |
+| --------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `output_dir`                | path   | Path to the directory where the output files are to be saved.                                                                                      |
+| `variant_caller`            | string | Variant calling algorithm used to generate input VCF: [HaplotypeCaller, Mutect2, Strelka2, SomaticSniper, Muse2, Delly2-gSV, Delly2-sSV].          |
+| `rf_model`                  | path   | Path to corresponding pre-trained random forest model.                                                                                             |
+| `liftover_direction`        | string | Conversion direction: [GRCh37ToGRCh38, GRCh38ToGRCh37].                                                                                            |
+| `fasta_ref_37`              | path   | Path to the GRCh37 reference sequence (FASTA).                                                                                                     |
+| `fasta_ref_38`              | path   | Path to the GRCh38 reference sequence (FASTA).                                                                                                     |
+| `resource_bundle_path`      | path   | Path to unpacked [resource-bundle.zip](https://github.com/uclahs-cds/pipeline-StableLift/releases).            |
+| `funcotator_data_source`    | path   | Path to [Funcotator data source](https://gatk.broadinstitute.org/hc/en-us/articles/360050815792-FuncotatorDataSourceDownloader) directory containing dbSNP, GENCODE and HGNC sources (required for SNV annotation).|
 
 | Optional Parameter          | Type                                                                                      | Default                      | Description                                                                                                                                                                                                                                                                                                                                                                           |
 | --------------------------- | ----------------------------------------------------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `target_threshold`          | numeric                                                                                   | `""`                         | Target Stability Score threshold for variant filtering: [0, 1]. |
 | `target_specificity`        | numeric                                                                                   | `""`                         | Target specificity based on whole genome validation set for variant filtering: [0, 1]. |
 | `extract_features_cpus`     | int                                                                                       | `4`                          | Number of cpus to use for parallel parsing of large VCFs (>1GB). |
-| `work_dir`                  | path                                                                                      | `/scratch/$SLURM_JOB_ID`     | Path of working directory for Nextflow. When included in the sample config file, Nextflow intermediate files and logs will be saved to this directory. With `ucla_cds`, the default is `/scratch` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. |
+| `work_dir`                  | path                                                                                      | `System.getenv("NXF_WORK")`  | Path of working directory for Nextflow. When included in the sample config file, Nextflow intermediate files and logs will be saved to this directory. With `ucla_cds`, the default is `/scratch` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. |
 | `save_intermediate_files`   | boolean                                                                                   | false                        | If set, save output files from intermediate pipeline processes.                                                                                                                                                                                                                                                                                                                       |
 | `min_cpus`                  | int                                                                                       | 1                            | Minimum number of CPUs that can be assigned to each process.                                                                                                                                                                                                                                                                                                                          |
 | `max_cpus`                  | int                                                                                       | `SysHelper.getAvailCpus()`   | Maximum number of CPUs that can be assigned to each process.                                                                                                                                                                                                                                                                                                                          |
@@ -119,7 +115,7 @@ input:
 | `max_memory`                | [MemoryUnit](https://www.nextflow.io/docs/latest/script.html#implicit-classes-memoryunit) | `SysHelper.getAvailMemory()` | Maximum amount of memory that can be assigned to each process.                                                                                                                                                                                                                                                                                                                        |
 | `dataset_id`                | string                                                                                    | `""`                         | Dataset ID to be used as output filename prefix.                                                                                                                                                                                                                                                                                                                                      |
 | `blcds_registered_dataset`  | boolean                                                                                   | false                        | Set to true when using BLCDS folder structure; use false for now.                                                                                                                                                                                                                                                                                                                     |
-| `ucla_cds`                  | boolean                                                                                   | true                         | If set, overwrite default memory and CPU values by UCLA cluster-specific configs.                                                                                                                                                                                                                                                                                                     |
+| `ucla_cds`                  | boolean                                                                                   | false                        | If set, overwrite default memory and CPU values by UCLA cluster-specific configs.                                                                                                                                                                                                                                                                                                     |
 
 ---
 
