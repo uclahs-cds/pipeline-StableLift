@@ -30,32 +30,32 @@ log.info """\
         dataset_id: ${params.dataset_id}
 
         liftover_direction: ${params.liftover_direction}
-
         variant_caller: ${params.variant_caller}
         rf_model: ${params.rf_model}
 
+        src_fasta_id:    ${params.src_fasta_id}
         src_fasta_ref:   ${params.src_fasta_ref}
         src_fasta_fai:   ${params.src_fasta_fai}
         src_fasta_dict:  ${params.src_fasta_dict}
 
+        dest_fasta_id:   ${params.dest_fasta_id}
         dest_fasta_ref:  ${params.dest_fasta_ref}
         dest_fasta_fai:  ${params.dest_fasta_fai}
         dest_fasta_dict: ${params.dest_fasta_dict}
 
-        chain_file: ${params.chain_file}
-
-    - SV only:
-        header_contigs: ${params.getOrDefault('header_contigs', null)}
-        gnomad_rds: ${params.getOrDefault('gnomad_rds', null)}
-
-    - SNV only:
-        repeat_bed: ${params.getOrDefault('repeat_bed', null)}
         funcotator_data_source: ${params.getOrDefault('funcotator_data_source', null)}
+
+        resource_bundle_path: ${params.resource_bundle_path}
+        chain_file: ${params.chain_file}
+        repeat_bed: ${params.getOrDefault('repeat_bed', null)}
+        gnomad_rds: ${params.getOrDefault('gnomad_rds', null)}
+        header_contigs: ${params.getOrDefault('header_contigs', null)}
 
     - output:
         output_dir_base: ${params.output_dir_base}
 
     - options:
+        save_intermediate_files: ${params.save_intermediate_files}
         blcds_registered_dataset: ${params.blcds_registered_dataset}
         ucla_cds: ${params.ucla_cds}
 
@@ -111,9 +111,6 @@ Channel
 
 // Main workflow here
 workflow {
-
-    // Currently this is written for a single sample_id and VCF file, but
-    // abstract that away
     Channel.of ([
             vcf: params.input.vcf,
             index: indexFile(params.input.vcf),
