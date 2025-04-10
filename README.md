@@ -157,8 +157,8 @@ input:
 
 ## References
 
-1. [StableLift: Optimized Germline and Somatic Variant Detection Across Genome Builds]()
-2. [Metapipeline-DNA: A Comprehensive Germline & Somatic Genomics Nextflow Pipeline](https://www.biorxiv.org/content/10.1101/2024.09.04.611267v1)
+1. [StableLift: Optimized Germline and Somatic Variant Detection Across Genome Builds](https://www.biorxiv.org/content/10.1101/2024.10.31.621401v1)
+2. [Metapipeline-DNA: A Comprehensive Germline & Somatic Genomics Nextflow Pipeline](https://www.biorxiv.org/content/10.1101/2024.09.04.611267v3)
 3. [uclahs-cds/metapipeline-DNA](https://github.com/uclahs-cds/metapipeline-DNA)
 
 ---
