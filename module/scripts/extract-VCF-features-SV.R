@@ -179,10 +179,13 @@ if (source.build == 'GRCh37') {
     features.dt <- annotate.gnomad.features(features.dt, features.dt.gnomad);
     }
 
+# Remove variants with identical CHROM and POS
+features.dt <- features.dt[!duplicated(features.dt[, .(CHROM, POS)])];
+
 ###################################################################################################
 # Write output VCF
 ###################################################################################################
-pass.liftover <- as.data.table(input.vcf@fix)$ID %in% grange.target.dt$ID;
+pass.liftover <- as.data.table(input.vcf@fix)$ID %in% features.dt$ID;
 input.fix <- as.data.table(input.vcf@fix)[pass.liftover];
 input.gt <- as.data.table(input.vcf@gt)[pass.liftover];
 grange.target.dt <- grange.target.dt[match(input.fix$ID, grange.target.dt$ID)];

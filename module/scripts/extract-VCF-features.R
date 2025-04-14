@@ -186,6 +186,10 @@ features.dt.subsets <- foreach(vcf.subset = vcf.subsets) %dopar% {
     }
 
 features.dt <- rbindlist(features.dt.subsets, use.names = TRUE, fill = TRUE);
+
+# Remove variants with identical CHROM and POS
+features.dt <- features.dt[!duplicated(features.dt[, .(CHROM, POS)])];
+
 rm(features.dt.subsets);
 gc();
 cat(format(Sys.time() - start.extract, nsmall = 2), '\n');
