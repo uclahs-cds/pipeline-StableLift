@@ -12,8 +12,8 @@
     "version": "v1.1.1",
     "title": "v1.1.1",
     "aliases": [
-      "release-candidate",
-      "latest"
+      "latest",
+      "release-candidate"
     ],
     "properties": {
       "commit": "407aaa83d89325d4106bdda1070941a95daaf418",
