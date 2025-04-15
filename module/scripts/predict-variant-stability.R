@@ -39,18 +39,6 @@ features.dt <- readRDS(features.dt.path);
 rf.model.path <- rf.model;
 rf.model <- readRDS(rf.model);
 
-####################################################################################################
-# Feature engineering
-####################################################################################################
-if (variant.caller == 'HaplotypeCaller') {
-    normalize.features <- c('DP', 'VQSLOD');
-    features.dt[, (normalize.features) := lapply(.SD, scale), .SDcols = normalize.features];
-    features.dt[, c('QUAL', 'GQ') := NULL];
-    }
-
-cat('Input data dimensions:\n');
-print(dim(features.dt));
-
 ###################################################################################################
 # Apply random forest model
 ###################################################################################################
