@@ -1,3 +1,5 @@
+[![GitHub release](https://img.shields.io/github/v/release/uclahs-cds/pipeline-StableLift)](https://github.com/uclahs-cds/pipeline-StableLift/actions/workflows/prepare-release.yaml)
+
 # StableLift
 
   - [Overview](#overview)
